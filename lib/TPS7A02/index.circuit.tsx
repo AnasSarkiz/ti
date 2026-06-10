@@ -30,6 +30,7 @@ export const TPS63802 = () => (
       capacitance="0uF"
       schX={-1.3}
       schY={-1.6}
+      capacitance="1uF"
       schOrientation="vertical"
     />
 
@@ -38,6 +39,7 @@ export const TPS63802 = () => (
       capacitance="0uF"
       schX={2}
       schY={-1}
+      capacitance="1uF"
       schOrientation="vertical"
     />
     <chip
