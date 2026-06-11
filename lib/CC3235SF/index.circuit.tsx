@@ -24,6 +24,8 @@ export default (props: SubcircuitProps) => (
       name="U3"
       schX={-6}
       schY={5}
+      pcbX={-24}
+      pcbY={8}
       schPinArrangement={{
         leftSide: { direction: "top-to-bottom", pins: ["RF1", "RF2", "GND"] },
         rightSide: { direction: "top-to-bottom", pins: ["VC1", "VC2", "RFC"] },
@@ -51,6 +53,8 @@ export default (props: SubcircuitProps) => (
       footprint="0402"
       schX={-8.3}
       schY={5.5}
+      pcbX={-29}
+      pcbY={9}
       connections={{ pin1: "net.RF_BLE" }}
     />
     <capacitor
@@ -59,6 +63,8 @@ export default (props: SubcircuitProps) => (
       footprint="0402"
       schX={-9.8}
       schY={4.7}
+      pcbX={-29}
+      pcbY={6}
       connections={{ pin1: "net.RF_BG" }}
     />
     <capacitor
@@ -67,6 +73,8 @@ export default (props: SubcircuitProps) => (
       footprint="0402"
       schX={-3.3}
       schY={4.5}
+      pcbX={-19}
+      pcbY={8}
     />
     <resistor
       name="R12"
@@ -75,6 +83,8 @@ export default (props: SubcircuitProps) => (
       schRotation={90}
       schX={-0.7}
       schY={4.3}
+      pcbX={-15}
+      pcbY={9}
       connections={{ pin1: "net.GND" }}
     />
     <capacitor
@@ -84,6 +94,8 @@ export default (props: SubcircuitProps) => (
       schOrientation="vertical"
       schX={0.5}
       schY={4.3}
+      pcbX={-15}
+      pcbY={6}
       connections={{ pin1: "R12.pin2", pin2: "net.GND" }}
     />
     <resistor
@@ -93,6 +105,8 @@ export default (props: SubcircuitProps) => (
       schRotation={90}
       schX={2.3}
       schY={4.3}
+      pcbX={-11}
+      pcbY={9}
       connections={{ pin1: "net.GND" }}
     />
     <capacitor
@@ -102,6 +116,8 @@ export default (props: SubcircuitProps) => (
       schOrientation="vertical"
       schX={3.5}
       schY={4.3}
+      pcbX={-11}
+      pcbY={6}
       connections={{ pin1: "R13.pin2", pin2: "net.GND" }}
     />
 
@@ -119,6 +135,8 @@ export default (props: SubcircuitProps) => (
       }}
       schX={-2.5}
       schY={0.8}
+      pcbX={-8}
+      pcbY={2}
       schPinStyle={{
         OUT: {
           marginBottom: 0.3,
@@ -154,6 +172,8 @@ export default (props: SubcircuitProps) => (
       }}
       schX={4}
       schY={0}
+      pcbX={-1}
+      pcbY={2}
       schPinStyle={{
         LBP: { marginTop: -0.4 },
         HBP: { marginTop: 0.3 },
@@ -173,6 +193,8 @@ export default (props: SubcircuitProps) => (
       footprint="0402"
       schX={7}
       schY={0.4}
+      pcbX={5}
+      pcbY={2}
       connections={{ pin2: "C37.pin1" }}
     />
     <capacitor
@@ -181,6 +203,8 @@ export default (props: SubcircuitProps) => (
       footprint="0402"
       schX={8.5}
       schY={0.4}
+      pcbX={8}
+      pcbY={2}
       connections={{ pin2: "L5.pin2" }}
     />
     <inductor
@@ -190,6 +214,8 @@ export default (props: SubcircuitProps) => (
       schRotation={90}
       schX={9.7}
       schY={-0.6}
+      pcbX={11}
+      pcbY={2}
       connections={{ pin1: "net.GND", pin2: "E1.FEED" }}
     />
 
@@ -213,6 +239,8 @@ export default (props: SubcircuitProps) => (
       }}
       schX={11.5}
       schY={0.5}
+      pcbX={15}
+      pcbY={2}
       connections={{
         FEED: "net.GND",
         GND: "net.GND",
@@ -223,6 +251,8 @@ export default (props: SubcircuitProps) => (
       name="U5"
       schX={-6}
       schY={-2.4}
+      pcbX={-24}
+      pcbY={-8}
       schPinArrangement={{
         leftSide: { direction: "top-to-bottom", pins: ["GND", "RF2", "RF1"] },
         rightSide: { direction: "top-to-bottom", pins: ["RFC", "VC2", "VC1"] },
@@ -250,6 +280,8 @@ export default (props: SubcircuitProps) => (
       footprint="0402"
       schX={-9.8}
       schY={-2}
+      pcbX={-29}
+      pcbY={-7}
       connections={{ pin1: "net.A_RX" }}
     />
     <capacitor
@@ -258,6 +290,8 @@ export default (props: SubcircuitProps) => (
       footprint="0402"
       schX={-10.3}
       schY={-3.5}
+      pcbX={-29}
+      pcbY={-10}
       connections={{ pin1: "net.A_TX" }}
     />
     <capacitor
@@ -266,6 +300,8 @@ export default (props: SubcircuitProps) => (
       footprint="0402"
       schX={-3.3}
       schY={-1.8}
+      pcbX={-19}
+      pcbY={-8}
       connections={{ pin2: "L6.pin2" }}
     />
     <inductor
@@ -275,6 +311,8 @@ export default (props: SubcircuitProps) => (
       schRotation={90}
       schX={-2.2}
       schY={-2.6}
+      pcbX={-16}
+      pcbY={-8}
       connections={{ pin1: "net.GND" }}
     />
     <capacitor
@@ -284,6 +322,8 @@ export default (props: SubcircuitProps) => (
       schOrientation="vertical"
       schX={-4}
       schY={-4.2}
+      pcbX={-20}
+      pcbY={-12}
       connections={{ pin2: "net.GND", pin1: "net.SOP0" }}
     />
     <capacitor
@@ -293,6 +333,8 @@ export default (props: SubcircuitProps) => (
       schOrientation="vertical"
       schX={-3}
       schY={-4.2}
+      pcbX={-16}
+      pcbY={-12}
       connections={{ pin2: "net.GND", pin1: "net.SOP1" }}
     />
 
@@ -313,6 +355,8 @@ export default (props: SubcircuitProps) => (
       }}
       schX={-0.3}
       schY={-2.2}
+      pcbX={-11}
+      pcbY={-8}
       connections={{
         IN: "L6.pin2",
         OUT: "C39.pin1",
@@ -325,6 +369,8 @@ export default (props: SubcircuitProps) => (
       footprint="0402"
       schX={2}
       schY={-1.8}
+      pcbX={-7}
+      pcbY={-8}
     />
   </subcircuit>
 );
