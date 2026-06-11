@@ -1,4 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
+import mspm0Opa from "./MSPM0_OPA-PSPICE/mspm0_opa.json";
 
 const pinLabels = {
   pin1: "PB13",
@@ -126,6 +127,18 @@ export default (props: SubcircuitProps) => (
       schY={0}
       pcbX={0}
       pcbY={0}
+      spiceModel={
+        <spicemodel
+          source={mspm0Opa.source}
+          spicePinMapping={{
+            INP: "OPA0_IN0_P",
+            INN: "OPA0_IN0_N",
+            VCC: "VDD",
+            VEE: "VSS",
+            OUT: "OPA0_OUT",
+          }}
+        />
+      }
       connections={{
         VDD: "C2.pin1",
         VSS: "C2.pin2",
@@ -252,6 +265,12 @@ export default (props: SubcircuitProps) => (
         pin1: "U1.SWDIO",
         pin2: "U1.SWCLK",
       }}
+    />
+    <voltageprobe name="OPA0_OUT" connectsTo="U1.OPA0_OUT" />
+    <analogsimulation
+      duration="10ms"
+      timePerStep="10us"
+      spiceEngine="ngspice"
     />
   </subcircuit>
 );
