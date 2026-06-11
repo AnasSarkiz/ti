@@ -24,7 +24,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
     "@types/react": "^19.2.17",
-    "tscircuit": "^0.0.1854",
+    "tscircuit": "^0.0.1857",
     "typescript": "^5.0.0"
   },
   "peerDependencies": {
