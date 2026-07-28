@@ -6,7 +6,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <TLC59116
       name="U3"
-      schX={0}
+      schX={-8}
       schY={0}
       connections={{
         pin2: "net.GND",
@@ -21,12 +21,12 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       }}
     />
 
-    <schematictext schX={0} schY={0} text="TLC59116" fontSize={0.65} />
+    <schematictext schX={-8} schY={0} text="TLC59116" fontSize={0.65} />
     <resistor
       name="REXT"
       resistance="931ohm"
       footprint="0402"
-      schX={-4.0}
+      schX={-12.0}
       schY={-4.2}
       schOrientation="vertical"
       connections={{
@@ -39,7 +39,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED15"
       footprint="led0603"
       color="red"
-      schX={4.1}
+      schX={-4.1}
       schY={4}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin23" }}
@@ -49,7 +49,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED14"
       footprint="led0603"
       color="red"
-      schX={5}
+      schX={-3}
       schY={3.3}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin22" }}
@@ -58,7 +58,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED13"
       footprint="led0603"
       color="red"
-      schX={6}
+      schX={-2}
       schY={4}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin21" }}
@@ -67,7 +67,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED12"
       footprint="led0603"
       color="red"
-      schX={6.9}
+      schX={-0.9}
       schY={3.3}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin20" }}
@@ -76,7 +76,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED11"
       footprint="led0603"
       color="red"
-      schX={8}
+      schX={0}
       schY={4}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin18" }}
@@ -85,7 +85,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED10"
       footprint="led0603"
       color="red"
-      schX={8.9}
+      schX={0.9}
       schY={3.3}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin17" }}
@@ -94,7 +94,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED9"
       footprint="led0603"
       color="red"
-      schX={10}
+      schX={2}
       schY={4}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin16" }}
@@ -103,7 +103,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED8"
       footprint="led0603"
       color="red"
-      schX={10.9}
+      schX={2.9}
       schY={3.3}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin15" }}
@@ -112,7 +112,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED7"
       footprint="led0603"
       color="red"
-      schX={12}
+      schX={4}
       schY={4}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin14" }}
@@ -121,7 +121,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED6"
       footprint="led0603"
       color="red"
-      schX={12.9}
+      schX={4.9}
       schY={3.3}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin13" }}
@@ -130,7 +130,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED5"
       footprint="led0603"
       color="red"
-      schX={14}
+      schX={6}
       schY={4}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin12" }}
@@ -139,7 +139,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED4"
       footprint="led0603"
       color="red"
-      schX={14.9}
+      schX={6.9}
       schY={3.3}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin11" }}
@@ -148,7 +148,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED3"
       footprint="led0603"
       color="red"
-      schX={16}
+      schX={8}
       schY={4}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin9" }}
@@ -157,7 +157,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED2"
       footprint="led0603"
       color="red"
-      schX={16.9}
+      schX={8.9}
       schY={3.3}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin8" }}
@@ -166,7 +166,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED1"
       footprint="led0603"
       color="red"
-      schX={18}
+      schX={10}
       schY={4}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin7" }}
@@ -175,7 +175,7 @@ export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
       name="LED0"
       footprint="led0603"
       color="red"
-      schX={18.9}
+      schX={10.9}
       schY={3.3}
       schOrientation="vertical"
       connections={{ anode: "net.VIN_5V", cathode: "U3.pin6" }}

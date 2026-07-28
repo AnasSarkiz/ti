@@ -183,7 +183,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       capacitance="100uF"
       footprint="1210"
       schX={-0.91}
-      schY={9.38}
+      schY={7.8}
       connections={{ pin1: "net.VBAT_CC", pin2: "net.GND" }}
     />
     <capacitor
@@ -192,7 +192,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       capacitance="100uF"
       footprint="1210"
       schX={0.5}
-      schY={9.38}
+      schY={7.8}
       connections={{ pin1: "net.VBAT_CC", pin2: "net.GND" }}
     />
     <capacitor
@@ -201,7 +201,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       capacitance="4.7uF"
       footprint="0603"
       schX={-11.61}
-      schY={8.57}
+      schY={7}
       connections={{ pin1: "net.VBAT_CC", pin2: "net.GND" }}
     />
     <capacitor
@@ -210,7 +210,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       capacitance="4.7uF"
       footprint="0603"
       schX={-9.19}
-      schY={8.57}
+      schY={7}
       connections={{ pin1: "net.VBAT_CC", pin2: "net.GND" }}
     />
     <capacitor
@@ -219,7 +219,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       capacitance="0.6pF"
       footprint="0402"
       schX={-8.18}
-      schY={8.57}
+      schY={7}
       connections={{ pin1: "net.VBAT_CC", pin2: "net.GND" }}
     />
     <capacitor
@@ -228,7 +228,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       capacitance="4.7uF"
       footprint="0603"
       schX={-6.97}
-      schY={8.57}
+      schY={7}
       connections={{ pin1: "net.VBAT_CC", pin2: "net.GND" }}
     />
     <capacitor
@@ -237,7 +237,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       capacitance="0.5pF"
       footprint="0402"
       schX={-5.96}
-      schY={8.57}
+      schY={7}
       connections={{ pin1: "net.VBAT_CC", pin2: "net.GND" }}
     />
     <capacitor
@@ -246,7 +246,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       capacitance="0.1uF"
       footprint="0402"
       schX={-4.75}
-      schY={8.57}
+      schY={7}
       connections={{ pin1: "net.VBAT_CC", pin2: "net.GND" }}
     />
     <capacitor
@@ -255,7 +255,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       capacitance="0.1uF"
       footprint="0402"
       schX={-3.54}
-      schY={8.57}
+      schY={7}
       connections={{ pin1: "net.VBAT_CC", pin2: "net.GND" }}
     />
 
@@ -450,7 +450,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       resistance="100k"
       footprint="0402"
       schX={2.8}
-      schY={10.59}
+      schY={9}
       connections={{ pin1: "net.VBAT_CC", pin2: "net.CC_nRESET" }}
     />
     <capacitor
@@ -459,7 +459,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       capacitance="0.01uF"
       footprint="0402"
       schX={2.97}
-      schY={8.57}
+      schY={7}
       connections={{ pin1: "net.CC_nRESET", pin2: "net.GND" }}
     />
 
@@ -539,8 +539,8 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       frequency="32.768kHz"
       loadCapacitance="10pF"
       footprint="0402"
-      schX={13.61}
-      schY={-3.3}
+      schX={12.61}
+      schY={-2.8}
     />
     <trace name="RTCP_Y1" from=".U2 .RTC_XTAL_P" to=".Y1 .pin1" />
     <trace name="RTCN_Y1" from=".U2 .RTC_XTAL_N" to=".Y1 .pin2" />
@@ -549,7 +549,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       name="C27"
       capacitance="10pF"
       footprint="0402"
-      schX={14.88}
+      schX={13.88}
       schY={-4.14}
       connections={{ pin1: ".Y1 .pin1", pin2: "net.GND" }}
     />
@@ -558,7 +558,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       name="C26"
       capacitance="10pF"
       footprint="0402"
-      schX={12.86}
+      schX={11.86}
       schY={-4.14}
       connections={{ pin1: ".Y1 .pin2", pin2: "net.GND" }}
     />
@@ -569,8 +569,8 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       loadCapacitance="6.2pF"
       pinVariant="four_pin"
       footprint="qfn4"
-      schX={9.8}
-      schY={-4.9}
+      schX={8.8}
+      schY={-5.4}
     />
     <trace name="WLANP_Y2" from=".U2 .WLAN_XTAL_P" to=".Y2 .pin1" />
     <trace name="WLANN_Y2" from=".U2 .WLAN_XTAL_N" to=".Y2 .pin3" />
@@ -590,19 +590,19 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       name="C30"
       capacitance="6.2pF"
       footprint="0402"
-      schX={8.22}
+      schX={7.22}
       schY={-5.15}
       connections={{ pin1: ".Y2 .pin3", pin2: "net.GND" }}
     />
 
-    <pinheader name="J1" pinCount={3} schX={-11.8} schY={-8.65} />
+    <pinheader name="J1" pinCount={3} schX={-11.8} schY={-7.65} />
     <resistor
       schRotation={270}
       name="R6"
       resistance="270"
       footprint="0402"
       schX={-9.51}
-      schY={-6.4}
+      schY={-6}
       connections={{ pin1: "net.VBAT_CC", pin2: ".J1 .pin1" }}
     />
     <resistor
@@ -611,19 +611,19 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       resistance="100k"
       footprint="0402"
       schX={-10.32}
-      schY={-9.99}
+      schY={-8.99}
       connections={{ pin1: ".J1 .pin3", pin2: "net.GND" }}
     />
     <trace name="J1_SOP2" from=".J1 .pin2" to="net.SOP2" />
 
-    <pinheader name="J2" pinCount={3} schX={-9.7} schY={-8.65} />
+    <pinheader name="J2" pinCount={3} schX={-9.7} schY={-7.65} />
     <resistor
       schRotation={270}
       name="R7"
       resistance="69.8k"
       footprint="0402"
       schX={-8.3}
-      schY={-6.4}
+      schY={-6}
       connections={{ pin1: "net.VBAT_CC", pin2: ".J2 .pin1" }}
     />
     <resistor
@@ -632,19 +632,19 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       resistance="69.8k"
       footprint="0402"
       schX={-9.06}
-      schY={-9.99}
+      schY={-8.99}
       connections={{ pin1: ".J2 .pin3", pin2: "net.GND" }}
     />
     <trace name="J2_SOP0" from=".J2 .pin2" to="net.SOP0" />
 
-    <pinheader name="J3" pinCount={3} schX={-7.5} schY={-8.65} />
+    <pinheader name="J3" pinCount={3} schX={-7.5} schY={-7.65} />
     <resistor
       schRotation={270}
       name="R8"
       resistance="69.8k"
       footprint="0402"
       schX={-7.09}
-      schY={-6.4}
+      schY={-6}
       connections={{ pin1: "net.VBAT_CC", pin2: ".J3 .pin1" }}
     />
     <resistor
@@ -653,7 +653,7 @@ export const WirelessMCU_CC3235SF = (props: SubcircuitProps) => (
       resistance="69.8k"
       footprint="0402"
       schX={-7.85}
-      schY={-9.99}
+      schY={-8.99}
       connections={{ pin1: ".J3 .pin3", pin2: "net.GND" }}
     />
     <trace name="J3_SOP1" from=".J3 .pin2" to="net.SOP1" />
