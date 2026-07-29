@@ -3,21 +3,6 @@ import { CC2745R10 } from "../chips/CC2745R10.circuit.tsx";
 
 export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
   <subcircuit {...props}>
-    <schematictext
-      schX={0}
-      schY={11.4}
-      text="Wireless MCU RF"
-      fontSize={1.25}
-    />
-
-    <schematictext
-      schX={-20.3}
-      schY={6.2}
-      text="B1 is placeholder for ferrite bead"
-      fontSize={0.55}
-      anchor="left"
-    />
-
     <CC2745R10
       name="U1"
       schX={-1}
@@ -216,13 +201,6 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       }}
     />
 
-    <schematictext
-      schX={-7.2}
-      schY={-10}
-      text="Place L1 and C105 close to Pin 30"
-      fontSize={0.5}
-    />
-
     {/* 32.768 kHz crystal */}
     <crystal
       name="Y3"
@@ -286,7 +264,6 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
     {/* 48 MHz crystal */}
     <chip
       name="Y2"
-      footprint="qfn4"
       symbol={
         <symbol>
           {/* Reference designator: Y2 */}
@@ -557,7 +534,6 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
 
     <chip
       name="CR10"
-      footprint="sod882"
       symbol={
         <symbol>
           <port
@@ -628,7 +604,6 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
     <chip
       name="J7"
       displayName="RF TEST"
-      footprint="sma"
       symbol={
         <symbol>
           {/* Square connector body */}
@@ -687,6 +662,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
           <port
             name="pin3"
             schX={12.5}
+            pinNumber={3}
             schY={11.4}
             direction="left"
             schStemLength={0.8}
@@ -695,6 +671,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
             name="pin2"
             schX={12.5}
             schY={10.6}
+            pinNumber={2}
             direction="left"
             schStemLength={0.8}
           />
@@ -704,6 +681,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
             schY={9.4}
             direction="down"
             schStemLength={0.8}
+            pinNumber={1}
           />
 
           <port
@@ -712,6 +690,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
             schY={11.4}
             direction="right"
             schStemLength={0.8}
+            pinNumber={4}
           />
           <port
             name="pin5"
@@ -719,6 +698,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
             schY={10.6}
             direction="right"
             schStemLength={0.8}
+            pinNumber={5}
           />
         </symbol>
       }
@@ -764,7 +744,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       inductance="2.8nH"
       footprint="0402"
       schX={15.9}
-      schY={3.15}
+      schY={1.15}
       schOrientation="horizontal"
       connections={{
         pin1: "net.ANT_MATCH_IN",
@@ -777,7 +757,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       capacitance="0.4pF"
       footprint="0402"
       schX={14.55}
-      schY={1.6}
+      schY={-1.6}
       schOrientation="vertical"
       connections={{ pin1: "net.ANT_MATCH_IN", pin2: "net.GND" }}
     />
@@ -787,14 +767,13 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       capacitance="1.6pF"
       footprint="0402"
       schX={17.25}
-      schY={1.6}
+      schY={-1.6}
       schOrientation="vertical"
       connections={{ pin1: "net.ANT_MATCH_OUT", pin2: "net.GND" }}
     />
 
     <chip
       name="ANT1"
-      footprint="sot23"
       symbol={
         <symbol>
           <schematictext
@@ -836,26 +815,13 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
             strokeWidth={0.04}
           />
 
-          <schematictext text="2" schX={19.04} schY={3.33} fontSize={0.2} />
-
-          <schematictext text="1" schX={19.04} schY={2.63} fontSize={0.2} />
-
-          <schematictext text="3" schX={21.16} schY={3.33} fontSize={0.2} />
-
-          <schematictext
-            text="2.4GHz"
-            schX={20.1}
-            schY={2.1}
-            fontSize={0.22}
-            anchor="center"
-          />
-
           <port
             name="pin2"
             schX={19.0}
             schY={3.15}
             direction="left"
             schStemLength={0.4}
+            pinNumber={2}
           />
 
           <port
@@ -864,6 +830,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
             schY={2.45}
             direction="left"
             schStemLength={1.1}
+            pinNumber={1}
           />
 
           <port
@@ -872,37 +839,15 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
             schY={3.15}
             direction="right"
             schStemLength={0.4}
+            pinNumber={3}
           />
         </symbol>
       }
       connections={{
-        pin1: "net.ANT_MATCH_OUT",
         pin2: "net.GND",
+        pin1: "net.ANT_MATCH_OUT",
         pin3: "net.GND",
       }}
-    />
-
-    <schematictext
-      schX={15.9}
-      schY={-0.05}
-      text="Z60-Z62 for antenna matching"
-      fontSize={0.52}
-    />
-
-    <schematictext
-      schX={-18.3}
-      schY={-10.25}
-      text="BOM Generation notes:"
-      fontSize={0.5}
-      anchor="left"
-    />
-
-    <schematictext
-      schX={-18.3}
-      schY={-10.95}
-      text="CR10 = DNM"
-      fontSize={0.5}
-      anchor="left"
     />
   </subcircuit>
 );
