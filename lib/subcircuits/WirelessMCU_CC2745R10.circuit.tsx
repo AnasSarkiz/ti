@@ -58,7 +58,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="B1"
       resistance="10ohm"
       footprint="0402"
-      schX={-20.2}
+      schX={-12.2}
       schY={3.5}
       connections={{
         pin1: "net.WMCU_VDD",
@@ -70,7 +70,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C99"
       capacitance="100nF"
       footprint="0402"
-      schX={-18.8}
+      schX={-14}
       schY={1.5}
       schOrientation="vertical"
       connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
@@ -80,7 +80,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C101"
       capacitance="100nF"
       footprint="0402"
-      schX={-16.9}
+      schX={-12.5}
       schY={1.5}
       schOrientation="vertical"
       connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
@@ -90,7 +90,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C104"
       capacitance="10uF"
       footprint="0805"
-      schX={-15}
+      schX={-11}
       schY={1.5}
       schOrientation="vertical"
       connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
@@ -100,7 +100,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C103"
       capacitance="100nF"
       footprint="0402"
-      schX={-13.1}
+      schX={-9.5}
       schY={1.5}
       schOrientation="vertical"
       connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
@@ -110,7 +110,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C102"
       capacitance="100nF"
       footprint="0402"
-      schX={-11.2}
+      schX={-8}
       schY={1.5}
       schOrientation="vertical"
       connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
@@ -121,7 +121,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C9"
       capacitance="1uF"
       footprint="0402"
-      schX={-9.5}
+      schX={-6.5}
       schY={1.5}
       schOrientation="vertical"
       connections={{ pin1: "net.VDDD", pin2: "net.GND" }}
@@ -132,7 +132,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       capacitance="100nF"
       footprint="0402"
       schX={-7.4}
-      schY={0}
+      schY={-1.5}
       schOrientation="vertical"
       connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
     />
@@ -142,7 +142,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       capacitance="100nF"
       footprint="0402"
       schX={-6}
-      schY={0}
+      schY={-1.5}
       schOrientation="vertical"
       connections={{ pin1: "net.VDDS", pin2: "net.GND" }}
     />
@@ -183,7 +183,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       capacitance="10uF"
       footprint="0805"
       schX={-8.2}
-      schY={-5.4}
+      schY={-6.4}
       schOrientation="vertical"
       connections={{ pin1: "net.VDDR", pin2: "net.GND" }}
     />
@@ -193,7 +193,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       inductance="6.8uH"
       footprint="0805"
       schX={-6.2}
-      schY={-4.55}
+      schY={-5.55}
       schOrientation="horizontal"
       connections={{
         pin1: "C105.pin1",
@@ -207,8 +207,8 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       frequency="32.768kHz"
       loadCapacitance={0}
       footprint="0402"
-      schX={-13.1}
-      schY={-4.3}
+      schX={-11.6}
+      schY={-4}
       schOrientation="horizontal"
       connections={{
         pin1: "U1.pin26",
@@ -220,8 +220,8 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C81"
       capacitance="12pF"
       footprint="0402"
-      schX={-13.9}
-      schY={-4.75}
+      schX={-12.4}
+      schY={-4.45}
       schOrientation="vertical"
       connections={{ pin1: "R6.pin2", pin2: "net.GND" }}
     />
@@ -230,8 +230,8 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C91"
       capacitance="15pF"
       footprint="0402"
-      schX={-12.3}
-      schY={-4.75}
+      schX={-10.8}
+      schY={-4.45}
       schOrientation="vertical"
       connections={{ pin1: "net.X32N", pin2: "net.GND" }}
     />
@@ -241,7 +241,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       resistance="10ohm"
       footprint="0402"
       doNotPlace
-      schX={-16}
+      schX={-14.5}
       schY={-4.3}
       connections={{
         pin1: "net.DIO23",
@@ -254,8 +254,8 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       resistance="10ohm"
       footprint="0402"
       doNotPlace
-      schX={-10.2}
-      schY={-4.3}
+      schX={-9.2}
+      schY={-4}
       connections={{
         pin1: "net.X32N",
         pin2: "net.DIO24",
@@ -442,7 +442,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="R1"
       resistance="100k"
       footprint="0402"
-      schX={7.4}
+      schX={5.1}
       schY={1.5}
       schOrientation="vertical"
       connections={{
@@ -455,7 +455,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C92"
       capacitance="100nF"
       footprint="0402"
-      schX={7.4}
+      schX={5.1}
       schY={0.5}
       schOrientation="vertical"
       connections={{ pin2: "net.GND" }}
@@ -466,7 +466,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="L33"
       inductance="3.4nH"
       footprint="0402"
-      schX={5.1}
+      schX={3.1}
       schY={6.25}
       schOrientation="horizontal"
       connections={{
@@ -478,7 +478,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C33"
       capacitance="0.82pF"
       footprint="0402"
-      schX={3.5}
+      schX={2}
       schY={5}
       schOrientation="vertical"
       connections={{
@@ -491,7 +491,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="L34"
       inductance="1.1nH"
       footprint="0402"
-      schX={3.5}
+      schX={2}
       schY={3.3}
       schOrientation="vertical"
       connections={{
@@ -503,7 +503,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="C34"
       capacitance="1.2pF"
       footprint="0402"
-      schX={6.65}
+      schX={4.35}
       schY={4.95}
       schOrientation="vertical"
       connections={{ pin1: "net.RF_MATCH_1", pin2: "net.GND" }}
@@ -513,7 +513,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="R78"
       resistance="10ohm"
       footprint="0402"
-      schX={8.25}
+      schX={5.5}
       schY={6.25}
       connections={{
         pin1: "net.RF_MATCH_1",
@@ -526,7 +526,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       capacitance={5}
       footprint="0402"
       doNotPlace
-      schX={9.85}
+      schX={7.15}
       schY={5.5}
       schOrientation="vertical"
       connections={{ pin1: "net.RF_FEED", pin2: "net.GND" }}
@@ -539,7 +539,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
           <port
             name="pin2"
             pinNumber={2}
-            schX={11.35}
+            schX={8.35}
             schY={6.0}
             direction="up"
             schStemLength={0.63}
@@ -547,10 +547,10 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
 
           <schematicpath
             points={[
-              { x: 11.07, y: 5.37 },
-              { x: 11.63, y: 5.37 },
-              { x: 11.35, y: 5.02 },
-              { x: 11.07, y: 5.37 },
+              { x: 8.07, y: 5.37 },
+              { x: 8.63, y: 5.37 },
+              { x: 8.35, y: 5.02 },
+              { x: 8.07, y: 5.37 },
             ]}
             isFilled
             strokeWidth={0.025}
@@ -558,10 +558,10 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
 
           <schematicpath
             points={[
-              { x: 11.07, y: 4.53 },
-              { x: 11.63, y: 4.53 },
-              { x: 11.35, y: 4.88 },
-              { x: 11.07, y: 4.53 },
+              { x: 8.07, y: 4.53 },
+              { x: 8.63, y: 4.53 },
+              { x: 8.35, y: 4.88 },
+              { x: 8.07, y: 4.53 },
             ]}
             isFilled
             strokeWidth={0.025}
@@ -569,20 +569,20 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
 
           <schematicpath
             points={[
-              { x: 10.97, y: 4.71 },
-              { x: 11.13, y: 4.95 },
-              { x: 11.57, y: 5.02 },
-              { x: 11.73, y: 5.19 },
+              { x: 7.97, y: 4.71 },
+              { x: 8.13, y: 4.95 },
+              { x: 8.57, y: 5.02 },
+              { x: 8.73, y: 5.19 },
             ]}
             strokeWidth={0.025}
           />
 
           <schematicpath
             points={[
-              { x: 10.97, y: 4.71 },
-              { x: 11.13, y: 4.88 },
-              { x: 11.57, y: 4.95 },
-              { x: 11.73, y: 5.19 },
+              { x: 7.97, y: 4.71 },
+              { x: 8.13, y: 4.88 },
+              { x: 8.57, y: 4.95 },
+              { x: 8.73, y: 5.19 },
             ]}
             strokeWidth={0.025}
           />
@@ -590,7 +590,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
           <port
             name="pin1"
             pinNumber={1}
-            schX={11.35}
+            schX={8.35}
             schY={3.9}
             direction="down"
             schStemLength={0.63}
@@ -609,8 +609,8 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
           {/* Square connector body */}
 
           <schematicrect
-            schX={14.1}
-            schY={11}
+            schX={12.1}
+            schY={8}
             width={1.6}
             height={1.6}
             strokeWidth="0.04"
@@ -621,7 +621,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
           {/* Circular socket */}
 
           <schematiccircle
-            center={{ x: 14.1, y: 11 }}
+            center={{ x: 12.1, y: 8 }}
             radius={0.56}
             strokeWidth="0.04"
             color="#c77700"
@@ -629,7 +629,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
           />
 
           <schematiccircle
-            center={{ x: 14.1, y: 11 }}
+            center={{ x: 12.1, y: 8 }}
             radius={0.49}
             strokeWidth="0.04"
             color="#c77700"
@@ -639,7 +639,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
           {/* Center contact */}
 
           <schematiccircle
-            center={{ x: 14.1, y: 11 }}
+            center={{ x: 12.1, y: 8 }}
             radius={0.1}
             strokeWidth="0.04"
             color="#c77700"
@@ -649,10 +649,10 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
           {/* Small line inside center contact */}
 
           <schematicline
-            x1={14.1}
-            y1={11}
-            x2={14.1}
-            y2={10.2}
+            x1={12.1}
+            y1={8}
+            x2={12.1}
+            y2={7.2}
             strokeWidth="0.04"
             color="#c77700"
           />
@@ -661,24 +661,24 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
 
           <port
             name="pin3"
-            schX={12.5}
+            schX={10.5}
             pinNumber={3}
-            schY={11.4}
+            schY={8.4}
             direction="left"
             schStemLength={0.8}
           />
           <port
             name="pin2"
-            schX={12.5}
-            schY={10.6}
+            schX={10.5}
+            schY={7.6}
             pinNumber={2}
             direction="left"
             schStemLength={0.8}
           />
           <port
             name="pin1"
-            schX={14.1}
-            schY={9.4}
+            schX={12.1}
+            schY={6.4}
             direction="down"
             schStemLength={0.8}
             pinNumber={1}
@@ -686,16 +686,16 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
 
           <port
             name="pin4"
-            schX={15.7}
-            schY={11.4}
+            schX={13.7}
+            schY={8.4}
             direction="right"
             schStemLength={0.8}
             pinNumber={4}
           />
           <port
             name="pin5"
-            schX={15.7}
-            schY={10.6}
+            schX={13.7}
+            schY={7.6}
             direction="right"
             schStemLength={0.8}
             pinNumber={5}
@@ -716,8 +716,8 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       capacitance={5}
       footprint="0402"
       doNotPlace
-      schX={14.1}
-      schY={7.25}
+      schX={12.1}
+      schY={4.25}
       schOrientation="vertical"
       connections={{
         pin1: "net.RF_TEST",
@@ -730,8 +730,8 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="CA2"
       capacitance="15pF"
       footprint="0402"
-      schX={14.1}
-      schY={4.45}
+      schX={12.1}
+      schY={2.45}
       schOrientation="vertical"
       connections={{
         pin1: "net.RF_FEED",
@@ -743,8 +743,8 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="Z61"
       inductance="2.8nH"
       footprint="0402"
-      schX={15.9}
-      schY={1.15}
+      schX={13}
+      schY={0.15}
       schOrientation="horizontal"
       connections={{
         pin1: "net.ANT_MATCH_IN",
@@ -756,7 +756,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="Z62"
       capacitance="0.4pF"
       footprint="0402"
-      schX={14.55}
+      schX={12.1}
       schY={-1.6}
       schOrientation="vertical"
       connections={{ pin1: "net.ANT_MATCH_IN", pin2: "net.GND" }}
@@ -766,7 +766,7 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
       name="Z60"
       capacitance="1.6pF"
       footprint="0402"
-      schX={17.25}
+      schX={13.75}
       schY={-1.6}
       schOrientation="vertical"
       connections={{ pin1: "net.ANT_MATCH_OUT", pin2: "net.GND" }}
@@ -778,47 +778,47 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
         <symbol>
           <schematictext
             text="{NAME}"
-            schX={20.1}
-            schY={4.2}
+            schX={12.1}
+            schY={-4.2}
             fontSize={0.22}
             anchor="center"
           />
 
           <schematiccircle
-            center={{ x: 20.1, y: 3.15 }}
+            center={{ x: 12.1, y: -5.15 }}
             radius={0.7}
             isFilled={false}
             strokeWidth={0.04}
           />
 
           <schematicline
-            x1={20.1}
-            y1={2.45}
-            x2={20.1}
-            y2={3.67}
+            x1={12.1}
+            y1={-6.45}
+            x2={12.1}
+            y2={-5.67}
             strokeWidth={0.04}
           />
 
           <schematicline
-            x1={20.1}
-            y1={3.17}
-            x2={19.83}
-            y2={3.67}
+            x1={12.1}
+            y1={-5.17}
+            x2={11.83}
+            y2={-5.67}
             strokeWidth={0.04}
           />
 
           <schematicline
-            x1={20.1}
-            y1={3.17}
-            x2={20.37}
-            y2={3.67}
+            x1={12.1}
+            y1={-5.17}
+            x2={12.37}
+            y2={-5.67}
             strokeWidth={0.04}
           />
 
           <port
             name="pin2"
-            schX={19.0}
-            schY={3.15}
+            schX={11.0}
+            schY={-5.15}
             direction="left"
             schStemLength={0.4}
             pinNumber={2}
@@ -826,8 +826,8 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
 
           <port
             name="pin1"
-            schX={19.0}
-            schY={2.45}
+            schX={11.0}
+            schY={-6.45}
             direction="left"
             schStemLength={1.1}
             pinNumber={1}
@@ -835,8 +835,8 @@ export const WirelessMCU_CC2745R10 = (props: SubcircuitProps) => (
 
           <port
             name="pin3"
-            schX={21.2}
-            schY={3.15}
+            schX={13.2}
+            schY={-5.15}
             direction="right"
             schStemLength={0.4}
             pinNumber={3}
