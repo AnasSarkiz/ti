@@ -108,6 +108,7 @@ The package currently exports these subcircuit components:
 - `PowerMonitor_INA237`
 - `AudioAmplifier_TAS2505`
 - `TargetSocket_MSPTS430D8`
+- `BluetoothAudioHost_MSP430F5229`
 - `Microcontroller_MSPM0G3507`
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
@@ -148,6 +149,7 @@ chip is listed individually below, including whether it supports a
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
+| `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TAS2505` | `-` | `TAS2505` |
