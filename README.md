@@ -90,6 +90,8 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 
 The package currently exports these subcircuit components:
 
+- `BatteryManagement_BQ24072`
+- `BatteryManagement_BQ24073`
 - `BatteryManagement_BQ24074`
 - `BatteryManagement_BQ25895`
 - `BatteryManagement_BQ27441G1`

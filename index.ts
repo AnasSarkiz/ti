@@ -1,4 +1,6 @@
 import {
+  BQ24072,
+  BQ24073,
   BQ24074,
   BQ25895,
   BQ27441G1,
@@ -30,6 +32,8 @@ import {
   TXS0102,
   W25Q128JVSIQ,
 } from "./lib/chips/index";
+import { BatteryManagement_BQ24072 } from "./lib/subcircuits/BatteryManagement_BQ24072.circuit";
+import { BatteryManagement_BQ24073 } from "./lib/subcircuits/BatteryManagement_BQ24073.circuit";
 import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_BQ24074.circuit";
 import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit";
 import { BatteryManagement_BQ27441G1 } from "./lib/subcircuits/BatteryManagement_BQ27441G1.circuit";
@@ -66,6 +70,8 @@ import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128J
 export * from "./lib/chips/index.tsx";
 
 export {
+  BatteryManagement_BQ24072,
+  BatteryManagement_BQ24073,
   BatteryManagement_BQ24074,
   BatteryManagement_BQ25895,
   BatteryManagement_BQ27441G1,
@@ -99,6 +105,8 @@ export {
 };
 
 export const TiChipComponents = {
+  BQ24072,
+  BQ24073,
   BQ24074,
   BQ25895,
   BQ27441G1,
@@ -132,6 +140,8 @@ export const TiChipComponents = {
 } as const;
 
 export const TiSubcircuitComponents = {
+  BatteryManagement_BQ24072,
+  BatteryManagement_BQ24073,
   BatteryManagement_BQ24074,
   BatteryManagement_BQ25895,
   BatteryManagement_BQ27441G1,

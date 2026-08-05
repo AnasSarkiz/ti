@@ -1,3 +1,5 @@
+export { BQ24072 } from "./BQ24072.circuit.tsx";
+export { BQ24073 } from "./BQ24073.circuit.tsx";
 export { BQ24074 } from "./BQ24074.circuit.tsx";
 export { BQ25895 } from "./BQ25895.circuit.tsx";
 export { BQ27441G1 } from "./BQ27441G1.circuit.tsx";
@@ -28,6 +30,8 @@ export { TPSM82823 } from "./TPSM82823.circuit.tsx";
 export { TXB0104 } from "./TXB0104.circuit.tsx";
 export { TXS0102 } from "./TXS0102.circuit.tsx";
 
+export { BQ24072RGTR } from "./BQ24072RGTR.circuit.tsx";
+export { BQ24073RGTR } from "./BQ24073RGTR.circuit.tsx";
 export { BQ24074RGTR } from "./BQ24074RGTR.circuit.tsx";
 export { BQ25895RTWR } from "./BQ25895RTWR.circuit.tsx";
 export { BQ27441DRZR_G1B } from "./BQ27441DRZR_G1B.circuit.tsx";
