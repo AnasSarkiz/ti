@@ -28,6 +28,13 @@ export default () => (
 )
 ```
 
+## Complete Examples
+
+The [`BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx`](examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx)
+example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
+audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
+connected Bluetooth speaker schematic.
+
 ## Raw Chip Usage
 
 When you need the bare chip package instead of a full reference design, import

@@ -6,6 +6,9 @@
     "outDir": "dist",
     "rootDir": ".",
     "baseUrl": ".",
+    "paths": {
+      "@tsci/tscircuit.ti": ["./index.ts"]
+    },
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
