@@ -16,6 +16,7 @@ import {
   INA237,
   MSPM33C3x,
   MSPM0G3507,
+  TAS2505,
   TLC59116,
   TMP1827,
   TMP1075,
@@ -47,6 +48,7 @@ import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSens
 import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit";
 import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit";
 import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit";
+import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit";
 import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit";
 import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit";
 import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit";
@@ -85,6 +87,7 @@ export {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  AudioAmplifier_TAS2505,
   Microcontroller_MSPM0G3507,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
@@ -122,6 +125,7 @@ export const TiChipComponents = {
   INA237,
   MSPM33C3x,
   MSPM0G3507,
+  TAS2505,
   TLC59116,
   TMP1827,
   TMP1075,
@@ -155,6 +159,7 @@ export const TiSubcircuitComponents = {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  AudioAmplifier_TAS2505,
   Microcontroller_MSPM0G3507,
   Microcontroller_MSPM33C3x,
   LEDDriver_TLC59116,
