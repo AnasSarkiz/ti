@@ -20,6 +20,7 @@ import {
   MSPM0G3507,
   TAS2505,
   TLC59116,
+  TLV755P,
   TMP1827,
   TMP1075,
   TPS22919,
@@ -67,6 +68,7 @@ import {
 import { PowerManagement_TPS6521835 } from "./lib/subcircuits/PowerManagement_TPS6521835.circuit";
 import { BuckBoostConverter_TPS63802 } from "./lib/subcircuits/BuckBoostConverter_TPS63802.circuit";
 import { PowerManagement_TPS7A02 } from "./lib/subcircuits/PowerManagement_TPS7A02.circuit";
+import { PowerManagement_TLV755P } from "./lib/subcircuits/PowerManagement_TLV755P.circuit";
 import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.circuit";
 import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit";
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit";
@@ -106,6 +108,7 @@ export {
   PowerManagement_TPS6521835,
   BuckBoostConverter_TPS63802,
   PowerManagement_TPS7A02,
+  PowerManagement_TLV755P,
   PowerModule_TPSM82823,
   LevelShifter_TXB0104,
   LevelShifter_TXS0102,
@@ -135,6 +138,7 @@ export const TiChipComponents = {
   MSPM0G3507,
   TAS2505,
   TLC59116,
+  TLV755P,
   TMP1827,
   TMP1075,
   TPS22919,
@@ -181,6 +185,7 @@ export const TiSubcircuitComponents = {
   PowerManagement_TPS6521835,
   BuckBoostConverter_TPS63802,
   PowerManagement_TPS7A02,
+  PowerManagement_TLV755P,
   PowerModule_TPSM82823,
   LevelShifter_TXB0104,
   LevelShifter_TXS0102,

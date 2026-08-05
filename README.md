@@ -119,6 +119,7 @@ The package currently exports these subcircuit components:
 - `PowerManagement_TPS6521835`
 - `BuckBoostConverter_TPS63802`
 - `PowerManagement_TPS7A02`
+- `PowerManagement_TLV755P`
 - `PowerModule_TPSM82823`
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
@@ -147,6 +148,7 @@ chip is listed individually below, including whether it supports a
 | `INA237` | `vssop_10` | `INA237AQDGSRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
+| `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TAS2505` | `-` | `TAS2505` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
