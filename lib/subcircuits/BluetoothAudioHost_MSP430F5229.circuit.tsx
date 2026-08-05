@@ -201,10 +201,10 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
         pin5: "TMS",
         pin6: "NC6",
         pin7: "TCK",
-        pin8: "TEST/SBWTCK",
+        pin8: "TEST_SBWTCK",
         pin9: "GND",
         pin10: "NC10",
-        pin11: "nRST/SBWTDIO",
+        pin11: "nRST_SBWTDIO",
         pin12: "NC12",
       }}
       schPinArrangement={{

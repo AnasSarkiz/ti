@@ -239,17 +239,6 @@ export const BatteryManagement_BQ24074 = (props: SubcircuitProps) => (
       }}
     />
 
-    <schematicbox
-      schX={6.3}
-      schY={-0.15}
-      width={2.9}
-      height={6.3}
-      title="SYSTEM"
-      titleInside
-      titleAlignment="top_center"
-      titleFontSize={0.35}
-      strokeStyle="dashed"
-    />
     <trace from="U1.OUT" to="net.OUT" />
   </subcircuit>
 );
