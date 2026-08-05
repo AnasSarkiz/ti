@@ -6,6 +6,7 @@ import {
   BQ27441G1,
   BQ32002,
   CC2340R5,
+  CC2564C,
   CC2745R10,
   CC3235SF,
   DRV8833,
@@ -41,6 +42,7 @@ import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_B
 import { BatteryManagement_BQ27441G1 } from "./lib/subcircuits/BatteryManagement_BQ27441G1.circuit";
 import { RealTimeClock_BQ32002 } from "./lib/subcircuits/RealTimeClock_BQ32002.circuit";
 import { WirelessMCU_CC2340R5 } from "./lib/subcircuits/WirelessMCU_CC2340R5.circuit";
+import { BluetoothController_CC2564C } from "./lib/subcircuits/BluetoothController_CC2564C.circuit";
 import { WirelessMCU_CC2745R10 } from "./lib/subcircuits/WirelessMCU_CC2745R10.circuit";
 import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.circuit";
 import { MotorDriver_DRV8833 } from "./lib/subcircuits/MotorDriver_DRV8833.circuit";
@@ -81,6 +83,7 @@ export {
   BatteryManagement_BQ27441G1,
   RealTimeClock_BQ32002,
   WirelessMCU_CC2340R5,
+  BluetoothController_CC2564C,
   WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
   MotorDriver_DRV8833,
@@ -118,6 +121,7 @@ export const TiChipComponents = {
   BQ27441G1,
   BQ32002,
   CC2340R5,
+  CC2564C,
   CC2745R10,
   CC3235SF,
   DRV8833,
@@ -155,6 +159,7 @@ export const TiSubcircuitComponents = {
   BatteryManagement_BQ27441G1,
   RealTimeClock_BQ32002,
   WirelessMCU_CC2340R5,
+  BluetoothController_CC2564C,
   WirelessMCU_CC2745R10,
   WirelessMCU_CC3235SF,
   MotorDriver_DRV8833,

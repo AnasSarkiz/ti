@@ -97,6 +97,7 @@ The package currently exports these subcircuit components:
 - `BatteryManagement_BQ27441G1`
 - `RealTimeClock_BQ32002`
 - `WirelessMCU_CC2340R5`
+- `BluetoothController_CC2564C`
 - `WirelessMCU_CC2745R10`
 - `WirelessMCU_CC3235SF`
 - `MotorDriver_DRV8833`
@@ -135,6 +136,7 @@ chip is listed individually below, including whether it supports a
 | `BQ25895` | `wqfn_24_ep_4x4` | `BQ25895RTWR` |
 | `BQ27441G1` | `vson_12_ep_2p5x4` | `BQ27441DRZR_G1B` |
 | `CC2340R5` | `-` | `CC2340R5` |
+| `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
 | `DRV8833` | `-` | `DRV8833` |
