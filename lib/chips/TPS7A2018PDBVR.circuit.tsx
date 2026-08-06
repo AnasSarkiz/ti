@@ -14,7 +14,58 @@ export const TPS7A2018PDBVR = (props: ChipProps<typeof pinLabels>) => (
   <chip
     manufacturerPartNumber="TPS7A2018PDBVR"
     supplierPartNumbers={{ jlcpcb: ["C963430"] }}
-    footprint="sot23_5"
+    footprint={
+      <footprint>
+        <smtpad
+          portHints={["pin1"]}
+          pcbX="-0.94996mm"
+          pcbY="-1.147572mm"
+          width="0.532003mm"
+          height="1.0450068mm"
+          shape="rect"
+        />
+        <smtpad
+          portHints={["pin2"]}
+          pcbX="0mm"
+          pcbY="-1.147572mm"
+          width="0.532003mm"
+          height="1.0450068mm"
+          shape="rect"
+        />
+        <smtpad
+          portHints={["pin3"]}
+          pcbX="0.94996mm"
+          pcbY="-1.147572mm"
+          width="0.532003mm"
+          height="1.0450068mm"
+          shape="rect"
+        />
+        <smtpad
+          portHints={["pin4"]}
+          pcbX="0.94996mm"
+          pcbY="1.147572mm"
+          width="0.532003mm"
+          height="1.0450068mm"
+          shape="rect"
+        />
+        <smtpad
+          portHints={["pin5"]}
+          pcbX="-0.94996mm"
+          pcbY="1.147572mm"
+          width="0.532003mm"
+          height="1.0450068mm"
+          shape="rect"
+        />
+      </footprint>
+    }
+    cadModel={{
+      objUrl:
+        "https://modelcdn.tscircuit.com/easyeda_models/assets/C963430.obj?uuid=c7fdf6dae3ca4abaabd1bafd2d31350d",
+      stepUrl:
+        "https://modelcdn.tscircuit.com/easyeda_models/assets/C963430.step?uuid=c7fdf6dae3ca4abaabd1bafd2d31350d",
+      pcbRotationOffset: 90,
+      modelOriginPosition: { x: 0, y: 0.000012700000070253736, z: 0.050795 },
+    }}
     schWidth="1.5mm"
     schHeight="2.5mm"
     pinLabels={pinLabels}

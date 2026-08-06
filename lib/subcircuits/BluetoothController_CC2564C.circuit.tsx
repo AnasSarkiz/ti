@@ -42,7 +42,7 @@ const cc2564cNoConnectPins = [
  * electrically defined on the raw chip but are intentionally not drawn here.
  */
 export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled schMaxTraceDistance="8mm" {...props}>
+  <subcircuit schMaxTraceDistance="8mm" {...props}>
     <CC2564C
       name="U1A"
       schX={0}

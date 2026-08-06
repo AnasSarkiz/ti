@@ -6,7 +6,7 @@ devices, reusable TI reference subcircuits, and raw TI chip definitions.
 The published package is `@tsci/tscircuit.ti`. It provides ready-to-use
 subcircuit components and low-level chip components that can be imported into a
 local tscircuit project, placed on a board, and connected to from the
-surrounding circuit.
+surrounding circuit. 
 
 ## Installation
 

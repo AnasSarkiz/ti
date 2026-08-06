@@ -9,7 +9,6 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
     <MSP430F5229IRGCR
       name="U10"
       displayName=""
-      manufacturerPartNumber=""
       schX={-4.8}
       schY={0.2}
       connections={{
