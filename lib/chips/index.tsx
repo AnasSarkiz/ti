@@ -1,3 +1,4 @@
+export { AM62L32 } from "./AM62L32.circuit.tsx";
 export { BQ24072 } from "./BQ24072.circuit.tsx";
 export { BQ24073 } from "./BQ24073.circuit.tsx";
 export { BQ24074 } from "./BQ24074.circuit.tsx";
@@ -36,6 +37,7 @@ export { TPSM82823 } from "./TPSM82823.circuit.tsx";
 export { TXB0104 } from "./TXB0104.circuit.tsx";
 export { TXS0102 } from "./TXS0102.circuit.tsx";
 
+export { AM62L32BOGHAANBR } from "./AM62L32BOGHAANBR.circuit.tsx";
 export { BQ24072RGTR } from "./BQ24072RGTR.circuit.tsx";
 export { BQ24073RGTR } from "./BQ24073RGTR.circuit.tsx";
 export { BQ24074RGTR } from "./BQ24074RGTR.circuit.tsx";

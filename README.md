@@ -143,6 +143,7 @@ chip is listed individually below, including whether it supports a
 
 | Chip Export | `footprintVariant` | Underlying Component Export |
 | --- | --- | --- |
+| `AM62L32` | `fccsp_373_anb` | `AM62L32BOGHAANBR` |
 | `BQ24074` | `vqfn_16_ep_3x3` | `BQ24074RGTR` |
 | `BQ25895` | `wqfn_24_ep_4x4` | `BQ25895RTWR` |
 | `BQ27441G1` | `vson_12_ep_2p5x4` | `BQ27441DRZR_G1B` |
