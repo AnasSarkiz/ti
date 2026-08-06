@@ -203,7 +203,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
       name="C1"
       capacitance="22pF"
       footprint="0402"
-      schX={5.7}
+      schX={5.3}
       schY={8.5}
       schOrientation="horizontal"
       connections={{
@@ -214,8 +214,8 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     <chip
       name="FL1"
       manufacturerPartNumber="LFB212G45SG8C341"
-      schX={8.4}
-      schY={8.5}
+      schX={8}
+      schY={8.6}
       schWidth="1.5mm"
       schHeight="1.5mm"
       pinLabels={{ pin1: "GND", pin2: "OUT", pin3: "GND", pin4: "IN" }}
@@ -238,8 +238,8 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
       name="L1"
       inductance="33nH"
       footprint="0402"
-      schX={11.2}
-      schY={8.5}
+      schX={10.5}
+      schY={9}
       connections={{
         pin2: "net.ANT_FEED",
       }}
@@ -249,7 +249,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
       capacitance="0.5pF"
       footprint="0402"
       doNotPlace
-      schX={12.7}
+      schX={11.2}
       schY={6.8}
       schOrientation="vertical"
       connections={{
@@ -268,40 +268,46 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
         <symbol>
           <schematictext
             text="{NAME}"
-            schX={15}
+            schX={13.5}
             schY={9.5}
             fontSize={0.22}
             anchor="center"
           />
 
-          <schematicline x1={15} y1={8.2} x2={15} y2={8.8} strokeWidth={0.02} />
-
           <schematicline
-            x1={15}
-            y1={8.5}
-            x2={15.5}
-            y2={8.8}
-            strokeWidth={0.02}
-          />
-
-          <schematicline
-            x1={15}
-            y1={8.5}
-            x2={14.5}
-            y2={8.8}
-            strokeWidth={0.02}
-          />
-          <schematicline
-            x1={14.4}
+            x1={13.5}
             y1={8.2}
-            x2={15.6}
+            x2={13.5}
+            y2={8.8}
+            strokeWidth={0.02}
+          />
+
+          <schematicline
+            x1={13.5}
+            y1={8.5}
+            x2={14}
+            y2={8.8}
+            strokeWidth={0.02}
+          />
+
+          <schematicline
+            x1={13.5}
+            y1={8.5}
+            x2={13}
+            y2={8.8}
+            strokeWidth={0.02}
+          />
+          <schematicline
+            x1={12.9}
+            y1={8.2}
+            x2={14.1}
             y2={8.2}
             strokeWidth={0.02}
           />
 
           <port
             name="pin1"
-            schX={14.4}
+            schX={12.9}
             schY={7.4}
             direction="down"
             schStemLength={0.8}
@@ -310,7 +316,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
 
           <port
             name="pin2"
-            schX={15.6}
+            schX={14.1}
             schY={7.4}
             direction="down"
             schStemLength={0.8}
@@ -325,7 +331,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
       name="C3"
       capacitance="0.1uF"
       footprint="0402"
-      schX={6.2}
+      schX={5.7}
       schY={4.1}
       schOrientation="vertical"
       connections={{ pin1: "net.VDD_IO", pin2: "net.GND" }}
@@ -334,7 +340,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
       name="C4"
       capacitance="0.1uF"
       footprint="0402"
-      schX={7.8}
+      schX={7.3}
       schY={4.1}
       schOrientation="vertical"
       connections={{ pin1: "net.VDD_IO", pin2: "net.GND" }}
@@ -343,7 +349,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
       name="C5"
       capacitance="0.1uF"
       footprint="0402"
-      schX={9.4}
+      schX={8.9}
       schY={4.1}
       schOrientation="vertical"
       connections={{ pin1: "net.VDD_IO", pin2: "net.GND" }}
@@ -352,7 +358,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
       name="C6"
       capacitance="0.1uF"
       footprint="0402"
-      schX={11}
+      schX={10.5}
       schY={4.1}
       schOrientation="vertical"
       connections={{ pin1: "net.VDD_IO", pin2: "net.GND" }}
