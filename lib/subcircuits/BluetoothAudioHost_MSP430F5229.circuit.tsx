@@ -335,7 +335,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       name="J17"
       displayName="SMCLK"
       schX={-3.25}
-      schY={-8.4}
+      schY={-8}
       connections={{
         pin1: "U10.pin28",
       }}
@@ -354,7 +354,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       manufacturerPartNumber="SCAN-SWITCH"
       doNotPlace
       schX={-1.8}
-      schY={-7.7}
+      schY={-7}
       schWidth="1.5mm"
       schHeight="1.5mm"
       pinLabels={{
@@ -405,8 +405,8 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       name="R11"
       resistance="18k"
       footprint="0402"
-      schX={-4.8}
-      schY={-10.1}
+      schX={-5.7}
+      schY={-8.9}
       schOrientation="vertical"
       connections={{
         pin1: "net.SLOW_CLK_1V8_CC",
@@ -434,7 +434,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       color="yellow"
       footprint="led0603"
       schX={0.3}
-      schY={-10.0}
+      schY={-9.0}
       schOrientation="vertical"
       connections={{
         anode: "net.LED1_A",
@@ -461,7 +461,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       color="red"
       footprint="led0603"
       schX={2.3}
-      schY={-10.0}
+      schY={-9.0}
       schOrientation="vertical"
       connections={{
         anode: "net.LED2_A",
@@ -488,7 +488,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       color="green"
       footprint="led0603"
       schX={4.3}
-      schY={-10.0}
+      schY={-9.0}
       schOrientation="vertical"
       connections={{
         anode: "net.LED3_A",
@@ -570,7 +570,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       capacitance="10uF"
       footprint="0805"
       schX={-15.3}
-      schY={-9.4}
+      schY={-8.9}
       schOrientation="vertical"
       connections={{
         pin1: "net.DVIO_1V8_5229",
@@ -584,7 +584,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       maxVoltageRating="6.3V"
       footprint="0402"
       schX={-12.5}
-      schY={-9.4}
+      schY={-8.9}
       schOrientation="vertical"
       connections={{
         pin1: "net.VCC_5229",
@@ -598,7 +598,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
       maxVoltageRating="6.3V"
       footprint="0402"
       schX={-9.7}
-      schY={-9.4}
+      schY={-8.9}
       schOrientation="vertical"
       connections={{
         pin1: "net.VCORE",
