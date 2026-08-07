@@ -1,6 +1,6 @@
 import createEncryptedPspiceNgspiceEngine, {
   createCdnNgspiceSpiceEngine,
-} from "./lib/spice/create-encrypted-pspice-ngspice-engine";
+} from "./lib/spice/create-encrypted-pspice-ngspice-engine.ts";
 
 export default {
   mainEntrypoint: "index.ts",

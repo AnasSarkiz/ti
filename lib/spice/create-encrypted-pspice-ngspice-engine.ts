@@ -1,5 +1,5 @@
 import type { SpiceEngine } from "@tscircuit/props";
-import { decryptEncryptedPspiceModelsInSpice } from "./encrypted-pspice-model";
+import { decryptEncryptedPspiceModelsInSpice } from "./encrypted-pspice-model.ts";
 
 let ngspiceModulePromise: Promise<{
   default: () => Promise<SpiceEngine>;

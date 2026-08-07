@@ -1,5 +1,5 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { BQ24074RGTR } from "../chips/BQ24074RGTR.circuit";
+import { BQ24074RGTR } from "../chips/BQ24074RGTR.circuit.tsx";
 
 const ovpInputPinLabels = {
   pin1: ["OUT"],

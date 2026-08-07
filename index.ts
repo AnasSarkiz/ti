@@ -38,48 +38,48 @@ import {
   TXB0104,
   TXS0102,
   W25Q128JVSIQ,
-} from "./lib/chips/index";
-import { BatteryManagement_BQ24072 } from "./lib/subcircuits/BatteryManagement_BQ24072.circuit";
-import { BatteryManagement_BQ24073 } from "./lib/subcircuits/BatteryManagement_BQ24073.circuit";
-import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_BQ24074.circuit";
-import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit";
-import { BatteryManagement_BQ27441G1 } from "./lib/subcircuits/BatteryManagement_BQ27441G1.circuit";
-import { RealTimeClock_BQ32002 } from "./lib/subcircuits/RealTimeClock_BQ32002.circuit";
-import { WirelessMCU_CC2340R5 } from "./lib/subcircuits/WirelessMCU_CC2340R5.circuit";
-import { BluetoothController_CC2564C } from "./lib/subcircuits/BluetoothController_CC2564C.circuit";
-import { WirelessMCU_CC2745R10 } from "./lib/subcircuits/WirelessMCU_CC2745R10.circuit";
-import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.circuit";
-import { MotorDriver_DRV8833 } from "./lib/subcircuits/MotorDriver_DRV8833.circuit";
-import { MotorDriver_DRV8876 } from "./lib/subcircuits/MotorDriver_DRV8876.circuit";
-import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSensor_HDC2080.circuit";
-import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit";
-import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit";
-import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit";
-import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit";
-import { TargetSocket_MSPTS430D8 } from "./lib/subcircuits/TargetSocket_MSPTS430D8.circuit";
-import { BluetoothAudioHost_MSP430F5229 } from "./lib/subcircuits/BluetoothAudioHost_MSP430F5229.circuit";
-import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit";
-import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit";
-import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit";
-import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit";
-import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit";
-import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit";
-import { BuckConverter_TPS62933 } from "./lib/subcircuits/BuckConverter_TPS62933.circuit";
+} from "./lib/chips/index.tsx";
+import { BatteryManagement_BQ24072 } from "./lib/subcircuits/BatteryManagement_BQ24072.circuit.tsx";
+import { BatteryManagement_BQ24073 } from "./lib/subcircuits/BatteryManagement_BQ24073.circuit.tsx";
+import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_BQ24074.circuit.tsx";
+import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit.tsx";
+import { BatteryManagement_BQ27441G1 } from "./lib/subcircuits/BatteryManagement_BQ27441G1.circuit.tsx";
+import { RealTimeClock_BQ32002 } from "./lib/subcircuits/RealTimeClock_BQ32002.circuit.tsx";
+import { WirelessMCU_CC2340R5 } from "./lib/subcircuits/WirelessMCU_CC2340R5.circuit.tsx";
+import { BluetoothController_CC2564C } from "./lib/subcircuits/BluetoothController_CC2564C.circuit.tsx";
+import { WirelessMCU_CC2745R10 } from "./lib/subcircuits/WirelessMCU_CC2745R10.circuit.tsx";
+import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.circuit.tsx";
+import { MotorDriver_DRV8833 } from "./lib/subcircuits/MotorDriver_DRV8833.circuit.tsx";
+import { MotorDriver_DRV8876 } from "./lib/subcircuits/MotorDriver_DRV8876.circuit.tsx";
+import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSensor_HDC2080.circuit.tsx";
+import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit.tsx";
+import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit.tsx";
+import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit.tsx";
+import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit.tsx";
+import { TargetSocket_MSPTS430D8 } from "./lib/subcircuits/TargetSocket_MSPTS430D8.circuit.tsx";
+import { BluetoothAudioHost_MSP430F5229 } from "./lib/subcircuits/BluetoothAudioHost_MSP430F5229.circuit.tsx";
+import { Microcontroller_MSPM0G3507 } from "./lib/subcircuits/Microcontroller_MSPM0G3507.circuit.tsx";
+import { Microcontroller_MSPM33C3x } from "./lib/subcircuits/Microcontroller_MSPM33C3x.circuit.tsx";
+import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit.tsx";
+import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit.tsx";
+import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit.tsx";
+import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit.tsx";
+import { BuckConverter_TPS62933 } from "./lib/subcircuits/BuckConverter_TPS62933.circuit.tsx";
 import {
   BoostConverter_TPS61299X,
   TPS61299XBoostConverter,
-} from "./lib/subcircuits/BoostConverter_TPS61299X.circuit";
-import { PowerManagement_TPS6521835 } from "./lib/subcircuits/PowerManagement_TPS6521835.circuit";
-import { BuckBoostConverter_TPS63802 } from "./lib/subcircuits/BuckBoostConverter_TPS63802.circuit";
-import { PowerManagement_TPS7A02 } from "./lib/subcircuits/PowerManagement_TPS7A02.circuit";
-import { PowerManagement_TPS7A20 } from "./lib/subcircuits/PowerManagement_TPS7A20.circuit";
-import { PowerManagement_TPS7A2018 } from "./lib/subcircuits/PowerManagement_TPS7A2018.circuit";
-import { PowerManagement_TLV755P } from "./lib/subcircuits/PowerManagement_TLV755P.circuit";
-import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.circuit";
-import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit";
-import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit";
-import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit";
-import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit";
+} from "./lib/subcircuits/BoostConverter_TPS61299X.circuit.tsx";
+import { PowerManagement_TPS6521835 } from "./lib/subcircuits/PowerManagement_TPS6521835.circuit.tsx";
+import { BuckBoostConverter_TPS63802 } from "./lib/subcircuits/BuckBoostConverter_TPS63802.circuit.tsx";
+import { PowerManagement_TPS7A02 } from "./lib/subcircuits/PowerManagement_TPS7A02.circuit.tsx";
+import { PowerManagement_TPS7A20 } from "./lib/subcircuits/PowerManagement_TPS7A20.circuit.tsx";
+import { PowerManagement_TPS7A2018 } from "./lib/subcircuits/PowerManagement_TPS7A2018.circuit.tsx";
+import { PowerManagement_TLV755P } from "./lib/subcircuits/PowerManagement_TLV755P.circuit.tsx";
+import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.circuit.tsx";
+import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit.tsx";
+import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit.tsx";
+import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
+import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 

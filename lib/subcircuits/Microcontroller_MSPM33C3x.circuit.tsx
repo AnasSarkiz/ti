@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { MSPM33C3x } from "../chips/MSPM33C3x.circuit";
+import { MSPM33C3x } from "../chips/MSPM33C3x.circuit.tsx";
 
 export const Microcontroller_MSPM33C3x = (props: SubcircuitProps) => (
   <subcircuit {...props}>

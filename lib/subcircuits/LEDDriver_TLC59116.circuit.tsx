@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { TLC59116 } from "../chips/TLC59116.circuit";
+import { TLC59116 } from "../chips/TLC59116.circuit.tsx";
 
 export const LEDDriver_TLC59116 = (props: SubcircuitProps) => (
   <subcircuit {...props}>

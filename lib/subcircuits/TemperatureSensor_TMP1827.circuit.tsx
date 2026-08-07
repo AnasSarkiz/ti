@@ -1,6 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { TMP1827 } from "../chips/TMP1827.circuit";
+import { TMP1827 } from "../chips/TMP1827.circuit.tsx";
 
 export const TemperatureSensor_TMP1827 = (props: SubcircuitProps) => (
   <subcircuit {...props}>

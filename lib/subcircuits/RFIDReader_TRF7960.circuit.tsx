@@ -1,10 +1,10 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-import { CoaxialTestPort } from "../chips/CoaxialTestPort.circuit";
-import { Header2x10 } from "../chips/Header2x10.circuit";
-import { OscillatorCrystal4 } from "../chips/OscillatorCrystal4.circuit";
-import { TPS61222 } from "../chips/TPS61222.circuit";
-import { TRF7960RHB } from "../chips/TRF7960RHB.circuit";
+import { CoaxialTestPort } from "../chips/CoaxialTestPort.circuit.tsx";
+import { Header2x10 } from "../chips/Header2x10.circuit.tsx";
+import { OscillatorCrystal4 } from "../chips/OscillatorCrystal4.circuit.tsx";
+import { TPS61222 } from "../chips/TPS61222.circuit.tsx";
+import { TRF7960RHB } from "../chips/TRF7960RHB.circuit.tsx";
 
 export const RFIDReader_TRF7960 = (props: SubcircuitProps) => (
   <subcircuit {...props}>

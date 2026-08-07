@@ -3,7 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import {
   encryptPspiceModelSource,
   toEncryptedPspiceModelSpiceSource,
-} from "../lib/spice/encrypted-pspice-model";
+} from "../lib/spice/encrypted-pspice-model.ts";
 
 const sourceModelPath = "lib/chips/spice-models/BQ24074-spice-model.json";
 const encryptedModelPath =
