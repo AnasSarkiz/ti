@@ -102,6 +102,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     {/* 32.768 kHz slow-clock oscillator */}
     <chip
       name="Y1"
+      footprint="kicad:Oscillator/Oscillator_SMD_Abracon_ASV-4Pin_7.0x5.1mm"
       manufacturerPartNumber="ASH7K-32.768KHZ-T"
       schX={-10.8}
       schY={3.7}
@@ -153,6 +154,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     {/* 26 MHz fast-clock crystal */}
     <crystal
       name="Y2"
+      footprint="kicad:Crystal/Crystal_SMD_2016-4Pin_2.0x1.6mm"
       manufacturerPartNumber="NX2016SA-26.000M-STD-CZS-246"
       frequency="26MHz"
       loadCapacitance="8pF"
@@ -193,6 +195,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     />
     <testpoint
       name="TP1"
+      footprint="kicad:TestPoint/TestPoint_Plated_Hole_D1.0mm"
       schX={-5.2}
       schY={-2.05}
       connections={{ pin1: "net.TX_DBG" }}
@@ -213,6 +216,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     />
     <chip
       name="FL1"
+      footprint="kicad:Package_LGA/LGA-4_2x1.25mm_P0.65mm"
       manufacturerPartNumber="LFB212G45SG8C341"
       schX={8}
       schY={8.6}
@@ -259,6 +263,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     />
     <chip
       name="ANT1"
+      footprint="kicad:RF_Antenna/Texas_SWRA117D_2.4GHz_Left"
       manufacturerPartNumber="IIFA_CC2420"
       connections={{
         pin1: "net.ANT_FEED",
