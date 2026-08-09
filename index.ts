@@ -74,6 +74,7 @@ import { BuckBoostConverter_TPS63802 } from "./lib/subcircuits/BuckBoostConverte
 import { PowerManagement_TPS7A02 } from "./lib/subcircuits/PowerManagement_TPS7A02.circuit.tsx";
 import { PowerManagement_TPS7A20 } from "./lib/subcircuits/PowerManagement_TPS7A20.circuit.tsx";
 import { PowerManagement_TPS7A2018 } from "./lib/subcircuits/PowerManagement_TPS7A2018.circuit.tsx";
+import { PowerManagement_TPS7A2028 } from "./lib/subcircuits/PowerManagement_TPS7A2028.circuit.tsx";
 import { PowerManagement_TLV755P } from "./lib/subcircuits/PowerManagement_TLV755P.circuit.tsx";
 import { PowerModule_TPSM82823 } from "./lib/subcircuits/PowerModule_TPSM82823.circuit.tsx";
 import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.circuit.tsx";
@@ -117,6 +118,7 @@ export {
   PowerManagement_TPS7A02,
   PowerManagement_TPS7A20,
   PowerManagement_TPS7A2018,
+  PowerManagement_TPS7A2028,
   PowerManagement_TLV755P,
   PowerModule_TPSM82823,
   LevelShifter_TXB0104,
@@ -200,6 +202,7 @@ export const TiSubcircuitComponents = {
   PowerManagement_TPS7A02,
   PowerManagement_TPS7A20,
   PowerManagement_TPS7A2018,
+  PowerManagement_TPS7A2028,
   PowerManagement_TLV755P,
   PowerModule_TPSM82823,
   LevelShifter_TXB0104,

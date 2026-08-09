@@ -57,6 +57,7 @@ export { TPS61299DRLR } from "./TPS61299DRLR.circuit.tsx";
 export { TPS63802DLAR } from "./TPS63802DLAR.circuit.tsx";
 export { TPS7A0230PDBVR } from "./TPS7A0230PDBVR.circuit.tsx";
 export { TPS7A2018PDBVR } from "./TPS7A2018PDBVR.circuit.tsx";
+export { TPS7A2028PDBVR } from "./TPS7A2028PDBVR.circuit.tsx";
 export { TPS7A2033PDBVR } from "./TPS7A2033PDBVR.circuit.tsx";
 export { TLV75533PDBVR } from "./TLV75533PDBVR.circuit.tsx";
 export { TXB0104RGYR } from "./TXB0104RGYR.circuit.tsx";
