@@ -14,50 +14,7 @@ export const TPS7A2018PDBVR = (props: ChipProps<typeof pinLabels>) => (
   <chip
     manufacturerPartNumber="TPS7A2018PDBVR"
     supplierPartNumbers={{ jlcpcb: ["C963430"] }}
-    footprint={
-      <footprint>
-        <smtpad
-          portHints={["pin1"]}
-          pcbX="-0.94996mm"
-          pcbY="-1.147572mm"
-          width="0.532003mm"
-          height="1.0450068mm"
-          shape="rect"
-        />
-        <smtpad
-          portHints={["pin2"]}
-          pcbX="0mm"
-          pcbY="-1.147572mm"
-          width="0.532003mm"
-          height="1.0450068mm"
-          shape="rect"
-        />
-        <smtpad
-          portHints={["pin3"]}
-          pcbX="0.94996mm"
-          pcbY="-1.147572mm"
-          width="0.532003mm"
-          height="1.0450068mm"
-          shape="rect"
-        />
-        <smtpad
-          portHints={["pin4"]}
-          pcbX="0.94996mm"
-          pcbY="1.147572mm"
-          width="0.532003mm"
-          height="1.0450068mm"
-          shape="rect"
-        />
-        <smtpad
-          portHints={["pin5"]}
-          pcbX="-0.94996mm"
-          pcbY="1.147572mm"
-          width="0.532003mm"
-          height="1.0450068mm"
-          shape="rect"
-        />
-      </footprint>
-    }
+    footprint="sot25_w2.3mm_pw0.53mm_pl1.05mm_pin1location(leftside,bottom)"
     cadModel={{
       objUrl:
         "https://modelcdn.tscircuit.com/easyeda_models/assets/C963430.obj?uuid=c7fdf6dae3ca4abaabd1bafd2d31350d",

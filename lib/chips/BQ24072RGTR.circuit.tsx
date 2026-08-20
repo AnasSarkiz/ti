@@ -30,7 +30,7 @@ export const BQ24072RGTR = (
     supplierPartNumbers={{
       jlcpcb: ["C140288"],
     }}
-    footprint="qfn16_w3_h3_p0.5mm_thermalpad"
+    footprint="qfn16_thermalpad1.6mmx1.6mm_pillpads_pw0.28mm_pl0.8mm"
     schWidth="3.4mm"
     schHeight="5.2mm"
     schPinArrangement={{

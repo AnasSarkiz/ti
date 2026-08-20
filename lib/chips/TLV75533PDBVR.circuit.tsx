@@ -14,7 +14,7 @@ export const TLV75533PDBVR = (props: ChipProps<typeof pinLabels>) => (
   <chip
     manufacturerPartNumber="TLV75533PDBVR"
     supplierPartNumbers={{ jlcpcb: ["C404027"] }}
-    footprint="sot23_5"
+    footprint="sot25_w2.6mm_pl1.1mm_pin1location(rightside,bottom)"
     schWidth="3mm"
     schHeight="3mm"
     pinLabels={pinLabels}

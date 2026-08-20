@@ -28,7 +28,7 @@ export const TemperatureSensor_TMP1827 = (props: SubcircuitProps) => (
       pcbY={0}
       schX={2}
       schY={0}
-      noConnect={["ADDR", "IO3", "IO0", "IO1", "IO2_ALERT", "EP"]}
+      noConnect={["ADDR", "IO3", "IO0", "IO1", "IO2_ALERT"]}
     />
 
     <TMP1827
@@ -37,7 +37,7 @@ export const TemperatureSensor_TMP1827 = (props: SubcircuitProps) => (
       pcbY={0}
       schX={6}
       schY={0}
-      noConnect={["ADDR", "IO3", "IO0", "IO1", "IO2_ALERT", "EP"]}
+      noConnect={["ADDR", "IO3", "IO0", "IO1", "IO2_ALERT"]}
     />
     <trace
       name="vdd_pullup_to_u2"
