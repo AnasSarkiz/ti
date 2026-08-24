@@ -78,7 +78,7 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
     <SN65HVD1473DGSR
       name="U2"
       schX={-1.5}
-      schY={0}
+      schY={-0.4}
       pcbX={-3.662}
       pcbY={-0.272}
       layer="bottom"
@@ -88,8 +88,14 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
         pin7: "net.D_N",
         pin8: "net.R_N",
         pin9: "net.R_P",
-        pin10: "net.VOUT",
       }}
+    />
+    <netlabel
+      net="VOUT"
+      connectsTo=".U2 > .pin10"
+      schX={-1.5}
+      schY={1.25}
+      anchorSide="bottom"
     />
 
     {/* Primary-side supply bypassing. */}
@@ -184,7 +190,7 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       resistance="0ohm"
       tolerance="5%"
       footprint="0201"
-      schX={-5.1}
+      schX={-4.8}
       schY={-3}
       schOrientation="vertical"
       pcbX={0.417}
@@ -289,7 +295,7 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
         leftSide: { direction: "top-to-bottom", pins: [1, 2] },
         bottomSide: { direction: "left-to-right", pins: [3] },
       }}
-      schX={7.1}
+      schX={7.3}
       schY={1.8}
       pcbX={6.941}
       pcbY={2.366}
@@ -317,7 +323,7 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
         leftSide: { direction: "top-to-bottom", pins: [1, 2] },
         bottomSide: { direction: "left-to-right", pins: [3] },
       }}
-      schX={7.5}
+      schX={7.3}
       schY={-1.8}
       pcbX={6.941}
       pcbY={-2.028}
@@ -351,13 +357,19 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       pcbY={0}
       pcbRotation={270}
       connections={{
-        pin1: "net.VOUT",
         pin2: "net.D_O_P",
         pin3: "net.D_O_N",
         pin4: "net.R_I_N",
         pin5: "net.R_I_P",
         pin6: "net.GND2",
       }}
+    />
+    <netlabel
+      net="VOUT"
+      connectsTo=".J2 > .pin1"
+      schX={9.5}
+      schY={0.5}
+      anchorSide="right"
     />
 
     {/* High-voltage capacitive coupling to the chassis/reference plane. */}
