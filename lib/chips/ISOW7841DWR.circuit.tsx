@@ -26,8 +26,8 @@ export const ISOW7841DWR = (props: ChipProps<typeof pinLabels>) => (
     manufacturerPartNumber="ISOW7841DWR"
     datasheetUrl="https://www.ti.com/lit/ds/symlink/isow7841.pdf"
     footprint="soic16_p1.27mm_w11.4mm_pw0.6mm_pl1.9mm_pillpads"
-    schWidth="5.5mm"
-    schHeight="9mm"
+    schWidth="3.4mm"
+    schHeight="2.4mm"
     pinLabels={pinLabels}
     schPinArrangement={{
       leftSide: {

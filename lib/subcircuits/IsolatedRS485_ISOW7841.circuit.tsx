@@ -32,7 +32,7 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       pinLabels={["VIN", "INA", "INB", "INC", "OUTD", "GND1"]}
       showSilkscreenPinLabels
       schFacingDirection="right"
-      schX={-17}
+      schX={-14.5}
       schY={0}
       pcbX={-15.5}
       pcbY={0}
@@ -42,7 +42,7 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
 
     <ISOW7841DWR
       name="U1"
-      schX={-9}
+      schX={-8.5}
       schY={0}
       pcbX={-6.659}
       pcbY={0.109}
@@ -77,7 +77,7 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
 
     <SN65HVD1473DGSR
       name="U2"
-      schX={0}
+      schX={-1.5}
       schY={0}
       pcbX={-3.662}
       pcbY={-0.272}
@@ -98,8 +98,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       capacitance="10uF"
       maxVoltageRating="35V"
       footprint="0805"
-      schX={-13}
-      schY={6.5}
+      schX={-10.5}
+      schY={3.4}
       schOrientation="vertical"
       pcbX={-11.815}
       pcbY={2.788}
@@ -112,8 +112,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       capacitance="0.1uF"
       maxVoltageRating="25V"
       footprint="0402"
-      schX={-11.5}
-      schY={6.5}
+      schX={-9.3}
+      schY={3.4}
       schOrientation="vertical"
       pcbX={-13.2}
       pcbY={5.5}
@@ -128,7 +128,7 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       maxVoltageRating="35V"
       footprint="0805"
       schX={-5}
-      schY={6.5}
+      schY={3.4}
       schOrientation="vertical"
       pcbX={-1.909}
       pcbY={3.538}
@@ -141,8 +141,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       capacitance="0.1uF"
       maxVoltageRating="25V"
       footprint="0402"
-      schX={-3.5}
-      schY={6.5}
+      schX={-3.7}
+      schY={3.4}
       schOrientation="vertical"
       pcbX={-4.212}
       pcbY={3.954}
@@ -155,8 +155,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       capacitance="0.01uF"
       maxVoltageRating="50V"
       footprint="0603"
-      schX={-2}
-      schY={6.5}
+      schX={-2.4}
+      schY={3.4}
       schOrientation="vertical"
       pcbX={-4.5}
       pcbY={-5.8}
@@ -172,8 +172,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       tolerance="5%"
       footprint="0201"
       doNotPlace
-      schX={-6.6}
-      schY={-6}
+      schX={-6.5}
+      schY={-3}
       schOrientation="vertical"
       pcbX={0.417}
       pcbY={-3.891}
@@ -184,8 +184,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       resistance="0ohm"
       tolerance="5%"
       footprint="0201"
-      schX={-4.8}
-      schY={-6}
+      schX={-5.1}
+      schY={-3}
       schOrientation="vertical"
       pcbX={0.417}
       pcbY={-5.052}
@@ -198,8 +198,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       resistance="120ohm"
       tolerance="1%"
       footprint="0805"
-      schX={4.4}
-      schY={2.2}
+      schX={2.3}
+      schY={1.8}
       schOrientation="vertical"
       pcbX={1.637}
       pcbY={1.985}
@@ -212,8 +212,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       resistance="10ohm"
       tolerance="5%"
       footprint="0603"
-      schX={7}
-      schY={2.8}
+      schX={4.8}
+      schY={2.2}
       pcbX={4.771}
       pcbY={3.106}
       layer="bottom"
@@ -224,8 +224,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       resistance="10ohm"
       tolerance="5%"
       footprint="0603"
-      schX={7}
-      schY={1.6}
+      schX={4.8}
+      schY={1.4}
       pcbX={4.941}
       pcbY={1.166}
       layer="bottom"
@@ -238,8 +238,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       resistance="120ohm"
       tolerance="1%"
       footprint="0805"
-      schX={4.4}
-      schY={-2.2}
+      schX={2.3}
+      schY={-1.8}
       schOrientation="vertical"
       pcbX={2.145}
       pcbY={-2.028}
@@ -252,8 +252,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       resistance="10ohm"
       tolerance="5%"
       footprint="0603"
-      schX={7}
-      schY={-1.6}
+      schX={4.8}
+      schY={-1.4}
       pcbX={4.941}
       pcbY={-1.21}
       layer="bottom"
@@ -264,8 +264,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       resistance="10ohm"
       tolerance="5%"
       footprint="0603"
-      schX={7}
-      schY={-2.8}
+      schX={4.8}
+      schY={-2.2}
       pcbX={4.941}
       pcbY={-2.847}
       layer="bottom"
@@ -283,14 +283,14 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       datasheetUrl="https://www.bourns.com/docs/product-datasheets/cdsot23-sm712.pdf"
       footprint="sot23"
       pinLabels={tvsPinLabels}
-      schWidth="2.5mm"
-      schHeight="2.2mm"
+      schWidth="1.4mm"
+      schHeight="1mm"
       schPinArrangement={{
         leftSide: { direction: "top-to-bottom", pins: [1, 2] },
         bottomSide: { direction: "left-to-right", pins: [3] },
       }}
-      schX={10.3}
-      schY={2.2}
+      schX={7.1}
+      schY={1.8}
       pcbX={6.941}
       pcbY={2.366}
       pcbRotation={180}
@@ -311,14 +311,14 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       datasheetUrl="https://www.bourns.com/docs/product-datasheets/cdsot23-sm712.pdf"
       footprint="sot23"
       pinLabels={tvsPinLabels}
-      schWidth="2.5mm"
-      schHeight="2.2mm"
+      schWidth="1.4mm"
+      schHeight="1mm"
       schPinArrangement={{
         leftSide: { direction: "top-to-bottom", pins: [1, 2] },
         bottomSide: { direction: "left-to-right", pins: [3] },
       }}
-      schX={10.3}
-      schY={-2.2}
+      schX={7.5}
+      schY={-1.8}
       pcbX={6.941}
       pcbY={-2.028}
       connections={{
@@ -345,7 +345,7 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       pinLabels={["VOUT", "Y", "Z", "B", "A", "GND2"]}
       showSilkscreenPinLabels
       schFacingDirection="left"
-      schX={15}
+      schX={11}
       schY={0}
       pcbX={13.972}
       pcbY={0}
@@ -366,8 +366,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       capacitance="4700pF"
       maxVoltageRating="2kV"
       footprint="1210"
-      schX={6.5}
-      schY={-6.2}
+      schX={5.5}
+      schY={-3.8}
       schOrientation="vertical"
       pcbX={10.5}
       pcbY={5.2}
@@ -378,8 +378,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       capacitance="4700pF"
       maxVoltageRating="2kV"
       footprint="1210"
-      schX={8.5}
-      schY={-6.2}
+      schX={6.9}
+      schY={-3.8}
       schOrientation="vertical"
       pcbX={10.226}
       pcbY={-4.113}
@@ -397,8 +397,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       padShape="rect"
       width="3.8mm"
       height="2.03mm"
-      schX={11}
-      schY={-6.2}
+      schX={8.7}
+      schY={-3.8}
       pcbX={10.227}
       pcbY={0.001}
       pcbRotation={180}

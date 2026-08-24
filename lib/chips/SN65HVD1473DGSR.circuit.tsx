@@ -21,8 +21,8 @@ export const SN65HVD1473DGSR = (props: ChipProps<typeof pinLabels>) => (
     supplierPartNumbers={{ jlcpcb: ["C2863381"] }}
     datasheetUrl="https://www.ti.com/lit/ds/symlink/sn65hvd1473.pdf"
     footprint="soic10_p0.5mm_w5.8mm_pw0.3mm_pl1.35mm_pillpads"
-    schWidth="4mm"
-    schHeight="6mm"
+    schWidth="2.4mm"
+    schHeight="1.8mm"
     pinLabels={pinLabels}
     schPinArrangement={{
       leftSide: {
