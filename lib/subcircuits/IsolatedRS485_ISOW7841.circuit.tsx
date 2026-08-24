@@ -14,7 +14,7 @@ const tvsPinLabels = {
  * TIDA-00892: https://www.ti.com/tool/TIDA-00892
  */
 export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
-  <subcircuit schMaxTraceDistance="35mm" autorouterEffortLevel="10x" {...props}>
+  <subcircuit schMaxTraceDistance="7mm" autorouterEffortLevel="10x" {...props}>
     <pinheader
       name="J1"
       displayName="HOST"
@@ -87,14 +87,8 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
         pin7: "net.D_N",
         pin8: "net.R_N",
         pin9: "net.R_P",
+        pin10: "net.VOUT",
       }}
-    />
-    <netlabel
-      net="VOUT"
-      connectsTo=".U2 > .pin10"
-      schX={-1.5}
-      schY={1.25}
-      anchorSide="bottom"
     />
     <trace
       from=".U1 > .pin13"
@@ -365,19 +359,13 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       pcbY={0}
       pcbRotation={270}
       connections={{
+        pin1: "net.VOUT",
         pin2: "net.D_O_P",
         pin3: "net.D_O_N",
         pin4: "net.R_I_N",
         pin5: "net.R_I_P",
         pin6: "net.GND2",
       }}
-    />
-    <netlabel
-      net="VOUT"
-      connectsTo=".J2 > .pin1"
-      schX={9.5}
-      schY={0.5}
-      anchorSide="right"
     />
 
     {/* High-voltage capacitive coupling to the chassis/reference plane. */}
