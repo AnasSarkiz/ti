@@ -58,7 +58,6 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
         pin10: "net.SEL",
         pin11: "U2.pin1",
         pin12: "U2.pin2",
-        pin13: "U2.pin3",
         pin14: "U2.pin4",
         pin15: "net.GND2",
         pin16: "net.VOUT",
@@ -96,6 +95,15 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       schX={-1.5}
       schY={1.25}
       anchorSide="bottom"
+    />
+    <trace
+      from=".U1 > .pin13"
+      to=".U2 > .pin3"
+      pcbRouteHints={[
+        { x: -0.94, y: 0.744 },
+        { x: 0.111, y: 1.611, via: true, to_layer: "bottom" },
+        { x: -0.682, y: -0.207 },
+      ]}
     />
 
     {/* Primary-side supply bypassing. */}
@@ -416,6 +424,11 @@ export const IsolatedRS485_ISOW7841 = (props: SubcircuitProps) => (
       pcbRotation={180}
       connections={{ pin1: "net.CHASSIS_GND" }}
     />
+
+    {/* Keep the primary, isolated, and chassis ground domains distinct. */}
+    <net name="GND1" isGroundNet />
+    <net name="GND2" isGroundNet />
+    <net name="CHASSIS_GND" isGroundNet />
   </subcircuit>
 );
 
