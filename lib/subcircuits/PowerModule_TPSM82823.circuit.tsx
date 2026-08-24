@@ -3,13 +3,23 @@ import type { SubcircuitProps } from "@tscircuit/props";
 
 export const PowerModule_TPSM82823 = (props: SubcircuitProps) => (
   <subcircuit width={100} height={100} {...props}>
-    <TPSM82823 schX={0} schY={0} name="U1" />
-    <trace from=".U1 > .GND" to="net.GND" />
-    <trace from=".U1 > .EN" to="net.Vin" />
-    <trace from=".U1 > .VIN" to="net.Vin" />
-    <trace from=".U1 > .PG" to="net.PG" />
-    <trace from=".U1 > .VOUT" to="net.Vout" />
-    <trace from=".U1 > .FB" to="net.FB" />
+    <TPSM82823
+      schX={0}
+      schY={0}
+      name="U1"
+      connections={{
+        pin1: "net.Vin",
+        pin2: "net.Vin",
+        pin3: "net.Vin",
+        pin4: "net.PG",
+        pin5: "net.Vout",
+        pin6: "net.Vout",
+        pin7: "net.Vout",
+        pin8: "net.FB",
+        pin9: "net.GND",
+        pin10: "net.GND",
+      }}
+    />
 
     <capacitor
       schX={-2.5}
@@ -19,7 +29,7 @@ export const PowerModule_TPSM82823 = (props: SubcircuitProps) => (
       capacitance="4.7µF"
       footprint="0402"
     />
-    <trace from=".U1 > .VIN" to=".C1 > .pin1" />
+    <trace from="net.Vin" to=".C1 > .pin1" />
     <trace from=".C1 > .pin2" to="net.GND" />
 
     <resistor

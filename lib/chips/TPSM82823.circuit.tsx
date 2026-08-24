@@ -1,15 +1,20 @@
-import { ChipProps } from "tscircuit";
+import type { ChipProps } from "@tscircuit/props";
+import "tscircuit";
 
 export const TPSM82823_PIN_LABELS = {
-  pin1: "VIN",
-  pin2: "EN",
-  pin3: "GND",
+  pin1: ["VIN", "VIN1"],
+  pin2: ["VIN", "VIN2"],
+  pin3: "EN",
   pin4: "PG",
-  pin5: "FB",
-  pin6: "VOUT",
-};
+  pin5: ["VOUT", "VOUT1"],
+  pin6: ["VOUT", "VOUT2"],
+  pin7: ["VOUT", "VOUT3"],
+  pin8: "FB",
+  pin9: ["GND", "GND1"],
+  pin10: ["GND", "GND2"],
+} as const;
 
-export const TPSM82823 = (props: ChipProps<any>) => (
+export const TPSM82823 = (props: ChipProps<typeof TPSM82823_PIN_LABELS>) => (
   <chip
     {...props}
     pinLabels={TPSM82823_PIN_LABELS}

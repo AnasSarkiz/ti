@@ -310,7 +310,6 @@ export const WirelessMCU_CC2340R5 = (props: SubcircuitProps) => (
       name="CR10"
       symbolName="gunn_diode_vert"
       footprint="sod882"
-      schRotation={-90}
       schX={6.6}
       schY={-1.2}
       pcbX={15}

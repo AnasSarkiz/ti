@@ -16,10 +16,12 @@ import {
   HDC3020,
   HDC3022,
   INA237,
+  ISOW7841,
   MSP430G2230ID,
   MSP430F5229,
   MSPM33C3x,
   MSPM0G3507,
+  SN65HVD1473,
   TAS2505,
   TLC59116,
   TLV755P,
@@ -55,6 +57,7 @@ import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSens
 import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit.tsx";
 import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit.tsx";
 import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit.tsx";
+import { IsolatedRS485_ISOW7841 } from "./lib/subcircuits/IsolatedRS485_ISOW7841.circuit.tsx";
 import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit.tsx";
 import { TargetSocket_MSPTS430D8 } from "./lib/subcircuits/TargetSocket_MSPTS430D8.circuit.tsx";
 import { BluetoothAudioHost_MSP430F5229 } from "./lib/subcircuits/BluetoothAudioHost_MSP430F5229.circuit.tsx";
@@ -101,6 +104,7 @@ export {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  IsolatedRS485_ISOW7841,
   AudioAmplifier_TAS2505,
   TargetSocket_MSPTS430D8,
   BluetoothAudioHost_MSP430F5229,
@@ -145,10 +149,12 @@ export const TiChipComponents = {
   HDC3020,
   HDC3022,
   INA237,
+  ISOW7841,
   MSP430G2230ID,
   MSP430F5229,
   MSPM33C3x,
   MSPM0G3507,
+  SN65HVD1473,
   TAS2505,
   TLC59116,
   TLV755P,
@@ -186,6 +192,7 @@ export const TiSubcircuitComponents = {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  IsolatedRS485_ISOW7841,
   AudioAmplifier_TAS2505,
   TargetSocket_MSPTS430D8,
   BluetoothAudioHost_MSP430F5229,
