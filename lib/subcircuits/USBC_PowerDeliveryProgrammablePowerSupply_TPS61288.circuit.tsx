@@ -6,7 +6,7 @@ import { TPS61288RQQR } from "../chips/TPS61288RQQR.circuit.tsx";
 export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit routingDisabled schAutoLayoutEnabled={false} {...props}>
+  <subcircuit routingDisabled {...props}>
     <net name="GND" isGroundNet />
     <capacitor
       name="C29"
