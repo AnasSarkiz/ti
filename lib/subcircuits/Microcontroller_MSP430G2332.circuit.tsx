@@ -2,26 +2,11 @@ import "tscircuit";
 import { MSP430G2332IPW20 } from "../chips/MSP430G2332IPW20.circuit.tsx";
 import { TPS78230DRVR } from "../chips/TPS78230DRVR.circuit.tsx";
 
-type McuCircuitProps = {
-  manualEdits?: {
-    schematic_placements?: Array<{
-      selector: string;
-      relative_to?: string;
-      center: { x: number; y: number };
-    }>;
-  };
-  useManualPlacement?: boolean;
-};
-
 const threeVoltNetName = "​3V";
 const threeVoltNetSelector = "net.​3V";
 
-export const Microcontroller_MSP430G2332 = ({
-  manualEdits,
-  useManualPlacement = false,
-}: McuCircuitProps = {}) => (
+export const Microcontroller_MSP430G2332 = () => (
   <subcircuit
-    manualEdits={manualEdits}
     routingDisabled
     schAutoLayoutEnabled={false}
     schTraceAutoLabelEnabled={false}
@@ -33,163 +18,163 @@ export const Microcontroller_MSP430G2332 = ({
     <capacitor
       name="C16"
       capacitance="1uF"
-      schX={useManualPlacement ? undefined : -0.7}
-      schY={useManualPlacement ? undefined : -7.2}
+      schX={-0.7}
+      schY={-7.2}
       schRotation={90}
     />
     <capacitor
       name="C8"
       capacitance="1uF"
-      schX={useManualPlacement ? undefined : -11.7}
-      schY={useManualPlacement ? undefined : -0.4}
+      schX={-11.7}
+      schY={-0.4}
       schRotation={270}
     />
     <capacitor
       name="C9"
       capacitance="1uF"
-      schX={useManualPlacement ? undefined : -7.9}
-      schY={useManualPlacement ? undefined : 0.1}
+      schX={-7.9}
+      schY={0.1}
       schRotation={270}
     />
     <capacitor
       name="C14"
       capacitance="1uF"
-      schX={useManualPlacement ? undefined : -5.6}
-      schY={useManualPlacement ? undefined : -6}
+      schX={-5.6}
+      schY={-6}
       schRotation={270}
     />
     <capacitor
       name="C15"
       capacitance="1uF"
-      schX={useManualPlacement ? undefined : -8.5}
-      schY={useManualPlacement ? undefined : -6.8}
+      schX={-8.5}
+      schY={-6.8}
       schRotation={90}
     />
     <capacitor
       name="C12"
       capacitance="1uF"
-      schX={useManualPlacement ? undefined : -8.1}
-      schY={useManualPlacement ? undefined : -3.3}
+      schX={-8.1}
+      schY={-3.3}
       schRotation={90}
     />
     <capacitor
       name="C11"
       capacitance="1uF"
-      schX={useManualPlacement ? undefined : -11.1}
-      schY={useManualPlacement ? undefined : -2.6}
+      schX={-11.1}
+      schY={-2.6}
       schRotation={90}
     />
     <capacitor
       name="C13"
       capacitance="1uF"
-      schX={useManualPlacement ? undefined : -7.1}
-      schY={useManualPlacement ? undefined : -3.2}
+      schX={-7.1}
+      schY={-3.2}
       schRotation={90}
     />
     <resistor
       name="R10"
       resistance="1k"
-      schX={useManualPlacement ? undefined : 2.9}
-      schY={useManualPlacement ? undefined : -1.25}
+      schX={2.9}
+      schY={-1.25}
       schRotation={0}
     />
     <resistor
       name="R11"
       resistance="1k"
-      schX={useManualPlacement ? undefined : -13.2}
-      schY={useManualPlacement ? undefined : -2.1}
+      schX={-13.2}
+      schY={-2.1}
       schRotation={0}
     />
     <resistor
       name="R15"
       resistance="1k"
-      schX={useManualPlacement ? undefined : -8.9}
-      schY={useManualPlacement ? undefined : -3.1}
+      schX={-8.9}
+      schY={-3.1}
       schRotation={90}
     />
     <resistor
       name="R19"
       resistance="1k"
-      schX={useManualPlacement ? undefined : 2.5}
-      schY={useManualPlacement ? undefined : -5.9}
+      schX={2.5}
+      schY={-5.9}
       schRotation={180}
     />
     <resistor
       name="R20"
       resistance="1k"
-      schX={useManualPlacement ? undefined : -0.7}
-      schY={useManualPlacement ? undefined : -6.3}
+      schX={-0.7}
+      schY={-6.3}
       schRotation={90}
     />
     <resistor
       name="R12"
       resistance="1k"
-      schX={useManualPlacement ? undefined : 2.9}
-      schY={useManualPlacement ? undefined : -2.05}
+      schX={2.9}
+      schY={-2.05}
       schRotation={0}
     />
     <resistor
       name="R16"
       resistance="1k"
-      schX={useManualPlacement ? undefined : 2.9}
-      schY={useManualPlacement ? undefined : -2.85}
+      schX={2.9}
+      schY={-2.85}
       schRotation={0}
     />
     <resistor
       name="R17"
       resistance="1k"
-      schX={useManualPlacement ? undefined : 2.9}
-      schY={useManualPlacement ? undefined : -3.65}
+      schX={2.9}
+      schY={-3.65}
       schRotation={0}
     />
     <resistor
       name="R14"
       resistance="1k"
-      schX={useManualPlacement ? undefined : -12}
-      schY={useManualPlacement ? undefined : -2.6}
+      schX={-12}
+      schY={-2.6}
       schRotation={90}
     />
     <resistor
       name="R13"
       resistance="1k"
-      schX={useManualPlacement ? undefined : -9.3}
-      schY={useManualPlacement ? undefined : -2.7}
+      schX={-9.3}
+      schY={-2.7}
       schRotation={0}
     />
     <resistor
       name="R18"
       resistance="1k"
-      schX={useManualPlacement ? undefined : -7.7}
-      schY={useManualPlacement ? undefined : -5.5}
+      schX={-7.7}
+      schY={-5.5}
       schRotation={90}
     />
 
     <diode
       name="D2"
       manufacturerPartNumber="D2"
-      schX={useManualPlacement ? undefined : 4.1}
-      schY={useManualPlacement ? undefined : -2.08}
+      schX={4.1}
+      schY={-2.08}
       schRotation={0}
     />
     <diode
       name="D1"
       manufacturerPartNumber="D1"
-      schX={useManualPlacement ? undefined : 4.1}
-      schY={useManualPlacement ? undefined : -1.28}
+      schX={4.1}
+      schY={-1.28}
       schRotation={0}
     />
     <diode
       name="D4"
       manufacturerPartNumber="D4"
-      schX={useManualPlacement ? undefined : 4.1}
-      schY={useManualPlacement ? undefined : -3.68}
+      schX={4.1}
+      schY={-3.68}
       schRotation={0}
     />
     <diode
       name="D3"
       manufacturerPartNumber="D3"
-      schX={useManualPlacement ? undefined : 4.1}
-      schY={useManualPlacement ? undefined : -2.88}
+      schX={4.1}
+      schY={-2.88}
       schRotation={0}
     />
 
@@ -197,14 +182,14 @@ export const Microcontroller_MSP430G2332 = ({
       name="Q5"
       manufacturerPartNumber="Q5"
       type="npn"
-      schX={useManualPlacement ? undefined : 3.4}
-      schY={useManualPlacement ? undefined : -5.9}
+      schX={3.4}
+      schY={-5.9}
       schRotation={270}
     />
     <TPS78230DRVR
       name="U2"
-      schX={useManualPlacement ? undefined : -9.7}
-      schY={useManualPlacement ? undefined : 0.5}
+      schX={-9.7}
+      schY={0.5}
       schWidth={1.2}
       schHeight={1.2}
       schPinArrangement={{
@@ -219,8 +204,8 @@ export const Microcontroller_MSP430G2332 = ({
     />
     <MSP430G2332IPW20
       name="U4"
-      schX={useManualPlacement ? undefined : -1.9}
-      schY={useManualPlacement ? undefined : -3.5}
+      schX={-1.9}
+      schY={-3.5}
       schWidth={4.4}
       schHeight={2.8}
       schPinArrangement={{
@@ -249,8 +234,8 @@ export const Microcontroller_MSP430G2332 = ({
       schPinStyle={{}}
       schWidth={0.5}
       schHeight={0.6}
-      schX={useManualPlacement ? undefined : -2.9}
-      schY={useManualPlacement ? undefined : -6.8}
+      schX={-2.9}
+      schY={-6.8}
     />
     <chip
       name="RT1"
@@ -265,8 +250,8 @@ export const Microcontroller_MSP430G2332 = ({
       schPinStyle={{}}
       schWidth={0.5}
       schHeight={0.5}
-      schX={useManualPlacement ? undefined : -7.7}
-      schY={useManualPlacement ? undefined : -6.7}
+      schX={-7.7}
+      schY={-6.7}
     />
     <trace from=".D2 > .anode" to=".R12 > .pin2" />
     <trace from=".D2 > .cathode" to=".D1 > .cathode" />
