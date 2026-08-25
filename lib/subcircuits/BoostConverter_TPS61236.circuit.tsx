@@ -97,6 +97,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
     <resistor
       name="R5"
       resistance="1k"
+      connections={{ pin1: `net.${threeVoltNetName}` }}
       schX={-8.7}
       schY={2.6}
       schRotation={90}
@@ -124,6 +125,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       symbolDrainSide="top"
       symbolSourceSide="bottom"
       symbolGateSide="left"
+      connections={{ gate: "net.VCUR" }}
       schX={-12.45}
       schY={1.38}
     />
@@ -135,6 +137,7 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
       symbolDrainSide="top"
       symbolSourceSide="bottom"
       symbolGateSide="right"
+      connections={{ gate: "net.VCOM" }}
       schX={-1.55}
       schY={2.98}
     />
@@ -245,13 +248,6 @@ export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
     <trace from=".Q1 > .drain" to=".R2 > .pin1" />
     <trace from=".C7 > .pin1" to=".R7 > .pin1" />
     <trace from=".C2 > .pin2" to="net.GND" />
-    <netlabel net="VCUR" connectsTo=".Q2 > .gate" anchorSide="right" />
-    <netlabel net="VCOM" connectsTo=".Q1 > .gate" anchorSide="left" />
-    <netlabel
-      net={threeVoltNetName}
-      connectsTo=".R5 > .pin1"
-      anchorSide="bottom"
-    />
   </subcircuit>
 );
 
