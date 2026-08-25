@@ -14,6 +14,7 @@ export const Microcontroller_MSP430G2332 = () => (
   >
     <net name="GND" isGroundNet />
     <net name={threeVoltNetName} isPowerNet />
+    <net name="VINT" isPowerNet />
     <net name="TEST" />
     <capacitor
       name="C16"
@@ -257,6 +258,7 @@ export const Microcontroller_MSP430G2332 = () => (
     <trace from=".D2 > .cathode" to=".D3 > .cathode" />
     <trace from=".D2 > .cathode" to=".C16 > .pin1" />
     <trace from=".D2 > .cathode" to=".Q5 > .emitter" />
+    <trace from=".Q5 > .collector" to="net.VINT" />
     <trace from=".D2 > .cathode" to=".U2 > .pin3" />
     <trace from=".D2 > .cathode" to=".U2 > .pin5" />
     <trace from=".D2 > .cathode" to=".U2 > .pin7" />
