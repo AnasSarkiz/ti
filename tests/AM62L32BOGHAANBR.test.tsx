@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { Circuit, type AnyCircuitElement } from "tscircuit";
-import { AM62L32BOGHAANBR } from "./AM62L32BOGHAANBR.circuit";
+import { AM62L32BOGHAANBR } from "../lib/chips/AM62L32BOGHAANBR.circuit";
 
 type ElementOfType<T extends AnyCircuitElement["type"]> = Extract<
   AnyCircuitElement,
