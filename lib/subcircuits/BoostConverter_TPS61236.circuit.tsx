@@ -2,7 +2,7 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { TPS61236RWLR } from "../chips/TPS61236RWLR.circuit.tsx";
 
-const threeVoltNetName = "​3V";
+const threeVoltNetName = "V3_0";
 
 export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled schAutoLayoutEnabled={false} {...props}>

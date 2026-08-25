@@ -241,12 +241,10 @@ export const Microcontroller_MSP430G2332 = () => (
       name="RT1"
       manufacturerPartNumber="RT1"
       pinLabels={{ pin2: "2", pin1: "1" }}
-      schPinArrangement={
-        {
-          topSide: { pins: [2], direction: "left-to-right" },
-          bottomSide: { pins: [1], direction: "left-to-right" },
-        } as any
-      }
+      schPinArrangement={{
+        topSide: { pins: [2], direction: "left-to-right" },
+        bottomSide: { pins: [1], direction: "left-to-right" },
+      }}
       schPinStyle={{}}
       schWidth={0.5}
       schHeight={0.5}
