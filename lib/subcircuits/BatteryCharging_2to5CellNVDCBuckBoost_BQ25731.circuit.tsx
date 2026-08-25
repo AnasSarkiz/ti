@@ -2,7 +2,9 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { BQ25731RSN } from "../chips/BQ25731RSN.circuit.tsx";
 
-export const BatteryCharging_BQ25731 = (props: SubcircuitProps) => (
+export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
+  props: SubcircuitProps,
+) => (
   <subcircuit routingDisabled schAutoLayoutEnabled={false} {...props}>
     <net name="GND" isPowerNet isGroundNet={true} />
     <net name="BAT" isPowerNet isGroundNet={false} />
@@ -652,4 +654,4 @@ export const BatteryCharging_BQ25731 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default BatteryCharging_BQ25731;
+export default BatteryCharging_2to5CellNVDCBuckBoost_BQ25731;

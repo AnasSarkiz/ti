@@ -90,10 +90,10 @@ import { LevelShifter_TXB0104 } from "./lib/subcircuits/LevelShifter_TXB0104.cir
 import { LevelShifter_TXS0102 } from "./lib/subcircuits/LevelShifter_TXS0102.circuit.tsx";
 import { RFIDReader_TRF7960 } from "./lib/subcircuits/RFIDReader_TRF7960.circuit.tsx";
 import { FlashMemory_W25Q128JVSIQ } from "./lib/subcircuits/FlashMemory_W25Q128JVSIQ.circuit.tsx";
-import { BatteryCharging_BQ25731 } from "./lib/subcircuits/BatteryCharging_BQ25731.circuit.tsx";
+import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits/BatteryCharging_2to5CellNVDCBuckBoost_BQ25731.circuit.tsx";
 import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
 import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
-import { USBTypeC_TPS61288 } from "./lib/subcircuits/USBTypeC_TPS61288.circuit.tsx";
+import { USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 } from "./lib/subcircuits/USBC_PowerDeliveryProgrammablePowerSupply_TPS61288.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -139,10 +139,10 @@ export {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
-  BatteryCharging_BQ25731,
+  BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
-  USBTypeC_TPS61288,
+  USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
 };
 
 export const TiChipComponents = {
@@ -236,10 +236,10 @@ export const TiSubcircuitComponents = {
   LevelShifter_TXS0102,
   RFIDReader_TRF7960,
   FlashMemory_W25Q128JVSIQ,
-  BatteryCharging_BQ25731,
+  BatteryCharging_2to5CellNVDCBuckBoost_BQ25731,
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
-  USBTypeC_TPS61288,
+  USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

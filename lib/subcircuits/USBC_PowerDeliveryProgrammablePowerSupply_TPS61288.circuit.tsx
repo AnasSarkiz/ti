@@ -3,7 +3,9 @@ import "tscircuit";
 import { TLV9152IDR } from "../chips/TLV9152IDR.circuit.tsx";
 import { TPS61288RQQR } from "../chips/TPS61288RQQR.circuit.tsx";
 
-export const USBTypeC_TPS61288 = (props: SubcircuitProps) => (
+export const USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 = (
+  props: SubcircuitProps,
+) => (
   <subcircuit routingDisabled schAutoLayoutEnabled={false} {...props}>
     <net name="GND" isGroundNet />
     <capacitor
@@ -605,4 +607,4 @@ export const USBTypeC_TPS61288 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default USBTypeC_TPS61288;
+export default USBC_PowerDeliveryProgrammablePowerSupply_TPS61288;
