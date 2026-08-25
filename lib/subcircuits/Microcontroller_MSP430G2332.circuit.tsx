@@ -228,9 +228,9 @@ export const Microcontroller_MSP430G2332 = () => (
       name="J6"
       manufacturerPartNumber="J6"
       pinLabels={{ pin1: "1", pin2: "2" }}
-      schPinArrangement={
-        { rightSide: { pins: [2, 1], direction: "top-to-bottom" } } as any
-      }
+      schPinArrangement={{
+        rightSide: { pins: [2, 1], direction: "top-to-bottom" },
+      }}
       schPinStyle={{}}
       schWidth={0.5}
       schHeight={0.6}
