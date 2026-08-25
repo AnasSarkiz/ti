@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true,
-    "types": ["tscircuit", "bun"]
-  },
-  "include": ["tests/**/*.ts", "tests/**/*.tsx"],
-  "exclude": ["node_modules", "dist", ".claude"]
-}

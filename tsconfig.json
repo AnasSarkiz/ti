@@ -22,5 +22,5 @@
     "types": ["tscircuit"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "dist", ".claude", "tests"]
+  "exclude": ["node_modules", "dist", ".claude"]
 }
