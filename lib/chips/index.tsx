@@ -45,6 +45,8 @@ export { BQ24073RGTR } from "./BQ24073RGTR.circuit.tsx";
 export { BQ24074RGTR } from "./BQ24074RGTR.circuit.tsx";
 export { BQ25895RTWR } from "./BQ25895RTWR.circuit.tsx";
 export { BQ25731RSN } from "./BQ25731RSN.circuit.tsx";
+export { BQ294700DSG } from "./BQ294700DSG.circuit.tsx";
+export { BQ40Z60RHB } from "./BQ40Z60RHB.circuit.tsx";
 export { BQ27441DRZR_G1B } from "./BQ27441DRZR_G1B.circuit.tsx";
 export { CC2745R10E0WRHARQ1 } from "./CC2745R10E0WRHARQ1.circuit.tsx";
 export { CC3235SF12RGKR } from "./CC3235SF12RGKR.circuit.tsx";

@@ -5,6 +5,8 @@ import {
   BQ24074,
   BQ25895,
   BQ25731RSN,
+  BQ294700DSG,
+  BQ40Z60RHB,
   BQ27441G1,
   BQ32002,
   CC2340R5,
@@ -52,6 +54,7 @@ import { BatteryManagement_BQ24073 } from "./lib/subcircuits/BatteryManagement_B
 import { BatteryManagement_BQ24074 } from "./lib/subcircuits/BatteryManagement_BQ24074.circuit.tsx";
 import { BatteryManagement_BQ25895 } from "./lib/subcircuits/BatteryManagement_BQ25895.circuit.tsx";
 import { BatteryManagement_BQ27441G1 } from "./lib/subcircuits/BatteryManagement_BQ27441G1.circuit.tsx";
+import { BatteryManagement_2to4Cell_BQ40Z60 } from "./lib/subcircuits/BatteryManagement_2to4Cell_BQ40Z60.circuit.tsx";
 import { RealTimeClock_BQ32002 } from "./lib/subcircuits/RealTimeClock_BQ32002.circuit.tsx";
 import { WirelessMCU_CC2340R5 } from "./lib/subcircuits/WirelessMCU_CC2340R5.circuit.tsx";
 import { BluetoothController_CC2564C } from "./lib/subcircuits/BluetoothController_CC2564C.circuit.tsx";
@@ -103,6 +106,7 @@ export {
   BatteryManagement_BQ24074,
   BatteryManagement_BQ25895,
   BatteryManagement_BQ27441G1,
+  BatteryManagement_2to4Cell_BQ40Z60,
   RealTimeClock_BQ32002,
   WirelessMCU_CC2340R5,
   BluetoothController_CC2564C,
@@ -152,6 +156,8 @@ export const TiChipComponents = {
   BQ24074,
   BQ25895,
   BQ25731RSN,
+  BQ294700DSG,
+  BQ40Z60RHB,
   BQ27441G1,
   BQ32002,
   CC2340R5,
@@ -201,6 +207,7 @@ export const TiSubcircuitComponents = {
   BatteryManagement_BQ24074,
   BatteryManagement_BQ25895,
   BatteryManagement_BQ27441G1,
+  BatteryManagement_2to4Cell_BQ40Z60,
   RealTimeClock_BQ32002,
   WirelessMCU_CC2340R5,
   BluetoothController_CC2564C,
