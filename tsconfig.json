@@ -19,8 +19,8 @@
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
     "experimentalDecorators": true,
-    "types": ["tscircuit", "bun"]
+    "types": ["tscircuit"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "dist", ".claude"]
+  "exclude": ["node_modules", "dist", ".claude", "tests"]
 }
