@@ -24,3 +24,30 @@ jobs:
 
       - name: Run format check
         run: bun run format:check
+
+  system-block-ui:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: system-block-ui
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install UI dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck UI
+        run: bun run typecheck
+
+      - name: Test resolver and code generator
+        run: bun test
+
+      - name: Build UI
+        run: bun run build

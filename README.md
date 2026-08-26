@@ -35,6 +35,15 @@ example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
 audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
 
+## System Block Builder
+
+The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
+Rete.js canvas for dragging these subcircuits into a system diagram. Connections
+stay at a readable system level—such as Power or Data—while a curated semantic
+catalog resolves compatible voltage rails and protocols into exact tscircuit
+selectors. The app generates example-style TSX and can evaluate it with PCB and
+routing work disabled to produce a schematic preview and downloadable PDF.
+
 ## Raw Chip Usage
 
 When you need the bare chip package instead of a full reference design, import
