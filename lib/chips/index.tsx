@@ -27,6 +27,7 @@ export {
   LM74202QPWPRQ1_PIN_LABELS,
 } from "./LM74202QPWPRQ1.circuit.tsx";
 export { LMK1C1104 } from "./LMK1C1104.circuit.tsx";
+export { LP5892Q1 } from "./LP5892Q1.circuit.tsx";
 export { MSP430G2230ID } from "./MSP430G2230ID.circuit.tsx";
 export { MSP430F5229 } from "./MSP430F5229.circuit.tsx";
 export { MSPM0L1306 } from "./MSPM0L1306.circuit.tsx";
@@ -86,6 +87,7 @@ export {
   LM50HVQDBZRQ1_PIN_LABELS,
 } from "./LM50HVQDBZRQ1.circuit.tsx";
 export { LMK1C1104PWR } from "./LMK1C1104PWR.circuit.tsx";
+export { LP5892QRRFRQ1 } from "./LP5892QRRFRQ1.circuit.tsx";
 export { MSP430F5229IRGCR } from "./MSP430F5229IRGCR.circuit.tsx";
 export { MSPM0L1306SRHBR } from "../../imports/MSPM0L1306SRHBR.tsx";
 export { MSP430G2332IPW20 } from "./MSP430G2332IPW20.circuit.tsx";

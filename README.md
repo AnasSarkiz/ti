@@ -132,6 +132,47 @@ and [bulk capacitance guidance](https://www.ti.com/document-viewer/DRV8210/datas
 The raw chip is available as `DRV8210DSGR` or as
 `DRV8210` with `footprintVariant="wson_8_ep_2x2"`.
 
+### LP5892-Q1 LED matrix output interface
+
+`OutputUserInterface_LEDMatrix_LP5892_Q1` implements the 48-source,
+16-scan-line interface for a common-cathode 16-by-16 RGB LED matrix. It exposes
+the four supply domains (`VCC`, `VR`, `VG`, and `VB`), `GND`, the
+`SCLK`/`SIN`/`SOUT` serial interface, `R0`-`R15`, `G0`-`G15`, `B0`-`B15`, and
+`LINE0`-`LINE15` as public subcircuit nets. Connect from a parent circuit with
+selectors such as `.DisplayDriver > net.SCLK`, `.DisplayDriver > net.R0`, and
+`.DisplayDriver > net.GND`.
+
+```tsx
+import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "@tsci/tscircuit.ti"
+
+export default () => (
+  <board width="28mm" height="24mm" isViaInPadAllowed>
+    <OutputUserInterface_LEDMatrix_LP5892_Q1 name="DisplayDriver" />
+    <led
+      name="D_R0_LINE0"
+      color="red"
+      footprint="0603"
+      connections={{
+        anode: ".DisplayDriver > net.R0",
+        cathode: ".DisplayDriver > net.LINE0",
+      }}
+    />
+  </board>
+)
+```
+
+The internal 23 kohm IREF resistor matches TI's 3 mA, BC=`011` design example;
+firmware must configure the matching brightness/current registers. SCLK must
+run continuously and SIN should remain high while idle. VCC and VR may share a
+rail, as may VG and VB; use at least 3.5 V on VCC when operating at 20 mA or
+more per channel.
+
+The exposed-pad thermal-via array requires `isViaInPadAllowed` on the parent
+`board`. Follow TI's fabrication guidance by filling, plugging, or tenting the
+vias. The implementation follows the
+[LP5892-Q1 datasheet](https://www.ti.com/lit/ds/symlink/lp5892-q1.pdf) and the
+related [LP5891Q1EVM hardware guide](https://www.ti.com/lit/pdf/snvu836).
+
 ### Available subcircuits
 
 The package currently exports these subcircuit components:
@@ -161,6 +202,7 @@ The package currently exports these subcircuit components:
 - `Microcontroller_MSPM0G3507`
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
+- `OutputUserInterface_LEDMatrix_LP5892_Q1`
 - `TemperatureSensor_TMP1075`
 - `TemperatureSensor_TMP1827`
 - `TemperatureSensor_LM50HV_Q1` ([LM50-Q1/LM50HV-Q1 datasheet, Figure 8-3](https://www.ti.com/lit/ds/symlink/lm50-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
@@ -212,6 +254,7 @@ chip is listed individually below, including whether it supports a
 | `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
+| `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
