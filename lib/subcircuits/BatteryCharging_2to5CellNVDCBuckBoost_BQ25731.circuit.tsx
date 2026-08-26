@@ -33,14 +33,14 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="C3"
       capacitance="0.01uF"
       schRotation={270}
-      schX={10.01}
+      schX={9.51}
       schY={7.35}
     />
     <capacitor
       name="C4"
       capacitance="68uF"
       schRotation={270}
-      schX={21.11}
+      schX={14.7}
       schY={7.31}
     />
     <capacitor
@@ -61,7 +61,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="C20"
       capacitance="10uF"
       schRotation={270}
-      schX={19.48}
+      schX={14}
       schY={7.35}
     />
     <capacitor
@@ -89,7 +89,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="C24"
       capacitance="1uF"
       schRotation={270}
-      schX={-19.71}
+      schX={-14.2}
       schY={6.17}
     />
     <capacitor
@@ -138,7 +138,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="C31"
       capacitance="0.1uF"
       schRotation={180}
-      schX={17.11}
+      schX={13.4}
       schY={6.02}
     />
     <capacitor
@@ -208,84 +208,84 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       name="C50"
       capacitance="22uF"
       schRotation={270}
-      schX={-18.38}
+      schX={-13.4}
       schY={7.35}
     />
     <capacitor
       name="C51"
       capacitance="22uF"
       schRotation={270}
-      schX={-16.9}
+      schX={-12.6}
       schY={7.35}
     />
     <capacitor
       name="C52"
       capacitance="22uF"
       schRotation={270}
-      schX={-15.43}
+      schX={-11.8}
       schY={7.35}
     />
     <capacitor
       name="C53"
       capacitance="22uF"
       schRotation={270}
-      schX={-13.95}
+      schX={-11}
       schY={7.35}
     />
     <capacitor
       name="C55"
       capacitance="22uF"
       schRotation={270}
-      schX={11.2}
+      schX={10.2}
       schY={7.35}
     />
     <capacitor
       name="C56"
       capacitance="22uF"
       schRotation={270}
-      schX={12.53}
+      schX={11}
       schY={7.35}
     />
     <capacitor
       name="C57"
       capacitance="22uF"
       schRotation={270}
-      schX={13.86}
+      schX={11.8}
       schY={7.35}
     />
     <capacitor
       name="C58"
       capacitance="22uF"
       schRotation={270}
-      schX={15.19}
+      schX={12.6}
       schY={7.35}
     />
     <capacitor
       name="C100"
       capacitance="15uF"
       schRotation={270}
-      schX={-21.05}
+      schX={-15}
       schY={6.72}
     />
     <resistor
       name="R1"
       resistance="0.005"
       schRotation={0}
-      schX={-10.99}
+      schX={-9.99}
       schY={7.79}
     />
     <resistor
       name="R2"
       resistance="0.005"
       schRotation={0}
-      schX={17.11}
+      schX={13.4}
       schY={7.79}
     />
     <resistor
       name="R3"
       resistance="1.80"
       schRotation={90}
-      schX={-19.71}
+      schX={-14.2}
       schY={7.2}
     />
     <resistor
@@ -425,7 +425,7 @@ export const BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 = (
       channelType="n"
       mosfetMode="enhancement"
       schRotation={90}
-      schX={8.53}
+      schX={8.03}
       schY={8.02}
     />
     <mosfet
