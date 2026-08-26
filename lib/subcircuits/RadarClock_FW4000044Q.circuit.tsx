@@ -36,14 +36,18 @@ export const RadarClock_FW4000044Q = (props: SubcircuitProps) => (
       schRotation={270}
     />
 
+    <trace name="XTAL_P_LOAD" from=".Y1 > .XTAL_P" to=".C14 > .pin1" />
     <trace
-      name="XTAL_P"
-      path={[".Y1 > .XTAL_P", ".C14 > .pin1", "net.AR_XTAL_P"]}
+      name="XTAL_P_INTERFACE"
+      from=".Y1 > .XTAL_P"
+      to="net.AR_XTAL_P"
       schDisplayLabel="AR_XTAL_P"
     />
+    <trace name="XTAL_N_LOAD" from=".Y1 > .XTAL_N" to=".C71 > .pin1" />
     <trace
-      name="XTAL_N"
-      path={[".Y1 > .XTAL_N", ".C71 > .pin1", "net.AR_XTAL_N"]}
+      name="XTAL_N_INTERFACE"
+      from=".Y1 > .XTAL_N"
+      to="net.AR_XTAL_N"
       schDisplayLabel="AR_XTAL_N"
     />
     <trace name="XTAL_CASE_GND_LEFT" from=".Y1 > .CASE_1" to=".C14 > .pin2" />

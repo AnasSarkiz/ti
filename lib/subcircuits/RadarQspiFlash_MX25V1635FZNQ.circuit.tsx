@@ -104,9 +104,11 @@ export const RadarQspiFlash_MX25V1635FZNQ = (props: SubcircuitProps) => (
       schRotation={270}
     />
 
+    <trace name="QSPI_CS_PULLUP" from=".U9 > .CS" to=".R43 > .pin1" />
     <trace
-      name="QSPI_CS"
-      path={[".U9 > .CS", ".R43 > .pin1", "net.AR_QSPI_CS"]}
+      name="QSPI_CS_INTERFACE"
+      from=".R43 > .pin1"
+      to="net.AR_QSPI_CS"
       schDisplayLabel="AR_QSPI_CS"
     />
     <trace
@@ -140,14 +142,18 @@ export const RadarQspiFlash_MX25V1635FZNQ = (props: SubcircuitProps) => (
       schDisplayLabel="AR_QSPI_D3_T"
     />
 
+    <trace name="QSPI_D2_PULLUP" from=".R48 > .pin1" to=".R44 > .pin1" />
     <trace
-      name="QSPI_D2_PULLUP"
-      path={[".R48 > .pin1", ".R44 > .pin1", "net.AR_QSPI_D2"]}
+      name="QSPI_D2_INTERFACE"
+      from=".R48 > .pin1"
+      to="net.AR_QSPI_D2"
       schDisplayLabel="AR_QSPI_D2"
     />
+    <trace name="QSPI_D3_PULLUP" from=".R49 > .pin1" to=".R45 > .pin1" />
     <trace
-      name="QSPI_D3_PULLUP"
-      path={[".R49 > .pin1", ".R45 > .pin1", "net.AR_QSPI_D3"]}
+      name="QSPI_D3_INTERFACE"
+      from=".R49 > .pin1"
+      to="net.AR_QSPI_D3"
       schDisplayLabel="AR_QSPI_D3"
     />
     <trace
@@ -170,12 +176,24 @@ export const RadarQspiFlash_MX25V1635FZNQ = (props: SubcircuitProps) => (
     />
 
     <trace
-      name="FLASH_PULLUP_3V3"
-      path={[".R43 > .pin2", ".R44 > .pin2", ".R45 > .pin2"]}
+      name="FLASH_PULLUP_3V3_R43_R44"
+      from=".R43 > .pin2"
+      to=".R44 > .pin2"
     />
     <trace
-      name="FLASH_DEVICE_3V3"
-      path={[".U9 > .VCC", ".C100 > .pin2", ".C101 > .pin2"]}
+      name="FLASH_PULLUP_3V3_R44_R45"
+      from=".R44 > .pin2"
+      to=".R45 > .pin2"
+    />
+    <trace
+      name="FLASH_DEVICE_3V3_U9_C100"
+      from=".U9 > .VCC"
+      to=".C100 > .pin2"
+    />
+    <trace
+      name="FLASH_DEVICE_3V3_C100_C101"
+      from=".C100 > .pin2"
+      to=".C101 > .pin2"
     />
     <trace name="FLASH_DEVICE_GND" from=".U9 > .GND" to=".U9 > .EP_GND" />
     <trace

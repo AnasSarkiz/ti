@@ -3186,13 +3186,15 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
 
     {AWR_NET_CONNECTIONS.map((connection) => (
       <Fragment key={connection.net}>
-        <trace
-          name={`U2_${connection.net}`}
-          path={[
-            ...connection.balls.map((ball) => `.U2 > .${ball}`),
-            `net.${connection.net}`,
-          ]}
-        />
+        {connection.balls.map((ball) => (
+          <Fragment key={`${connection.net}-${ball}`}>
+            <trace
+              name={`U2_${connection.net}_${ball}`}
+              from={`.U2 > .${ball}`}
+              to={`net.${connection.net}`}
+            />
+          </Fragment>
+        ))}
       </Fragment>
     ))}
 
@@ -3231,26 +3233,25 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
       />
     ))}
 
-    <trace
-      name="IO_PULLUP_RAIL"
-      path={[
-        ".R59 > .pin2",
-        ".R23 > .pin2",
-        ".R22 > .pin2",
-        ".R21 > .pin2",
-        ".R9 > .pin1",
-        ".R8 > .pin2",
-        ".R7 > .pin2",
-        ".R5 > .pin1",
-        ".R4 > .pin1",
-        ".R75 > .pin1",
-        "net.PMIC_3V3",
-      ]}
-    />
-    <trace
-      name="NRST_PULLUP"
-      path={[".R59 > .pin1", ".C130 > .pin2", ".TP14 > .pin1", "net.AR_NRST"]}
-    />
+    {[
+      ".R59 > .pin2",
+      ".R23 > .pin2",
+      ".R22 > .pin2",
+      ".R21 > .pin2",
+      ".R9 > .pin1",
+      ".R8 > .pin2",
+      ".R7 > .pin2",
+      ".R5 > .pin1",
+      ".R4 > .pin1",
+      ".R75 > .pin1",
+    ].map((port, index) => (
+      <Fragment key={`io-pullup-${index}`}>
+        <trace name={`IO_PULLUP_RAIL_${index}`} from={port} to="net.PMIC_3V3" />
+      </Fragment>
+    ))}
+    <trace name="NRST_R59_C130" from=".R59 > .pin1" to=".C130 > .pin2" />
+    <trace name="NRST_C130_TP14" from=".C130 > .pin2" to=".TP14 > .pin1" />
+    <trace name="NRST_INTERFACE" from=".TP14 > .pin1" to="net.AR_NRST" />
     <trace name="WARMRST_PULLUP" from=".R23 > .pin1" to="net.AR_WARMRST" />
     <trace name="NERRIN_PULLUP" from=".R22 > .pin1" to="net.AR_NERRIN" />
     <trace name="NERROUT_PULLUP" from=".R21 > .pin1" to="net.AR_NERR_OUT" />
@@ -3261,17 +3262,17 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
     <trace name="RS232TX_PULLUP" from=".R4 > .pin2" to="net.AR_RS232TX" />
     <trace name="SPICLK1_PULLUP" from=".R75 > .pin2" to="net.AR_SPICLK1" />
     <trace name="HOSTINTR1_PULLDOWN" from=".R3 > .pin1" to="net.AR_HOSTINTR1" />
-    <trace
-      name="IO_GROUND"
-      path={[
-        ".R3 > .pin2",
-        ".C130 > .pin1",
-        ".R172 > .pin1",
-        ".R170 > .pin1",
-        ".R158 > .pin1",
-        "net.GND",
-      ]}
-    />
+    {[
+      ".R3 > .pin2",
+      ".C130 > .pin1",
+      ".R172 > .pin1",
+      ".R170 > .pin1",
+      ".R158 > .pin1",
+    ].map((port, index) => (
+      <Fragment key={`io-ground-${index}`}>
+        <trace name={`IO_GROUND_${index}`} from={port} to="net.GND" />
+      </Fragment>
+    ))}
 
     <trace name="GPADC1_TEST" from=".TP9 > .pin1" to="net.AR_GPADC_1" />
     <trace name="GPADC2_TEST" from=".TP8 > .pin1" to="net.AR_GPADC_2" />
@@ -3281,32 +3282,57 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
     <trace name="GPADC6_TEST" from=".TP2 > .pin1" to="net.AR_GPADC_6" />
     <trace name="OSC_CLKOUT_TEST" from=".TP17 > .pin1" to="net.AR_OSC_CLKOUT" />
 
+    <trace name="SOP2_SOURCE" from=".R103 > .pin1" to=".R85 > .pin1" />
     <trace
-      name="SOP2_SOURCE"
-      path={[".R103 > .pin1", ".R85 > .pin1", "net.AR_PMIC_CLKOUT_SOP2"]}
+      name="SOP2_SOURCE_INTERFACE"
+      from=".R85 > .pin1"
+      to="net.AR_PMIC_CLKOUT_SOP2"
     />
     <trace name="PMIC_CLK_DNP" from=".R103 > .pin2" to="net.PMIC_CLK" />
     <trace
-      name="SOP2_DIVIDER_NODE"
-      path={[".R85 > .pin2", ".R176 > .pin2", ".R172 > .pin2"]}
+      name="SOP2_DIVIDER_R85_R176"
+      from=".R85 > .pin2"
+      to=".R176 > .pin2"
     />
-    <trace name="SOP2_SWITCH" path={[".R176 > .pin1", ".S3 > .pin1"]} />
+    <trace
+      name="SOP2_DIVIDER_R176_R172"
+      from=".R176 > .pin2"
+      to=".R172 > .pin2"
+    />
+    <trace name="SOP2_SWITCH" from=".R176 > .pin1" to=".S3 > .pin1" />
     <trace name="SOP2_SWITCH_SUPPLY" from=".S3 > .pin2" to="net.PMIC_3V3" />
 
     <trace name="SOP1_SOURCE" from=".R84 > .pin1" to="net.AR_SYNC_OUT_SOP1" />
     <trace
-      name="SOP1_DIVIDER_NODE"
-      path={[".R84 > .pin2", ".R171 > .pin1", ".R170 > .pin2"]}
+      name="SOP1_DIVIDER_R84_R171"
+      from=".R84 > .pin2"
+      to=".R171 > .pin1"
+    />
+    <trace
+      name="SOP1_DIVIDER_R171_R170"
+      from=".R171 > .pin1"
+      to=".R170 > .pin2"
     />
     <trace name="SOP1_STRAP" from=".R171 > .pin2" to="net.SOP1" />
 
     <trace name="SOP0_SOURCE" from=".R83 > .pin1" to="net.AR_TDO_SOP0" />
     <trace
-      name="SOP0_DIVIDER_NODE"
-      path={[".R83 > .pin2", ".R174 > .pin2", ".R159 > .pin1", ".R158 > .pin2"]}
+      name="SOP0_DIVIDER_R83_R174"
+      from=".R83 > .pin2"
+      to=".R174 > .pin2"
+    />
+    <trace
+      name="SOP0_DIVIDER_R174_R159"
+      from=".R174 > .pin2"
+      to=".R159 > .pin1"
+    />
+    <trace
+      name="SOP0_DIVIDER_R159_R158"
+      from=".R159 > .pin1"
+      to=".R158 > .pin2"
     />
     <trace name="SOP0_STRAP" from=".R159 > .pin2" to="net.SOP0" />
-    <trace name="SOP0_SUPPLY" path={[".R174 > .pin1", ".R2 > .pin1"]} />
+    <trace name="SOP0_SUPPLY" from=".R174 > .pin1" to=".R2 > .pin1" />
     <trace name="SOP0_SUPPLY_LINK" from=".R2 > .pin2" to="net.PMIC_3V3" />
 
     {POWER_CAPACITORS.map((capacitor) => (

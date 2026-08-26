@@ -65,12 +65,14 @@ export const RadarFrontEndProcessing_TIDEP01024 = (props: SubcircuitProps) => (
       to=".qspi_flash > .INTERFACE_PMIC_3V3"
     />
     <trace
-      name="COMPOSITE_GROUND"
-      path={[
-        ".radar_soc > .INTERFACE_GND",
-        ".radar_clock > .INTERFACE_GND",
-        ".qspi_flash > .INTERFACE_GND",
-      ]}
+      name="COMPOSITE_CLOCK_GROUND"
+      from=".radar_clock > .INTERFACE_GND"
+      to=".radar_soc > .INTERFACE_GND"
+    />
+    <trace
+      name="COMPOSITE_FLASH_GROUND"
+      from=".qspi_flash > .INTERFACE_GND"
+      to=".radar_soc > .INTERFACE_GND"
     />
     {RADAR_FRONT_END_INTERFACE_NETS.map((net) => (
       <Fragment key={`port-${net}`}>
