@@ -9,6 +9,20 @@ const LOAD_CAPACITOR_MPN = "GRM1885C2A5R0CA01D";
 const HIDDEN_ROUTE_LABEL = "\u200B";
 const SHEET_PORT_HEIGHT = 0.20106;
 
+const OUTPUT_NET_NAMES = [
+  "Y0",
+  "Y1",
+  "Y2",
+  "Y3",
+  "Y4",
+  "Y5",
+  "Y6",
+  "Y7",
+] as const;
+
+type OutputNetName = (typeof OUTPUT_NET_NAMES)[number];
+type SchematicPoint = readonly [x: number, y: number];
+
 type SheetPortGraphicProps = {
   name: string;
   schX: number;
@@ -52,7 +66,7 @@ const SheetPortGraphic = ({
 );
 
 const FIXTURE_SHEET_PORT_GEOMETRY: Record<
-  string,
+  OutputNetName,
   { centerX: number; width: number }
 > = {
   Y0: { centerX: -14.156418, width: 0.566622 },
@@ -287,7 +301,7 @@ const SmaConnector = ({
 };
 
 type OutputFixtureProps = {
-  netName: string;
+  netName: OutputNetName;
   firstResistor: string;
   secondResistor: string;
   capacitor: string;
@@ -295,12 +309,12 @@ type OutputFixtureProps = {
   pulldown: string;
   connector: string;
   sch: {
-    firstResistor: [number, number];
-    secondResistor: [number, number];
-    capacitor: [number, number];
-    pullup: [number, number];
-    pulldown: [number, number];
-    connector: [number, number];
+    firstResistor: SchematicPoint;
+    secondResistor: SchematicPoint;
+    capacitor: SchematicPoint;
+    pullup: SchematicPoint;
+    pulldown: SchematicPoint;
+    connector: SchematicPoint;
   };
   pcbY: number;
   pcbSide?: "left" | "right";
@@ -598,7 +612,7 @@ const OutputFixture = ({
   );
 };
 
-const OUTPUT_FIXTURES: OutputFixtureProps[] = [
+const OUTPUT_FIXTURES = [
   {
     netName: "Y0",
     firstResistor: "R9",
@@ -752,7 +766,30 @@ const OUTPUT_FIXTURES: OutputFixtureProps[] = [
     pcbXOffset: 20,
     doNotPlace: true,
   },
-];
+] as const satisfies readonly OutputFixtureProps[];
+
+const DRIVEN_OUTPUTS = [
+  { pin: 3, netName: "Y0" },
+  { pin: 8, netName: "Y1" },
+  { pin: 5, netName: "Y2" },
+  { pin: 7, netName: "Y3" },
+] as const satisfies readonly { pin: number; netName: OutputNetName }[];
+
+const DEVICE_OUTPUT_SHEET_PORTS = [
+  { name: "Y0", x: -1.369793, y: 7.676818, width: 0.566622 },
+  { name: "Y1", x: -1.369793, y: 7.311255, width: 0.566622 },
+  { name: "Y2", x: -1.361721, y: 6.945692, width: 0.566622 },
+  { name: "Y3", x: -1.361721, y: 6.58013, width: 0.566622 },
+  { name: "Y4", x: -1.361721, y: 4.935097, width: 0.566622 },
+  { name: "Y5", x: -1.352582, y: 4.569535, width: 0.5849 },
+  { name: "Y6", x: -1.361721, y: 4.203972, width: 0.566622 },
+  { name: "Y7", x: -1.352582, y: 3.838409, width: 0.5849 },
+] as const satisfies readonly {
+  name: OutputNetName;
+  x: number;
+  y: number;
+  width: number;
+}[];
 
 const TI_SCHEMATIC_NOTES = [
   { x: 0.1919, y: 8.3988, text: "VDD = 1.8V / 2.5V /", color: "#1f2937" },
@@ -970,25 +1007,20 @@ const TI_NOTE_FRAMES = [
   },
 ] as const;
 
-/**
- * LMK1C1104EVM validation circuit reproduced from TI's Altium reference.
- * Reference: https://www.ti.com/tool/LMK1C1104EVM
- */
-export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
-  <subcircuit
-    schMaxTraceDistance="3.2mm"
-    schTraceAutoLabelEnabled={false}
-    autorouterEffortLevel="10x"
-    {...props}
-  >
+const ReferenceNets = () => (
+  <>
     <net name="GND" isGroundNet />
     <net name="VDD" isPowerNet />
-    {Array.from({ length: 8 }, (_, index) => (
-      <Fragment key={`Y${index}`}>
-        <net name={`Y${index}`} />
+    {OUTPUT_NET_NAMES.map((netName) => (
+      <Fragment key={netName}>
+        <net name={netName} />
       </Fragment>
     ))}
+  </>
+);
 
+const ClockDevice = () => (
+  <>
     <LMK1C1104PWR
       name="U1"
       manufacturerPartNumber="LMK1C1104PW"
@@ -1014,12 +1046,7 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
     />
     <trace name="U1-VDD" from="U1.pin6" to="net.VDD" schDisplayLabel="VDD" />
     <trace name="U1-GND" from="U1.pin4" to="net.GND" schDisplayLabel="GND" />
-    {[
-      { pin: 3, netName: "Y0" },
-      { pin: 8, netName: "Y1" },
-      { pin: 5, netName: "Y2" },
-      { pin: 7, netName: "Y3" },
-    ].map(({ pin, netName }) => (
+    {DRIVEN_OUTPUTS.map(({ pin, netName }) => (
       <Fragment key={`U1-${netName}`}>
         <trace
           from={`U1.pin${pin}`}
@@ -1028,7 +1055,11 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
         />
       </Fragment>
     ))}
+  </>
+);
 
+const InputNetwork = () => (
+  <>
     <SmaConnector
       name="J2"
       schX={-12.5205}
@@ -1090,7 +1121,11 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
       to="U1.pin1"
       schDisplayLabel={HIDDEN_ROUTE_LABEL}
     />
+  </>
+);
 
+const EnableNetwork = () => (
+  <>
     <connector
       name="J3"
       pinCount={3}
@@ -1236,7 +1271,11 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
       to="U1.pin2"
       schDisplayLabel={HIDDEN_ROUTE_LABEL}
     />
+  </>
+);
 
+const InputAndEnableSourceArtwork = () => (
+  <>
     <schematicline
       x1={-12.0635}
       y1={6.9457}
@@ -1295,7 +1334,11 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
       strokeWidth={0.02}
       strokeColor="#008000"
     />
+  </>
+);
 
+const PowerNetwork = () => (
+  <>
     <connector
       name="J1"
       pinCount={2}
@@ -1948,24 +1991,23 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
       color="#1f2937"
     />
     <trace name="TP2-GND" from="TP2.pin1" to="net.GND" schDisplayLabel="GND" />
+  </>
+);
 
+const OutputFixtureBank = () => (
+  <>
     {OUTPUT_FIXTURES.map((fixture) => (
       <OutputFixture key={fixture.netName} {...fixture} />
     ))}
+  </>
+);
 
+const DeviceOutputSheetPorts = () => (
+  <>
     {/* TI terminates each device-side output stub in a named sheet port. The
         LMK1C1104 only drives Y0-Y3; the reused LMK1C1108 sheet keeps Y4-Y7 as
         visibly crossed-out stubs feeding DNP measurement fixtures. */}
-    {[
-      { name: "Y0", x: -1.369793, y: 7.676818, width: 0.566622 },
-      { name: "Y1", x: -1.369793, y: 7.311255, width: 0.566622 },
-      { name: "Y2", x: -1.361721, y: 6.945692, width: 0.566622 },
-      { name: "Y3", x: -1.361721, y: 6.58013, width: 0.566622 },
-      { name: "Y4", x: -1.361721, y: 4.935097, width: 0.566622 },
-      { name: "Y5", x: -1.352582, y: 4.569535, width: 0.5849 },
-      { name: "Y6", x: -1.361721, y: 4.203972, width: 0.566622 },
-      { name: "Y7", x: -1.352582, y: 3.838409, width: 0.5849 },
-    ].map((port, index) => {
+    {DEVICE_OUTPUT_SHEET_PORTS.map((port, index) => {
       const netName = port.name;
       const isDrivenOutput = index < 4;
       const y = port.y;
@@ -2009,7 +2051,11 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
         </Fragment>
       );
     })}
+  </>
+);
 
+const CoreArtifactOverlaysAndInlineLabels = () => (
+  <>
     {/* A zero-width display label keeps the cross-section CLKIN trace
         electrically joined, but core still draws its empty tag outline.
         Cover only that outline and restore TI's straight signal segment. */}
@@ -2053,7 +2099,11 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
       anchor="center"
       color="#840000"
     />
+  </>
+);
 
+const ReferenceNotesLayer = () => (
+  <>
     {TI_NOTE_FRAMES.map((frame, index) => (
       <Fragment key={`ti-note-frame-${index}`}>
         <schematicrect
@@ -2090,6 +2140,30 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
       anchor="top_left"
       color="#ff0000"
     />
+  </>
+);
+
+/**
+ * LMK1C1104EVM validation circuit reproduced from TI's Altium reference.
+ * Reference: https://www.ti.com/tool/LMK1C1104EVM
+ */
+export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
+  <subcircuit
+    schMaxTraceDistance="3.2mm"
+    schTraceAutoLabelEnabled={false}
+    autorouterEffortLevel="10x"
+    {...props}
+  >
+    <ReferenceNets />
+    <ClockDevice />
+    <InputNetwork />
+    <EnableNetwork />
+    <InputAndEnableSourceArtwork />
+    <PowerNetwork />
+    <OutputFixtureBank />
+    <DeviceOutputSheetPorts />
+    <CoreArtifactOverlaysAndInlineLabels />
+    <ReferenceNotesLayer />
   </subcircuit>
 );
 
