@@ -2,24 +2,31 @@ export {
   createSystemBlockEditor,
   SystemBlockEditorController,
 } from "./create-system-block-editor";
-export { LabeledConnection } from "./LabeledConnection";
-export { SemanticSocketView } from "./SemanticSocketView";
+export { SemanticEdge } from "./SemanticEdge";
+export { SystemBlockNodeView } from "./SystemBlockNodeView";
 export type {
   ConnectBlocksOptions,
   CreateSystemBlockEditorOptions,
   GraphChangeListener,
   RejectedConnection,
+  SemanticInterfaceSummary,
+  SystemBlockConnection,
+  SystemBlockConnectionData,
   SystemBlockGraphSnapshot,
   SystemBlockInitialGraph,
+  SystemBlockNode,
+  SystemBlockNodeData,
   SystemBlockPosition,
-  SystemBlockSchemes,
+  SystemBlockRenderState,
 } from "./types";
 export {
+  createSystemBlockConnection,
+  createSystemBlockNode,
+  formatProtocolLabel,
+  getSemanticInterfaces,
+  getSystemBlockHandleId,
   getSystemBlockSocketKey,
   normalizeConnectionKind,
-  SemanticSocket,
   SYSTEM_BLOCK_CONNECTION_COLORS,
   SYSTEM_BLOCK_SOCKET_LABELS,
-  SystemBlockConnection,
-  SystemBlockNode,
 } from "./types";

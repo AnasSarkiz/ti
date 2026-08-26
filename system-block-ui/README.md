@@ -1,6 +1,6 @@
 # TI System Block Builder
 
-`system-block-ui` is a standalone Rete.js application for composing the
+`system-block-ui` is a standalone React Flow application for composing the
 subcircuits in [`../lib/subcircuits`](../lib/subcircuits) as system-level
 blocks. The graph uses broad, readable connections such as **Power** and
 **Data**, then resolves them to the concrete tscircuit selectors needed by the
@@ -21,6 +21,14 @@ bun run typecheck
 bun test
 bun run build
 ```
+
+To create a directly openable, self-contained HTML file with no local server:
+
+```bash
+bun run build:standalone
+```
+
+The result is written to `dist/ti-system-block-builder.html`.
 
 ## How automatic connections work
 

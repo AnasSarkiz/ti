@@ -1,4 +1,4 @@
-import { ClassicPreset, type GetSchemes } from "rete";
+import type { Edge, Node } from "@xyflow/react";
 
 import type {
   BlockInstance,
@@ -21,12 +21,35 @@ export const SYSTEM_BLOCK_SOCKET_LABELS = {
 } satisfies Record<ConnectionKind, string>;
 
 export const SYSTEM_BLOCK_CONNECTION_COLORS = {
-  power: "#f59e0b",
-  data: "#2563eb",
+  power: "#d97706",
+  data: "#377bd4",
 } satisfies Record<ConnectionKind, string>;
 
 const OUTPUT_ROLES = new Set(["provider", "source", "host", "controller"]);
 const INPUT_ROLES = new Set(["consumer", "sink", "device", "peripheral"]);
+
+const PROTOCOL_LABELS: Readonly<Record<string, string>> = {
+  "can-bus": "CAN Bus",
+  "can-controller": "CAN",
+  "hci-uart": "HCI UART",
+  "motor-control": "Motor Control",
+  gpio: "GPIO",
+  i2c: "I²C",
+  i2s: "I²S",
+  power: "Power",
+  uart: "UART",
+};
+
+export function formatProtocolLabel(protocol: string): string {
+  return (
+    PROTOCOL_LABELS[protocol] ??
+    protocol
+      .split(/[-_]/)
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ")
+  );
+}
 
 export function normalizeConnectionKind(
   kind: ConnectionKindInput,
@@ -34,31 +57,15 @@ export function normalizeConnectionKind(
   return kind.toLowerCase() as ConnectionKind;
 }
 
-export function getSystemBlockSocketKey(
+export function getSystemBlockHandleId(
   side: "input" | "output",
   kind: ConnectionKind,
 ): string {
   return `${side}:${kind}`;
 }
 
-export class SemanticSocket extends ClassicPreset.Socket {
-  readonly kind: ConnectionKind;
-  readonly side: "input" | "output";
-  readonly ports: readonly PortDefinition[];
-
-  constructor(
-    kind: ConnectionKind,
-    side: "input" | "output",
-    ports: readonly PortDefinition[],
-  ) {
-    super(SYSTEM_BLOCK_SOCKET_LABELS[kind]);
-    this.kind = kind;
-    this.side = side;
-    this.ports = ports;
-  }
-}
-
-type SemanticSocketMap = Record<string, SemanticSocket>;
+/** @deprecated Use getSystemBlockHandleId. */
+export const getSystemBlockSocketKey = getSystemBlockHandleId;
 
 function portSupportsSide(
   port: PortDefinition,
@@ -70,112 +77,134 @@ function portSupportsSide(
     : OUTPUT_ROLES.has(port.role);
 }
 
-/** A Rete node backed by one model-layer subcircuit instance. */
-export class SystemBlockNode extends ClassicPreset.Node<
-  SemanticSocketMap,
-  SemanticSocketMap
-> {
-  readonly definition: SubcircuitDefinition;
+export interface SemanticInterfaceSummary {
+  kind: ConnectionKind;
+  label: string;
+  color: string;
+  inputPorts: readonly PortDefinition[];
+  outputPorts: readonly PortDefinition[];
+  protocols: readonly string[];
+}
+
+export type SystemBlockNodeData = {
   block: BlockInstance;
-  width = 240;
-  height = 112;
+  definition: SubcircuitDefinition;
+  interfaces: readonly SemanticInterfaceSummary[];
+};
 
-  constructor(block: BlockInstance, definition: SubcircuitDefinition) {
-    super(definition.title);
-    this.id = block.id;
-    this.block = {
-      ...block,
-      definitionId: definition.id,
-      position: block.position ? { ...block.position } : undefined,
-    };
-    this.definition = definition;
+export type SystemBlockNode = Node<SystemBlockNodeData, "systemBlock">;
 
-    for (const kind of ["power", "data"] as const) {
-      for (const side of ["input", "output"] as const) {
-        const ports = definition.ports.filter(
-          (port) => port.kind === kind && portSupportsSide(port, side),
-        );
-        if (ports.length === 0) continue;
+export type SystemBlockConnectionData = {
+  logical: LogicalConnection;
+  resolved: ResolvedConnection;
+  kind: ConnectionKind;
+  label: string;
+  color: string;
+};
 
-        const socket = new SemanticSocket(kind, side, ports);
-        const key = getSystemBlockSocketKey(side, kind);
-        const label = SYSTEM_BLOCK_SOCKET_LABELS[kind];
-        // The visible socket aggregates every compatible model port. Multiple
-        // physical rails/interfaces must remain connectable independently even
-        // when each underlying port only accepts one connection.
-        const multiple =
-          ports.length > 1 || ports.some((port) => port.allowMultiple === true);
+export type SystemBlockConnection = Edge<
+  SystemBlockConnectionData,
+  "semantic"
+> & { data: SystemBlockConnectionData };
 
-        if (side === "input") {
-          this.addInput(key, new ClassicPreset.Input(socket, label, multiple));
-        } else {
-          this.addOutput(
-            key,
-            new ClassicPreset.Output(socket, label, multiple),
-          );
-        }
-      }
-    }
-
-    this.height =
-      72 +
-      Math.max(
-        Object.keys(this.inputs).length,
-        Object.keys(this.outputs).length,
-        1,
-      ) *
-        40;
-  }
-
-  setPosition(position: SystemBlockPosition): void {
-    this.block = { ...this.block, position: { ...position } };
-  }
-
-  getPosition(): SystemBlockPosition {
-    return { ...(this.block.position ?? { x: 0, y: 0 }) };
-  }
-}
-
-/** A rendered edge plus the resolver result used later by TSX generation. */
-export class SystemBlockConnection extends ClassicPreset.Connection<
-  SystemBlockNode,
-  SystemBlockNode
-> {
-  readonly logical: LogicalConnection;
-  readonly resolved: ResolvedConnection;
-  readonly kind: ConnectionKind;
-  readonly label: string;
-  readonly color: string;
-
-  constructor(
-    source: SystemBlockNode,
-    target: SystemBlockNode,
-    logical: LogicalConnection,
-    resolved: ResolvedConnection,
-  ) {
-    const kind = normalizeConnectionKind(logical.kind);
-    super(
-      source,
-      getSystemBlockSocketKey("output", kind),
-      target,
-      getSystemBlockSocketKey("input", kind),
+export function getSemanticInterfaces(
+  definition: SubcircuitDefinition,
+): readonly SemanticInterfaceSummary[] {
+  return (["power", "data"] as const).flatMap((kind) => {
+    const inputPorts = definition.ports.filter(
+      (port) => port.kind === kind && portSupportsSide(port, "input"),
     );
-    this.id = logical.id;
-    this.logical = { ...logical };
-    this.resolved = {
-      ...resolved,
-      traces: resolved.traces.map((trace) => ({ ...trace })),
-    };
-    this.kind = kind;
-    this.label = SYSTEM_BLOCK_SOCKET_LABELS[kind];
-    this.color = SYSTEM_BLOCK_CONNECTION_COLORS[kind];
-  }
+    const outputPorts = definition.ports.filter(
+      (port) => port.kind === kind && portSupportsSide(port, "output"),
+    );
+    if (inputPorts.length === 0 && outputPorts.length === 0) return [];
+
+    const protocols = [
+      ...new Set(
+        [...inputPorts, ...outputPorts]
+          .map((port) => port.protocol)
+          .filter((protocol): protocol is string => Boolean(protocol)),
+      ),
+    ];
+
+    return [
+      {
+        kind,
+        label: SYSTEM_BLOCK_SOCKET_LABELS[kind],
+        color: SYSTEM_BLOCK_CONNECTION_COLORS[kind],
+        inputPorts,
+        outputPorts,
+        protocols,
+      },
+    ];
+  });
 }
 
-export type SystemBlockSchemes = GetSchemes<
-  SystemBlockNode,
-  SystemBlockConnection
->;
+export function createSystemBlockNode(
+  block: BlockInstance,
+  definition: SubcircuitDefinition,
+): SystemBlockNode {
+  const position = block.position ?? { x: 0, y: 0 };
+  const normalizedBlock: BlockInstance = {
+    ...block,
+    definitionId: definition.id,
+    position: { ...position },
+  };
+
+  return {
+    id: normalizedBlock.id,
+    type: "systemBlock",
+    position: { ...position },
+    data: {
+      block: normalizedBlock,
+      definition,
+      interfaces: getSemanticInterfaces(definition),
+    },
+    ariaLabel: `${definition.title} system block`,
+    deletable: true,
+    draggable: true,
+    selectable: true,
+  };
+}
+
+export function createSystemBlockConnection(
+  source: SystemBlockNode,
+  target: SystemBlockNode,
+  logical: LogicalConnection,
+  resolved: ResolvedConnection,
+): SystemBlockConnection {
+  const kind = normalizeConnectionKind(logical.kind);
+  const normalizedLogical: LogicalConnection = { ...logical, kind };
+  const label =
+    kind === "power"
+      ? "Power"
+      : resolved.protocol
+        ? `Data · ${formatProtocolLabel(resolved.protocol)}`
+        : "Data";
+
+  return {
+    id: logical.id,
+    type: "semantic",
+    source: source.id,
+    target: target.id,
+    sourceHandle: getSystemBlockHandleId("output", kind),
+    targetHandle: getSystemBlockHandleId("input", kind),
+    data: {
+      logical: normalizedLogical,
+      resolved: {
+        ...resolved,
+        traces: resolved.traces.map((trace) => ({ ...trace })),
+      },
+      kind,
+      label,
+      color: SYSTEM_BLOCK_CONNECTION_COLORS[kind],
+    },
+    ariaLabel: `${label} connection from ${source.data.definition.title} to ${target.data.definition.title}`,
+    deletable: true,
+    focusable: true,
+    selectable: true,
+  };
+}
 
 export interface SystemBlockGraphSnapshot {
   blocks: BlockInstance[];
@@ -205,4 +234,10 @@ export interface CreateSystemBlockEditorOptions {
   initialGraph?: SystemBlockInitialGraph;
   onGraphChange?: GraphChangeListener;
   onConnectionRejected?: (rejection: RejectedConnection) => void;
+}
+
+export interface SystemBlockRenderState {
+  revision: number;
+  nodes: SystemBlockNode[];
+  edges: SystemBlockConnection[];
 }

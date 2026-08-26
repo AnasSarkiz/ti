@@ -17,5 +17,5 @@
     "jsx": "react-jsx",
     "types": ["bun", "vite/client"]
   },
-  "include": ["src", "scripts", "vite.config.ts"]
+  "include": ["src", "scripts", "vite.config.ts", "vite.standalone.config.ts"]
 }

@@ -38,11 +38,12 @@ connected Bluetooth speaker schematic.
 ## System Block Builder
 
 The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
-Rete.js canvas for dragging these subcircuits into a system diagram. Connections
-stay at a readable system level—such as Power or Data—while a curated semantic
-catalog resolves compatible voltage rails and protocols into exact tscircuit
-selectors. The app generates example-style TSX and can evaluate it with PCB and
-routing work disabled to produce a schematic preview and downloadable PDF.
+React Flow canvas for dragging these subcircuits into a system diagram.
+Connections stay at a readable system level—such as Power or Data—while a
+curated semantic catalog resolves compatible voltage rails and protocols into
+exact tscircuit selectors. The app generates example-style TSX and can evaluate
+it with PCB and routing work disabled to produce a schematic preview and
+downloadable PDF.
 
 ## Raw Chip Usage
 

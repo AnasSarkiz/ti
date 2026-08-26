@@ -476,7 +476,7 @@ export function App() {
             }
           }}
         >
-          <div className="rete-canvas" ref={canvasRef} />
+          <div className="flow-canvas" ref={canvasRef} />
           <div className="canvas-toolbar">
             <span className="toolbar-label">
               {snapshot.blocks.length} blocks · {snapshot.connections.length}{" "}
