@@ -2030,8 +2030,16 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
       color="#008000"
     />
     <schematictext
+      text="1"
+      schX={-6.5801}
+      schY={6.9457}
+      fontSize={0.15}
+      anchor="bottom_center"
+      color="#a90000"
+    />
+    <schematictext
       text="CLKIN"
-      schX={-6.7685}
+      schX={-6.95}
       schY={7.0357}
       fontSize={0.18}
       anchor="center"
