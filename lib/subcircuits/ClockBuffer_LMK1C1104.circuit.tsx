@@ -20,6 +20,17 @@ const OUTPUT_NET_NAMES = [
   "Y7",
 ] as const;
 
+const EXPOSED_NET_NAMES = [
+  "CLKIN",
+  "OE",
+  "VDD",
+  "GND",
+  "Y0",
+  "Y1",
+  "Y2",
+  "Y3",
+] as const;
+
 type OutputNetName = (typeof OUTPUT_NET_NAMES)[number];
 type SchematicPoint = readonly [x: number, y: number];
 
@@ -358,15 +369,22 @@ const OutputFixture = ({
         pcbRotation={horizontalPcbRotation}
         doNotPlace={doNotPlace}
         connections={{
-          ...(doNotPlace ? {} : { pin1: `net.${netName}` }),
           pin2: `${secondResistor}.pin1`,
         }}
       />
-      {doNotPlace && (
+      {doNotPlace ? (
         <trace
           from={`${firstResistor}.pin1`}
           to={`net.${netName}`}
           pcbPath={[`${firstResistor}.pin1`, `${firstResistor}.pin1`]}
+        />
+      ) : (
+        <netlabel
+          net={netName}
+          connectsTo={`${firstResistor}.pin1`}
+          schX={sheetPort.centerX + sheetPort.width / 2}
+          schY={sch.firstResistor[1]}
+          anchorSide="right"
         />
       )}
       <resistor
@@ -602,12 +620,14 @@ const OutputFixture = ({
         to="net.GND"
         schDisplayLabel="GND"
       />
-      <SheetPortGraphic
-        name={netName}
-        schX={sheetPort.centerX}
-        schY={sch.firstResistor[1]}
-        width={sheetPort.width}
-      />
+      {doNotPlace && (
+        <SheetPortGraphic
+          name={netName}
+          schX={sheetPort.centerX}
+          schY={sch.firstResistor[1]}
+          width={sheetPort.width}
+        />
+      )}
     </>
   );
 };
@@ -804,12 +824,12 @@ const TI_SCHEMATIC_NOTES = [
   },
   { x: 8.0515, y: 6.7538, text: "to VDD Pins", color: "#ff0000" },
   {
-    x: -10.5922,
-    y: 6.3882,
+    x: -10.6,
+    y: 5.4,
     text: "Put these components close to",
     color: "#ff0000",
   },
-  { x: -10.5922, y: 6.2054, text: "SMA connector", color: "#ff0000" },
+  { x: -10.6, y: 5.2172, text: "SMA connector", color: "#ff0000" },
   {
     x: -14.4306,
     y: -1.1058,
@@ -926,6 +946,8 @@ const TI_SCHEMATIC_NOTES = [
 
 const ReferenceNets = () => (
   <>
+    <net name="CLKIN" />
+    <net name="OE" />
     <net name="GND" isGroundNet />
     <net name="VDD" isPowerNet />
     {OUTPUT_NET_NAMES.map((netName) => (
@@ -963,15 +985,20 @@ const ClockDevice = () => (
     />
     <trace name="U1-VDD" from="U1.pin6" to="net.VDD" schDisplayLabel="VDD" />
     <trace name="U1-GND" from="U1.pin4" to="net.GND" schDisplayLabel="GND" />
-    {DRIVEN_OUTPUTS.map(({ pin, netName }) => (
-      <Fragment key={`U1-${netName}`}>
-        <trace
-          from={`U1.pin${pin}`}
-          to={`net.${netName}`}
-          schDisplayLabel={HIDDEN_ROUTE_LABEL}
-        />
-      </Fragment>
-    ))}
+    {DRIVEN_OUTPUTS.map(({ pin, netName }, index) => {
+      const sheetPort = DEVICE_OUTPUT_SHEET_PORTS[index];
+      return (
+        <Fragment key={`U1-${netName}`}>
+          <netlabel
+            net={netName}
+            connectsTo={`U1.pin${pin}`}
+            schX={sheetPort.x - sheetPort.width / 2}
+            schY={sheetPort.y}
+            anchorSide="left"
+          />
+        </Fragment>
+      );
+    })}
   </>
 );
 
@@ -1006,7 +1033,7 @@ const InputNetwork = () => (
       footprint="0603"
       manufacturerPartNumber={TERMINATION_MPN}
       schX={-10.6013}
-      schY={7.3113}
+      schY={7.75}
       schOrientation="vertical"
       schSectionName="input-bias"
       pcbX={-8.5}
@@ -1021,7 +1048,7 @@ const InputNetwork = () => (
       footprint="0603"
       manufacturerPartNumber={TERMINATION_MPN}
       schX={-10.7841}
-      schY={6.5801}
+      schY={6.15}
       schOrientation="vertical"
       schSectionName="input-bias"
       pcbX={-8.5}
@@ -1032,11 +1059,12 @@ const InputNetwork = () => (
     <trace from="R1.pin2" to="R2.pin2" />
     <trace from="R3.pin1" to="R2.pin2" />
     <trace from="J2.pin1" to="R2.pin1" schDisplayLabel={HIDDEN_ROUTE_LABEL} />
-    <trace
-      name="CLKIN"
-      from="R2.pin2"
-      to="U1.pin1"
-      schDisplayLabel={HIDDEN_ROUTE_LABEL}
+    <netlabel
+      net="CLKIN"
+      connectsTo={["R2.pin2", "U1.pin1"]}
+      schX={-8.3}
+      schY={7.2}
+      anchorSide="right"
     />
   </>
 );
@@ -1182,74 +1210,12 @@ const EnableNetwork = () => (
       pcbX={-8}
       pcbY={-7}
     />
-    <trace
-      name="1G"
-      from="R4.pin1"
-      to="U1.pin2"
-      schDisplayLabel={HIDDEN_ROUTE_LABEL}
-    />
-  </>
-);
-
-const InputAndEnableSourceArtwork = () => (
-  <>
-    <schematicline
-      x1={-12.0635}
-      y1={6.9457}
-      x2={-11.4497}
-      y2={6.9457}
-      strokeWidth={0.02}
-      color="#008000"
-    />
-    <schematicline
-      x1={-10.8497}
-      y1={6.9457}
-      x2={-6.7629}
-      y2={6.9457}
-      strokeWidth={0.02}
-      color="#008000"
-    />
-    <schematicline
-      x1={-10.6013}
-      y1={7.0113}
-      x2={-10.6013}
-      y2={6.9457}
-      strokeWidth={0.02}
-      color="#008000"
-    />
-    <schematicline
-      x1={-10.7841}
-      y1={6.8801}
-      x2={-10.7841}
-      y2={6.9457}
-      strokeWidth={0.02}
-      color="#008000"
-    />
-    <schematiccircle
-      center={{ x: -10.6013, y: 6.9457 }}
-      radius={0.035}
-      strokeWidth={0}
-      color="#008000"
-      isFilled
-      fillColor="#008000"
-    />
-    <schematiccircle
-      center={{ x: -10.7841, y: 6.9457 }}
-      radius={0.035}
-      strokeWidth={0}
-      color="#008000"
-      isFilled
-      fillColor="#008000"
-    />
-    <schematicpath
-      points={[
-        { x: -9.3874, y: 3.4728 },
-        { x: -7.8596, y: 3.4728 },
-        { x: -7.8596, y: 6.2146 },
-        { x: -6.7629, y: 6.2146 },
-      ]}
-      strokeWidth={0.02}
-      strokeColor="#008000"
+    <netlabel
+      net="OE"
+      connectsTo={["R4.pin1", "U1.pin2"]}
+      schX={-7.8596}
+      schY={3.4728}
+      anchorSide="right"
     />
   </>
 );
@@ -1929,6 +1895,7 @@ const DeviceOutputSheetPorts = () => (
       const isDrivenOutput = index < 4;
       const y = port.y;
       const sheetPortLeftX = port.x - port.width / 2;
+      if (isDrivenOutput) return null;
       return (
         <Fragment key={`${netName}-stub`}>
           <schematicline
@@ -1939,26 +1906,22 @@ const DeviceOutputSheetPorts = () => (
             color="#008000"
             strokeWidth={0.02}
           />
-          {!isDrivenOutput && (
-            <>
-              <schematicline
-                x1={-4.642647}
-                y1={y - 0.073113}
-                x2={-4.496422}
-                y2={y + 0.073113}
-                color="#ff0000"
-                strokeWidth={0.02}
-              />
-              <schematicline
-                x1={-4.642647}
-                y1={y + 0.073113}
-                x2={-4.496422}
-                y2={y - 0.073113}
-                color="#ff0000"
-                strokeWidth={0.02}
-              />
-            </>
-          )}
+          <schematicline
+            x1={-4.642647}
+            y1={y - 0.073113}
+            x2={-4.496422}
+            y2={y + 0.073113}
+            color="#ff0000"
+            strokeWidth={0.02}
+          />
+          <schematicline
+            x1={-4.642647}
+            y1={y + 0.073113}
+            x2={-4.496422}
+            y2={y - 0.073113}
+            color="#ff0000"
+            strokeWidth={0.02}
+          />
           <SheetPortGraphic
             name={netName}
             schX={port.x}
@@ -1968,54 +1931,6 @@ const DeviceOutputSheetPorts = () => (
         </Fragment>
       );
     })}
-  </>
-);
-
-const CoreArtifactOverlaysAndInlineLabels = () => (
-  <>
-    {/* A zero-width display label keeps the cross-section CLKIN trace
-        electrically joined, but core still draws its empty tag outline.
-        Cover only that outline and restore TI's straight signal segment. */}
-    <schematictext
-      text="█"
-      schX={-6.98}
-      schY={6.9457}
-      fontSize={0.36}
-      anchor="center"
-      color="#f5f1ed"
-    />
-    <schematictext
-      text={"█".repeat(42)}
-      schX={-6.98}
-      schY={6.9457}
-      fontSize={0.02}
-      anchor="center"
-      color="#008000"
-    />
-    <schematictext
-      text="1"
-      schX={-6.5801}
-      schY={6.9457}
-      fontSize={0.15}
-      anchor="bottom_center"
-      color="#a90000"
-    />
-    <schematictext
-      text="CLKIN"
-      schX={-6.95}
-      schY={7.0357}
-      fontSize={0.18}
-      anchor="center"
-      color="#840000"
-    />
-    <schematictext
-      text="1G"
-      schX={-6.9485}
-      schY={6.3046}
-      fontSize={0.18}
-      anchor="center"
-      color="#840000"
-    />
   </>
 );
 
@@ -2048,10 +1963,16 @@ const ReferenceNotesLayer = () => (
 
 /**
  * LMK1C1104EVM validation circuit reproduced from TI's Altium reference.
+ * Exposes CLKIN, OE, VDD, GND, and the four driven outputs Y0-Y3 to the
+ * parent circuit. Y4-Y7 belong to the reference board's DNP LMK1C1108
+ * fixture paths and intentionally remain internal. OE is the API-safe alias
+ * for TI's 1G net because tscircuit net selectors cannot begin with a digit.
+ *
  * Reference: https://www.ti.com/tool/LMK1C1104EVM
  */
 export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
   <subcircuit
+    exposedNets={[...EXPOSED_NET_NAMES]}
     schMaxTraceDistance="3.2mm"
     schTraceAutoLabelEnabled={false}
     autorouterEffortLevel="10x"
@@ -2061,11 +1982,9 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
     <ClockDevice />
     <InputNetwork />
     <EnableNetwork />
-    <InputAndEnableSourceArtwork />
     <PowerNetwork />
     <OutputFixtureBank />
     <DeviceOutputSheetPorts />
-    <CoreArtifactOverlaysAndInlineLabels />
     <ReferenceNotesLayer />
   </subcircuit>
 );
