@@ -11,7 +11,10 @@ import {
   ResetIcon,
   SparkIcon,
 } from "./components/Icons";
-import { OutputPanel } from "./components/OutputPanel";
+import {
+  OutputPanel,
+  type SchematicSheetPreview,
+} from "./components/OutputPanel";
 import {
   createSystemBlockEditor,
   type SystemBlockEditorController,
@@ -27,11 +30,14 @@ import {
   type SubcircuitDefinition,
 } from "./model";
 import { downloadBlob } from "./rendering/download-blob";
+import type { EvaluatedSchematicSheet } from "./rendering/evaluate-schematic";
 
 interface Notice {
   message: string;
   tone: "default" | "error" | "success";
 }
+
+type RenderedSchematicSheet = EvaluatedSchematicSheet & SchematicSheetPreview;
 
 const componentId = (
   catalog: readonly SubcircuitDefinition[],
@@ -144,12 +150,6 @@ const createStarterDesign = (
   return { blocks, connections };
 };
 
-const emptySnapshot = (): SystemBlockGraphSnapshot => ({
-  blocks: [],
-  connections: [],
-  resolvedConnections: [],
-});
-
 const instanceBaseName = (componentName: string): string =>
   componentName
     .replace(/([a-z\d])([A-Z])/g, "$1_$2")
@@ -199,8 +199,9 @@ export function App() {
   }));
   const [notice, setNotice] = useState<Notice>();
   const [isRendering, setIsRendering] = useState(false);
-  const [schematicSvg, setSchematicSvg] = useState<string>();
-  const [schematicUrl, setSchematicUrl] = useState<string>();
+  const [schematicSheets, setSchematicSheets] = useState<
+    readonly RenderedSchematicSheet[]
+  >([]);
   const [previewError, setPreviewError] = useState<string>();
   const hasAutomaticPower = snapshot.connections.some(
     (connection) => connection.kind.toLowerCase() === "power",
@@ -250,7 +251,7 @@ export function App() {
       onGraphChange: (nextSnapshot) => {
         if (disposed) return;
         setSnapshot(nextSnapshot);
-        setSchematicSvg(undefined);
+        setSchematicSheets([]);
         setPreviewError(undefined);
       },
       onConnectionRejected: ({ error }) => notify(error.message, "error"),
@@ -281,17 +282,14 @@ export function App() {
     };
   }, [catalog, notify, starterDesign]);
 
-  useEffect(() => {
-    if (!schematicSvg) {
-      setSchematicUrl(undefined);
-      return;
-    }
-    const url = URL.createObjectURL(
-      new Blob([schematicSvg], { type: "image/svg+xml" }),
-    );
-    setSchematicUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [schematicSvg]);
+  useEffect(
+    () => () => {
+      for (const sheet of schematicSheets) {
+        URL.revokeObjectURL(sheet.svgUrl);
+      }
+    },
+    [schematicSheets],
+  );
 
   const insertDefinition = useCallback(
     async (
@@ -363,8 +361,18 @@ export function App() {
         );
         return;
       }
-      setSchematicSvg(rendered.svg);
-      notify("Schematic rendered with PCB and routing disabled.", "success");
+      setSchematicSheets(
+        rendered.sheets.map((sheet) => ({
+          ...sheet,
+          svgUrl: URL.createObjectURL(
+            new Blob([sheet.svg], { type: "image/svg+xml" }),
+          ),
+        })),
+      );
+      notify(
+        `${rendered.sheets.length} schematic sheet${rendered.sheets.length === 1 ? "" : "s"} rendered with PCB and routing disabled.`,
+        "success",
+      );
     } catch (error) {
       const message = errorMessage(error);
       setPreviewError(message);
@@ -402,18 +410,21 @@ export function App() {
   }, [generatedTsx, notify]);
 
   const downloadPdf = useCallback(async () => {
-    if (!schematicSvg) return;
+    if (schematicSheets.length === 0) return;
     try {
       const { downloadSchematicPdf } = await import("./rendering/export-pdf");
-      await downloadSchematicPdf(schematicSvg, {
+      await downloadSchematicPdf(schematicSheets, {
         fileName: "GeneratedSystem.schematic.pdf",
         title: "TI System Block Schematic",
       });
-      notify("Schematic PDF downloaded.", "success");
+      notify(
+        `${schematicSheets.length}-page schematic PDF downloaded.`,
+        "success",
+      );
     } catch (error) {
       notify(errorMessage(error), "error");
     }
-  }, [notify, schematicSvg]);
+  }, [notify, schematicSheets]);
 
   return (
     <main className="app-shell">
@@ -538,7 +549,7 @@ export function App() {
           onRender={() => void renderSchematic()}
           previewError={previewError}
           resolvedConnections={snapshot.resolvedConnections}
-          svgUrl={schematicUrl}
+          sheets={schematicSheets}
           tsx={generatedTsx}
         />
       </div>

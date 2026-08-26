@@ -12,7 +12,7 @@ import {
 interface OutputPanelProps {
   tsx: string;
   resolvedConnections: readonly ResolvedConnection[];
-  svgUrl?: string;
+  sheets: readonly SchematicSheetPreview[];
   previewError?: string;
   isRendering: boolean;
   onCopyTsx: () => void;
@@ -21,13 +21,20 @@ interface OutputPanelProps {
   onDownloadPdf: () => void;
 }
 
+export interface SchematicSheetPreview {
+  id: string;
+  title: string;
+  sheetIndex: number;
+  svgUrl: string;
+}
+
 const connectionColor = (kind: ResolvedConnection["kind"]): string =>
   kind === "power" ? "var(--power)" : "var(--data)";
 
 export function OutputPanel({
   tsx,
   resolvedConnections,
-  svgUrl,
+  sheets,
   previewError,
   isRendering,
   onCopyTsx,
@@ -36,13 +43,26 @@ export function OutputPanel({
   onDownloadPdf,
 }: OutputPanelProps) {
   const [activeTab, setActiveTab] = useState<"code" | "schematic">("code");
+  const [selectedSheetId, setSelectedSheetId] = useState<string>();
+  const selectedSheetIndex = Math.max(
+    0,
+    sheets.findIndex((sheet) => sheet.id === selectedSheetId),
+  );
+  const selectedSheet = sheets[selectedSheetIndex];
+  const hasSchematic = sheets.length > 0;
 
   return (
     <aside className="output-panel" aria-label="Generated output">
-      <div className="tab-list" role="tablist">
+      <div
+        aria-label="Generated output views"
+        className="tab-list"
+        role="tablist"
+      >
         <button
+          aria-controls="generated-code-panel"
           aria-selected={activeTab === "code"}
           className="tab-button"
+          id="generated-code-tab"
           onClick={() => setActiveTab("code")}
           role="tab"
           type="button"
@@ -51,8 +71,10 @@ export function OutputPanel({
           Generated TSX
         </button>
         <button
+          aria-controls="schematic-preview-panel"
           aria-selected={activeTab === "schematic"}
           className="tab-button"
+          id="schematic-preview-tab"
           onClick={() => setActiveTab("schematic")}
           role="tab"
           type="button"
@@ -63,7 +85,12 @@ export function OutputPanel({
       </div>
 
       {activeTab === "code" ? (
-        <div className="output-body" role="tabpanel">
+        <div
+          aria-labelledby="generated-code-tab"
+          className="output-body"
+          id="generated-code-panel"
+          role="tabpanel"
+        >
           <div className="code-toolbar">
             <span>GeneratedSystem.circuit.tsx</span>
             <span className="code-actions">
@@ -117,25 +144,88 @@ export function OutputPanel({
           </div>
         </div>
       ) : (
-        <div className="preview-pane" role="tabpanel">
+        <div
+          aria-labelledby="schematic-preview-tab"
+          className="preview-pane"
+          id="schematic-preview-panel"
+          role="tabpanel"
+        >
           <div className="preview-stage">
             {isRendering ? (
-              <div className="preview-loading">
+              <div aria-live="polite" className="preview-loading" role="status">
                 <span className="spinner" />
                 Evaluating TSX with PCB and routing disabled…
               </div>
             ) : previewError ? (
-              <div className="preview-error">
+              <div className="preview-error" role="alert">
                 <WarningIcon />
                 {previewError}
               </div>
-            ) : svgUrl ? (
-              <img alt="Generated circuit schematic" src={svgUrl} />
+            ) : selectedSheet ? (
+              <div className="sheet-browser">
+                <div className="sheet-preview-heading">
+                  <span
+                    className="sheet-preview-title"
+                    title={selectedSheet.title}
+                  >
+                    {selectedSheet.title}
+                  </span>
+                  <span className="sheet-preview-count">
+                    Sheet {selectedSheetIndex + 1} of {sheets.length}
+                  </span>
+                </div>
+
+                {sheets.length > 1 && (
+                  <nav
+                    aria-label="Schematic sheet navigator"
+                    className="sheet-navigator"
+                  >
+                    {sheets.map((sheet, index) => {
+                      const selected = index === selectedSheetIndex;
+                      return (
+                        <button
+                          aria-label={`Show sheet ${index + 1} of ${sheets.length}: ${sheet.title}`}
+                          aria-pressed={selected}
+                          className="sheet-thumbnail"
+                          key={sheet.id}
+                          onClick={() => setSelectedSheetId(sheet.id)}
+                          type="button"
+                        >
+                          <span className="sheet-thumbnail-image">
+                            <img
+                              alt=""
+                              aria-hidden="true"
+                              draggable={false}
+                              src={sheet.svgUrl}
+                            />
+                          </span>
+                          <span className="sheet-thumbnail-copy">
+                            <span className="sheet-thumbnail-number">
+                              Sheet {index + 1}
+                            </span>
+                            <span className="sheet-thumbnail-title">
+                              {sheet.title}
+                            </span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </nav>
+                )}
+
+                <div className="sheet-preview-frame">
+                  <img
+                    alt={`${selectedSheet.title} schematic, sheet ${selectedSheetIndex + 1} of ${sheets.length}`}
+                    draggable={false}
+                    src={selectedSheet.svgUrl}
+                  />
+                </div>
+              </div>
             ) : (
               <div className="preview-empty">
                 <SparkIcon />
-                Render the generated TSX to inspect its schematic and enable
-                vector PDF export.
+                Render the generated TSX to inspect every schematic sheet and
+                enable vector PDF export.
               </div>
             )}
           </div>
@@ -148,18 +238,23 @@ export function OutputPanel({
             >
               <span className="button-content">
                 <SparkIcon />
-                {svgUrl ? "Render again" : "Render schematic"}
+                {hasSchematic ? "Render again" : "Render schematic"}
               </span>
             </button>
             <button
               className="primary-button"
-              disabled={!svgUrl || isRendering}
+              aria-label={
+                hasSchematic
+                  ? `Download all ${sheets.length} schematic sheet${sheets.length === 1 ? "" : "s"} as PDF`
+                  : "Download schematic PDF"
+              }
+              disabled={!hasSchematic || isRendering}
               onClick={onDownloadPdf}
               type="button"
             >
               <span className="button-content">
                 <PdfIcon />
-                PDF
+                {sheets.length > 1 ? `PDF · ${sheets.length} sheets` : "PDF"}
               </span>
             </button>
           </div>

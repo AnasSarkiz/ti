@@ -1,20 +1,25 @@
 import webWorkerBlobUrl from "@tscircuit/eval/blob-url";
 import { createCircuitWebWorker } from "@tscircuit/eval/worker";
 import type { AnyCircuitElement } from "circuit-json";
-import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg";
 import { assertCircuitJsonHasNoErrors } from "./circuit-json-errors";
+import {
+  type EvaluatedSchematicSheet,
+  renderSchematicSheets,
+  type SchematicSvgOptions,
+} from "./render-schematic-sheets";
 
 export {
   CircuitJsonEvaluationError,
   getCircuitJsonErrors,
 } from "./circuit-json-errors";
+export {
+  type EvaluatedSchematicSheet,
+  renderSchematicSheets,
+  type SchematicSvgOptions,
+} from "./render-schematic-sheets";
 
 export const DEFAULT_EVALUATION_TIMEOUT_MS = 30_000;
 export const DEFAULT_MAIN_COMPONENT_PATH = "generated-system.tsx";
-
-export type SchematicSvgOptions = NonNullable<
-  Parameters<typeof convertCircuitJsonToSchematicSvg>[1]
->;
 
 export interface EvaluateGeneratedTsxOptions {
   /** Maximum time allowed for worker creation, evaluation, and rendering. */
@@ -29,7 +34,7 @@ export interface EvaluateGeneratedTsxOptions {
 
 export interface EvaluatedSchematic {
   circuitJson: AnyCircuitElement[];
-  svg: string;
+  sheets: EvaluatedSchematicSheet[];
 }
 
 export class SchematicEvaluationTimeoutError extends Error {
@@ -56,7 +61,7 @@ const validateMainComponentPath = (path: string): void => {
 
 /**
  * Evaluates generated, default-exported tscircuit TSX in an isolated worker and
- * converts its Circuit JSON into a schematic-only SVG.
+ * converts its Circuit JSON into one schematic-only SVG per sheet.
  */
 export async function evaluateGeneratedTsx(
   tsx: string,
@@ -119,12 +124,9 @@ export async function evaluateGeneratedTsx(
   try {
     const circuitJson = await Promise.race([evaluation, timeout]);
     assertCircuitJsonHasNoErrors(circuitJson);
-    const svg = convertCircuitJsonToSchematicSvg(
-      circuitJson,
-      options.schematicOptions,
-    );
+    const sheets = renderSchematicSheets(circuitJson, options.schematicOptions);
 
-    return { circuitJson, svg };
+    return { circuitJson, sheets };
   } finally {
     if (timeoutHandle !== undefined) clearTimeout(timeoutHandle);
     await killWorker();
