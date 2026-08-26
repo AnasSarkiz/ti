@@ -924,89 +924,6 @@ const TI_SCHEMATIC_NOTES = [
   },
 ] as const;
 
-// Altium places opaque white frames behind each note block so traces and
-// component text cannot bleed through the red layout instructions.
-const TI_NOTE_FRAMES = [
-  {
-    x: 9.870194534506716,
-    y: 6.76291106993979,
-    width: 3.6556276053728585,
-    height: 0.3655627605372858,
-  },
-  {
-    x: 4.752315886984714,
-    y: 6.76291106993979,
-    width: 2.9245020842982865,
-    height: 0.3655627605372858,
-  },
-  {
-    x: -9.139069013432145,
-    y: 6.214566929133859,
-    width: 2.9245020842982865,
-    height: 0.3655627605372858,
-  },
-  {
-    x: -13.068868689207969,
-    y: -1.462251042149143,
-    width: 2.741720704029644,
-    height: 0.7311255210745716,
-  },
-  {
-    x: -13.068868689207969,
-    y: -4.386753126447429,
-    width: 2.741720704029644,
-    height: 0.7311255210745716,
-  },
-  {
-    x: -5.392050717924967,
-    y: -1.5536417322834648,
-    width: 2.741720704029644,
-    height: 0.5483441408059287,
-  },
-  {
-    x: -5.209269337656323,
-    y: -4.478143816581751,
-    width: 2.741720704029644,
-    height: 0.5483441408059287,
-  },
-  {
-    x: 1.7364231125521066,
-    y: -1.3708603520148213,
-    width: 2.741720704029644,
-    height: 0.5483441408059287,
-  },
-  {
-    x: 1.7364231125521066,
-    y: -4.386753126447429,
-    width: 2.741720704029644,
-    height: 0.7311255210745716,
-  },
-  {
-    x: 8.773506252894858,
-    y: -1.462251042149143,
-    width: 2.9245020842982865,
-    height: 0.7311255210745716,
-  },
-  {
-    x: 8.773506252894858,
-    y: -4.386753126447429,
-    width: 2.9245020842982865,
-    height: 0.7311255210745716,
-  },
-  {
-    x: -0.7311255210745724,
-    y: -6.5801296896711445,
-    width: 2.9245020842982865,
-    height: 0.3655627605372858,
-  },
-  {
-    x: 1.2794696618805013,
-    y: 8.225162112088931,
-    width: 2.193376563223715,
-    height: 0.3655627605372858,
-  },
-] as const;
-
 const ReferenceNets = () => (
   <>
     <net name="GND" isGroundNet />
@@ -2104,20 +2021,6 @@ const CoreArtifactOverlaysAndInlineLabels = () => (
 
 const ReferenceNotesLayer = () => (
   <>
-    {TI_NOTE_FRAMES.map((frame, index) => (
-      <Fragment key={`ti-note-frame-${index}`}>
-        <schematicrect
-          schX={frame.x}
-          schY={frame.y}
-          width={frame.width}
-          height={frame.height}
-          strokeWidth={0}
-          color="#ffffff"
-          isFilled
-        />
-      </Fragment>
-    ))}
-
     {/* These strings intentionally preserve TI's source annotations verbatim,
         including its stale C29-C32 and output-resistor references. */}
     {TI_SCHEMATIC_NOTES.map((note, index) => (
