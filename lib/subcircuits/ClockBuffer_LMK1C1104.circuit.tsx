@@ -2010,6 +2010,25 @@ export const ClockBuffer_LMK1C1104 = (props: SubcircuitProps) => (
       );
     })}
 
+    {/* A zero-width display label keeps the cross-section CLKIN trace
+        electrically joined, but core still draws its empty tag outline.
+        Cover only that outline and restore TI's straight signal segment. */}
+    <schematictext
+      text="█"
+      schX={-6.98}
+      schY={6.9457}
+      fontSize={0.36}
+      anchor="center"
+      color="#f5f1ed"
+    />
+    <schematictext
+      text={"█".repeat(42)}
+      schX={-6.98}
+      schY={6.9457}
+      fontSize={0.02}
+      anchor="center"
+      color="#008000"
+    />
     <schematictext
       text="CLKIN"
       schX={-6.7685}
