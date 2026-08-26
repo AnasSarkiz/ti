@@ -30,6 +30,12 @@ export function SemanticEdge({
     curvature: 0.32,
   });
   const color = data?.color ?? "#64748b";
+  const summary = data?.powerSummary;
+  const tooltip = summary
+    ? `${summary.linkCount} resolved power link${summary.linkCount === 1 ? "" : "s"} · ${summary.traceCount} total trace${summary.traceCount === 1 ? "" : "s"} · ${summary.loadCount} load${summary.loadCount === 1 ? "" : "s"}`
+    : data
+      ? `${data.label}: ${data.resolved.traces.length} resolved trace${data.resolved.traces.length === 1 ? "" : "s"}`
+      : undefined;
 
   return (
     <>
@@ -49,16 +55,14 @@ export function SemanticEdge({
         <div
           className="nodrag nopan system-block-edge-label"
           data-kind={data?.kind}
+          data-summary={Boolean(summary)}
           style={{
             borderColor: color,
             color,
+            pointerEvents: summary ? "auto" : undefined,
             transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
           }}
-          title={
-            data
-              ? `${data.label}: ${data.resolved.traces.length} resolved trace${data.resolved.traces.length === 1 ? "" : "s"}`
-              : undefined
-          }
+          title={tooltip}
         >
           <span
             className="system-block-edge-label-dot"

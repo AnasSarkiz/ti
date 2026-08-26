@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "bun run typecheck && vite build",
     "build:standalone": "bun run typecheck && vite build --config vite.standalone.config.ts && bun run scripts/inline-standalone.ts",
+    "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "format": "biome format --write .",

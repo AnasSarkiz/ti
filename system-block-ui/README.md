@@ -6,7 +6,7 @@ blocks. The graph uses broad, readable connections such as **Power** and
 **Data**, then resolves them to the concrete tscircuit selectors needed by the
 generated TSX.
 
-## Run locally
+## Run with schematic preview
 
 ```bash
 cd system-block-ui
@@ -14,12 +14,21 @@ bun install
 bun run dev
 ```
 
-The production checks are:
+Open the local HTTP URL printed by Vite. Schematic rendering and PDF export are
+supported when the application is served over HTTP.
+
+To build the production application and serve that build locally:
+
+```bash
+bun run build
+bun run preview
+```
+
+The remaining production checks are:
 
 ```bash
 bun run typecheck
 bun test
-bun run build
 ```
 
 To create a directly openable, self-contained HTML file with no local server:
@@ -29,6 +38,10 @@ bun run build:standalone
 ```
 
 The result is written to `dist/ti-system-block-builder.html`.
+The standalone `file://` application supports the block editor, automatic
+connection resolution, and TSX generation/export only. It cannot render the
+schematic or create its PDF; run `bun run build && bun run preview` for those
+features.
 
 ## How automatic connections work
 

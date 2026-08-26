@@ -19,11 +19,11 @@ import {
   type SystemBlockInitialGraph,
 } from "./editor";
 import {
+  type BlockInstance,
   generateTsx,
   getSubcircuitCatalog,
-  resolveDesignConnections,
-  type BlockInstance,
   type LogicalConnection,
+  resolveDesignConnections,
   type SubcircuitDefinition,
 } from "./model";
 import { downloadBlob } from "./rendering/download-blob";
@@ -202,6 +202,12 @@ export function App() {
   const [schematicSvg, setSchematicSvg] = useState<string>();
   const [schematicUrl, setSchematicUrl] = useState<string>();
   const [previewError, setPreviewError] = useState<string>();
+  const hasAutomaticPower = snapshot.connections.some(
+    (connection) => connection.kind.toLowerCase() === "power",
+  );
+  const dataLinkCount = snapshot.connections.filter(
+    (connection) => connection.kind.toLowerCase() === "data",
+  ).length;
 
   const notify = useCallback(
     (message: string, tone: Notice["tone"] = "default") => {
@@ -328,6 +334,14 @@ export function App() {
   );
 
   const renderSchematic = useCallback(async () => {
+    if (window.location.protocol === "file:") {
+      const message =
+        'Schematic preview requires HTTP. In system-block-ui, run "bun run build && bun run preview", then open the shown local URL.';
+      setPreviewError(message);
+      notify(message, "error");
+      return;
+    }
+
     const source = generatedTsx;
     setIsRendering(true);
     setPreviewError(undefined);
@@ -479,8 +493,10 @@ export function App() {
           <div className="flow-canvas" ref={canvasRef} />
           <div className="canvas-toolbar">
             <span className="toolbar-label">
-              {snapshot.blocks.length} blocks · {snapshot.connections.length}{" "}
-              links
+              {snapshot.blocks.length}{" "}
+              {snapshot.blocks.length === 1 ? "block" : "blocks"}
+              {hasAutomaticPower ? " · automatic power" : ""} · {dataLinkCount}{" "}
+              {dataLinkCount === 1 ? "data link" : "data links"}
             </span>
             <span className="toolbar-separator" />
             <button
