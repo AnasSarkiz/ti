@@ -285,7 +285,7 @@ export const BluetoothAudioHost_MSP430F5229 = (props: SubcircuitProps) => (
 
     <chip
       name="S3"
-      footprint="kicad:Button_Switch_THT/SW_CuK_JS202011AQN_DPDT_Angled"
+      footprint="kicad:Button_Switch_THT/SW_CK_JS202011AQN_DPDT_Angled"
       manufacturerPartNumber="POS 2 SW"
       schX={8.2}
       schY={3.5}
