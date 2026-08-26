@@ -3,7 +3,7 @@ import "tscircuit";
 
 export const LMK1C1104PWR_PIN_LABELS = {
   pin1: "CLKIN",
-  pin2: ["OE", "1G"],
+  pin2: ["1G", "OE"],
   pin3: ["Y0", "CLKOUT0"],
   pin4: "GND",
   pin5: ["Y2", "CLKOUT2"],
