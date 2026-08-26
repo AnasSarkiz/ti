@@ -195,7 +195,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     />
     <testpoint
       name="TP1"
-      footprint="kicad:TestPoint/TestPoint_Plated_Hole_D1.0mm"
+      footprint="kicad:TestPoint/TestPoint_THTPad_D1.0mm_Drill0.5mm"
       schX={-5.2}
       schY={-2.05}
       connections={{ pin1: "net.TX_DBG" }}
@@ -216,7 +216,7 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     />
     <chip
       name="FL1"
-      footprint="kicad:Package_LGA/LGA-4_2x1.25mm_P0.65mm"
+      footprint="jlcpcb:C2650941"
       manufacturerPartNumber="LFB212G45SG8C341"
       schX={8}
       schY={8.6}
