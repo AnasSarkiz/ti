@@ -6,43 +6,46 @@ import { MX25V1635FZNQ } from "../chips/MX25V1635FZNQ.circuit.tsx";
  * TIDEP-01024 FLASH&USB_TO_UART sheet, QSPI FLASH box only.
  *
  * Coordinate transform from PROC106A1_FLASH_USB_TO_UART.SchDoc:
- *   schX = (sourceX - 500) * 0.0254
- *   schY = (sourceY - 290) * 0.0254
+ *   schX = (sourceX - 500) * 0.0762
+ *   schY = (sourceY - 290) * 0.0762
+ *
+ * The uniform 3x scale preserves the source placement while giving native
+ * tscircuit symbols and their built-in labels enough room to render clearly.
  */
 export const RadarQspiFlash_MX25V1635FZNQ = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <schematictext
       text="QSPI FLASH"
-      schX={-2.1}
-      schY={4.55}
+      schX={-6.3}
+      schY={13.65}
       fontSize={0.46}
       anchor="center"
     />
 
-    <MX25V1635FZNQ name="U9" schX={5.08} schY={-0.381} />
+    <MX25V1635FZNQ name="U9" schX={15.24} schY={-1.143} />
 
     <resistor
       name="R43"
       resistance="10k"
       footprint="0201"
-      schX={-3.302}
-      schY={1.016}
+      schX={-9.906}
+      schY={3.048}
       schRotation={90}
     />
     <resistor
       name="R44"
       resistance="10k"
       footprint="0201"
-      schX={-2.286}
-      schY={1.016}
+      schX={-6.858}
+      schY={3.048}
       schRotation={90}
     />
     <resistor
       name="R45"
       resistance="10k"
       footprint="0201"
-      schX={-1.27}
-      schY={1.016}
+      schX={-3.81}
+      schY={3.048}
       schRotation={90}
     />
 
@@ -51,56 +54,56 @@ export const RadarQspiFlash_MX25V1635FZNQ = (props: SubcircuitProps) => (
       resistance="33.2"
       footprint="0201"
       schSize="xs"
-      schX={-0.254}
-      schY={-0.254}
+      schX={-0.762}
+      schY={-0.762}
     />
     <resistor
       name="R6"
       resistance="33.2"
       footprint="0201"
       schSize="xs"
-      schX={-0.254}
-      schY={-0.508}
+      schX={-0.762}
+      schY={-1.524}
     />
     <resistor
       name="R46"
       resistance="33.2"
       footprint="0201"
       schSize="xs"
-      schX={-0.254}
-      schY={-0.762}
+      schX={-0.762}
+      schY={-2.286}
     />
     <resistor
       name="R48"
       resistance="33.2"
       footprint="0201"
       schSize="xs"
-      schX={-0.254}
-      schY={-1.016}
+      schX={-0.762}
+      schY={-3.048}
     />
     <resistor
       name="R49"
       resistance="33.2"
       footprint="0201"
       schSize="xs"
-      schX={-0.254}
-      schY={-1.27}
+      schX={-0.762}
+      schY={-3.81}
     />
 
     <capacitor
       name="C100"
       capacitance="1uF"
       footprint="0603"
-      schX={3.302}
-      schY={2.921}
+      schX={9.906}
+      schY={8.763}
       schRotation={270}
     />
     <capacitor
       name="C101"
       capacitance="0.1uF"
       footprint="0402"
-      schX={4.572}
-      schY={2.921}
+      schX={13.716}
+      schY={8.763}
       schRotation={270}
     />
 
@@ -204,29 +207,29 @@ export const RadarQspiFlash_MX25V1635FZNQ = (props: SubcircuitProps) => (
 
     <netlabel
       net="PMIC_3V3"
-      schX={2.54}
-      schY={3.81}
+      schX={7.62}
+      schY={11.43}
       anchorSide="bottom"
       connectsTo=".U9 > .VCC"
     />
     <netlabel
       net="PMIC_3V3"
-      schX={-3.302}
-      schY={2.286}
+      schX={-9.906}
+      schY={6.858}
       anchorSide="bottom"
       connectsTo=".R43 > .pin2"
     />
     <netlabel
       net="GND"
-      schX={7.874}
-      schY={-1.778}
+      schX={23.622}
+      schY={-5.334}
       anchorSide="top"
       connectsTo=".U9 > .GND"
     />
     <netlabel
       net="GND"
-      schX={3.302}
-      schY={1.778}
+      schX={9.906}
+      schY={5.334}
       anchorSide="top"
       connectsTo=".C100 > .pin1"
     />
