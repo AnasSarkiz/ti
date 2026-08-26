@@ -1,5 +1,6 @@
 import {
   AM62L32,
+  AWR1843ARBGALPQ1,
   BQ24072,
   BQ24073,
   BQ24074,
@@ -13,10 +14,12 @@ import {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CHS01TA,
   DAC101C081Q,
   DRV8210,
   DRV8833,
   DRV8876,
+  FW4000044Q,
   HDC2080,
   HDC3020,
   HDC3022,
@@ -32,6 +35,7 @@ import {
   MSPM0L1306,
   MSPM33C3x,
   MSPM0G3507,
+  MX25V1635FZNQ,
   OPT3001,
   SN65HVD1473,
   TAS2505,
@@ -119,6 +123,13 @@ import { LampDriver_TPS92638_TIDA00356 } from "./lib/subcircuits/LampDriver_TPS9
 import { LightSensor_OPT3001_TIDA01539 } from "./lib/subcircuits/LightSensor_OPT3001_TIDA01539.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
+import { RadarClock_FW4000044Q } from "./lib/subcircuits/RadarClock_FW4000044Q.circuit.tsx";
+import {
+  RADAR_FRONT_END_INTERFACE_NETS,
+  RadarFrontEndProcessing_TIDEP01024,
+} from "./lib/subcircuits/RadarFrontEndProcessing_TIDEP01024.circuit.tsx";
+import { RadarQspiFlash_MX25V1635FZNQ } from "./lib/subcircuits/RadarQspiFlash_MX25V1635FZNQ.circuit.tsx";
+import { RadarSoc_AWR1843ARBGALPQ1 } from "./lib/subcircuits/RadarSoc_AWR1843ARBGALPQ1.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 
@@ -179,10 +190,16 @@ export {
   LightSensor_OPT3001_TIDA01539,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
+  RadarClock_FW4000044Q,
+  RADAR_FRONT_END_INTERFACE_NETS,
+  RadarFrontEndProcessing_TIDEP01024,
+  RadarQspiFlash_MX25V1635FZNQ,
+  RadarSoc_AWR1843ARBGALPQ1,
 };
 
 export const TiChipComponents = {
   AM62L32,
+  AWR1843ARBGALPQ1,
   BQ24072,
   BQ24073,
   BQ24074,
@@ -196,10 +213,12 @@ export const TiChipComponents = {
   CC2564C,
   CC2745R10,
   CC3235SF,
+  CHS01TA,
   DAC101C081Q,
   DRV8210,
   DRV8833,
   DRV8876,
+  FW4000044Q,
   HDC2080,
   HDC3020,
   HDC3022,
@@ -215,6 +234,7 @@ export const TiChipComponents = {
   MSPM0L1306,
   MSPM33C3x,
   MSPM0G3507,
+  MX25V1635FZNQ,
   OPT3001,
   SN65HVD1473,
   TAS2505,
@@ -301,6 +321,10 @@ export const TiSubcircuitComponents = {
   LightSensor_OPT3001_TIDA01539,
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
+  RadarClock_FW4000044Q,
+  RadarFrontEndProcessing_TIDEP01024,
+  RadarQspiFlash_MX25V1635FZNQ,
+  RadarSoc_AWR1843ARBGALPQ1,
 } as const;
 
 export type TiChipName = keyof typeof TiChipComponents;

@@ -108,3 +108,14 @@ export { TPS61288RQQR } from "./TPS61288RQQR.circuit.tsx";
 export { TPS78230DRVR } from "./TPS78230DRVR.circuit.tsx";
 export { TXB0104RGYR } from "./TXB0104RGYR.circuit.tsx";
 export { TXS0102DCUR } from "./TXS0102DCUR.circuit.tsx";
+export {
+  AWR1843ARBGALPQ1,
+  AWR1843ARBGALPQ1_BALLS,
+  AWR1843ARBGALPQ1_PIN_LABELS,
+} from "./AWR1843ARBGALPQ1.circuit.tsx";
+export { CHS01TA } from "./CHS01TA.circuit.tsx";
+export { FW4000044Q } from "./FW4000044Q.circuit.tsx";
+export {
+  MX25V1635FZNQ,
+  MX25V1635FZNQ_PIN_LABELS,
+} from "./MX25V1635FZNQ.circuit.tsx";
