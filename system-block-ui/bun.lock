@@ -10,6 +10,7 @@
         "@tscircuit/eval": "0.0.1287",
         "circuit-json": "0.0.476",
         "circuit-to-svg": "0.0.408",
+        "comlink": "4.4.2",
         "jspdf": "4.2.1",
         "react": "19.2.8",
         "react-dom": "19.2.8",
@@ -218,6 +219,8 @@
     "circuit-to-svg": ["circuit-to-svg@0.0.408", "", { "dependencies": { "@types/node": "^22.5.5", "bun-types": "^1.1.40", "calculate-elbow": "0.0.12", "debug": "^4.4.3", "svg-path-commander": "^2.1.11", "svgson": "^5.3.1", "transformation-matrix": "^2.16.1" }, "peerDependencies": { "@tscircuit/alphabet": "*" } }, "sha512-theqIm33WmMCvb4kzzgIre/GhzkN1G6SiviNCYPyCPuXBWNWutHFm7xF7r06gNro2NoJKf306BY4UAbJ13MCDg=="],
 
     "color-diff": ["color-diff@1.4.0", "", {}, "sha512-4oDB/o78lNdppbaqrg0HjOp7pHmUc+dfCxWKWFnQg6AB/1dkjtBDop3RZht5386cq9xBUDRvDvSCA7WUlM9Jqw=="],
+
+    "comlink": ["comlink@4.4.2", "", {}, "sha512-OxGdvBmJuNKSCMO4NTl1L47VRp6xn2wG4F/2hYzB6tiCb709otOxtEYCSvK80PtjODfXXZu8ds+Nw5kVCjqd2g=="],
 
     "core-js": ["core-js@3.50.0", "", {}, "sha512-BRWgOLKkFeCgRudR6zrs8p9XJZcE14grzKMMssoYrk6krtuEZ7MTKPIY5RzOnqsEKIR9kst7wNzphttraT+Yqw=="],
 

@@ -17,6 +17,7 @@
     "@tscircuit/eval": "0.0.1287",
     "circuit-json": "0.0.476",
     "circuit-to-svg": "0.0.408",
+    "comlink": "4.4.2",
     "jspdf": "4.2.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
