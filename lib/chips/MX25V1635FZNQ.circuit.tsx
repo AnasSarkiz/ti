@@ -14,82 +14,6 @@ export const MX25V1635FZNQ_PIN_LABELS = {
   pin9: ["EP", "EP_GND", "thermalpad"],
 } as const;
 
-const renderMx25v1635fznqSymbol = () => {
-  const leftPins = [
-    { pin: 8, label: "VCC", y: 0.889 },
-    { pin: 1, label: "\\CS", y: 0.381 },
-    { pin: 6, label: "SCLK", y: 0.127 },
-    { pin: 5, label: "SI/SIO0", y: -0.127 },
-    { pin: 2, label: "SO/SIO1", y: -0.381 },
-    { pin: 3, label: "WP/SIO2", y: -0.635 },
-    { pin: 7, label: "HOLD/SIO3", y: -0.889 },
-  ] as const;
-  const rightPins = [
-    { pin: 9, label: "EP", y: -0.635 },
-    { pin: 4, label: "GND", y: -0.889 },
-  ] as const;
-
-  return (
-    <symbol>
-      <schematicrect
-        schX={0}
-        schY={0}
-        width={3.048}
-        height={2.286}
-        strokeWidth={0}
-        color="#fff8b5"
-        isFilled
-      />
-      <schematicrect
-        schX={0}
-        schY={0}
-        width={3.048}
-        height={2.286}
-        strokeWidth={0.03}
-        color="#8b5a00"
-      />
-      {leftPins.map(({ pin, y }) => (
-        <Fragment key={`left-symbol-pin-${pin}`}>
-          <port
-            name={`pin${pin}`}
-            pinNumber={pin}
-            schX={-2.032}
-            schY={y}
-            direction="left"
-            schStemLength={0.508}
-          />
-        </Fragment>
-      ))}
-      {rightPins.map(({ pin, y }) => (
-        <Fragment key={`right-symbol-pin-${pin}`}>
-          <port
-            name={`pin${pin}`}
-            pinNumber={pin}
-            schX={2.032}
-            schY={y}
-            direction="right"
-            schStemLength={0.508}
-          />
-        </Fragment>
-      ))}
-      <schematictext
-        text="{NAME}"
-        schX={-1.524}
-        schY={1.36}
-        fontSize={0.18}
-        anchor="bottom_left"
-      />
-      <schematictext
-        text="MX25V1635FZNQ"
-        schX={-1.524}
-        schY={-1.34}
-        fontSize={0.16}
-        anchor="top_left"
-      />
-    </symbol>
-  );
-};
-
 const renderWson8Footprint = () => (
   <footprint>
     {[1, 2, 3, 4].map((pinNumber) => (
@@ -158,7 +82,6 @@ export const MX25V1635FZNQ = (
       pin8: { requiresPower: true },
       pin9: { requiresGround: true },
     }}
-    symbol={renderMx25v1635fznqSymbol()}
     {...props}
   />
 );

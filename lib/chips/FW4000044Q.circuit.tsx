@@ -8,98 +8,6 @@ export const FW4000044Q_PIN_LABELS = {
   pin4: ["CASE_2", "GND_2"],
 } as const;
 
-const renderFw4000044qSymbol = () => (
-  <symbol>
-    <schematicrect
-      schX={0}
-      schY={0}
-      width={2.286}
-      height={1.016}
-      strokeWidth={0}
-      color="#fff8b5"
-      isFilled
-    />
-    <schematicrect
-      schX={0}
-      schY={0}
-      width={2.286}
-      height={1.016}
-      strokeWidth={0.03}
-      color="#8b5a00"
-    />
-    <schematicline
-      x1={-0.25}
-      y1={0.28}
-      x2={-0.25}
-      y2={-0.28}
-      strokeWidth={0.03}
-      color="#8b5a00"
-    />
-    <schematicrect
-      schX={0}
-      schY={0}
-      width={0.22}
-      height={0.58}
-      strokeWidth={0.03}
-      color="#8b5a00"
-    />
-    <schematicline
-      x1={0.25}
-      y1={0.28}
-      x2={0.25}
-      y2={-0.28}
-      strokeWidth={0.03}
-      color="#8b5a00"
-    />
-    <port
-      name="pin1"
-      pinNumber={1}
-      schX={-1.651}
-      schY={0.254}
-      direction="left"
-      schStemLength={0.508}
-    />
-    <port
-      name="pin2"
-      pinNumber={2}
-      schX={-1.651}
-      schY={-0.254}
-      direction="left"
-      schStemLength={0.508}
-    />
-    <port
-      name="pin3"
-      pinNumber={3}
-      schX={1.651}
-      schY={0.254}
-      direction="right"
-      schStemLength={0.508}
-    />
-    <port
-      name="pin4"
-      pinNumber={4}
-      schX={1.651}
-      schY={-0.254}
-      direction="right"
-      schStemLength={0.508}
-    />
-    <schematictext
-      text="{NAME}"
-      schX={-1.143}
-      schY={0.72}
-      fontSize={0.18}
-      anchor="bottom_left"
-    />
-    <schematictext
-      text="FW4000044Q"
-      schX={-1.143}
-      schY={-0.72}
-      fontSize={0.16}
-      anchor="top_left"
-    />
-  </symbol>
-);
-
 const renderCrystalFootprint = () => (
   <footprint>
     <smtpad
@@ -161,7 +69,6 @@ export const FW4000044Q = (props: ChipProps<typeof FW4000044Q_PIN_LABELS>) => (
       modelOriginPosition: { x: -0.0000762, y: 0, z: -0.01 },
     }}
     pinLabels={FW4000044Q_PIN_LABELS}
-    symbol={renderFw4000044qSymbol()}
     {...props}
   />
 );
