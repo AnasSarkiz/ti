@@ -8,6 +8,9 @@ import {
 } from "./RadarSoc_AWR1843ARBGALPQ1.circuit.tsx";
 
 const RADAR_QSPI_SHEET_NAME = "qspi_flash";
+// Re-center the X=500 extraction origin on the Altium sheet and retain one
+// 10-unit source-grid step of clearance inside the native inner frame.
+const RADAR_QSPI_SHEET_X_OFFSET = -3.6576;
 
 const COMPOSITE_INTERNAL_NETS = new Set([
   "AR_XTAL_P",
@@ -79,7 +82,7 @@ export const RadarFrontEndProcessing_TIDEP01024 = (props: SubcircuitProps) => (
     <RadarQspiFlash_MX25V1635FZNQ
       name="qspi_flash"
       schSheetName={RADAR_QSPI_SHEET_NAME}
-      schX={0}
+      schX={RADAR_QSPI_SHEET_X_OFFSET}
       schY={0}
     />
 
