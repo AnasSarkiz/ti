@@ -1,51 +1,67 @@
 import type { SubcircuitProps } from "@tscircuit/props";
-import { Fragment } from "react";
 import { MX25V1635FZNQ } from "../chips/MX25V1635FZNQ.circuit.tsx";
 
 /**
  * TIDEP-01024 FLASH&USB_TO_UART sheet, QSPI FLASH box only.
  *
  * Coordinate transform from PROC106A1_FLASH_USB_TO_UART.SchDoc:
- *   schX = (sourceX - 500) * 0.0762
- *   schY = (sourceY - 290) * 0.0762
+ *   schX = (sourceX - 500) * 0.06096
+ *   schY = (sourceY - 290) * 0.06096
  *
- * The uniform 3x scale preserves the source placement while giving native
+ * The uniform 2.4x scale preserves the source placement while giving native
  * tscircuit symbols and their built-in labels enough room to render clearly.
  */
 export const RadarQspiFlash_MX25V1635FZNQ = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <schematictext
       text="QSPI FLASH"
-      schX={-6.3}
-      schY={13.65}
+      schX={-5.04}
+      schY={10.92}
       fontSize={0.46}
       anchor="center"
     />
 
-    <MX25V1635FZNQ name="U9" schX={15.24} schY={-1.143} />
+    <MX25V1635FZNQ
+      name="U9"
+      schX={12.192}
+      schY={-0.9144}
+      schWidth={7.3152}
+      schHeight={5.4864}
+      schPinStyle={{
+        pin8: { marginTop: 0.6096, marginBottom: 1.0598 },
+        pin1: { marginBottom: 0.4502 },
+        pin6: { marginBottom: 0.4502 },
+        pin5: { marginBottom: 0.4502 },
+        pin2: { marginBottom: 0.4502 },
+        pin3: { marginBottom: 0.4502 },
+        pin7: { marginBottom: 0.6096 },
+        pin9: { marginTop: 4.2672 },
+        pin4: { marginTop: 0.4502, marginBottom: 0.6096 },
+      }}
+    />
 
     <resistor
       name="R43"
       resistance="10k"
       footprint="0201"
-      schX={-9.906}
-      schY={3.048}
+      schX={-7.9248}
+      schY={2.4384}
       schRotation={90}
     />
     <resistor
       name="R44"
       resistance="10k"
       footprint="0201"
-      schX={-6.858}
-      schY={3.048}
+      schX={-5.4864}
+      schY={2.4384}
       schRotation={90}
     />
     <resistor
       name="R45"
       resistance="10k"
       footprint="0201"
-      schX={-3.81}
-      schY={3.048}
+      schX={-3.048}
+      schY={2.4384}
       schRotation={90}
     />
 
@@ -53,57 +69,52 @@ export const RadarQspiFlash_MX25V1635FZNQ = (props: SubcircuitProps) => (
       name="R47"
       resistance="33.2"
       footprint="0201"
-      schSize="xs"
-      schX={-0.762}
-      schY={-0.762}
+      schX={-0.6096}
+      schY={-0.6096}
     />
     <resistor
       name="R6"
       resistance="33.2"
       footprint="0201"
-      schSize="xs"
-      schX={-0.762}
-      schY={-1.524}
+      schX={-0.6096}
+      schY={-1.2192}
     />
     <resistor
       name="R46"
       resistance="33.2"
       footprint="0201"
-      schSize="xs"
-      schX={-0.762}
-      schY={-2.286}
+      schX={-0.6096}
+      schY={-1.8288}
     />
     <resistor
       name="R48"
       resistance="33.2"
       footprint="0201"
-      schSize="xs"
-      schX={-0.762}
-      schY={-3.048}
+      schX={-0.6096}
+      schY={-2.4384}
     />
     <resistor
       name="R49"
       resistance="33.2"
       footprint="0201"
-      schSize="xs"
-      schX={-0.762}
-      schY={-3.81}
+      schX={-0.6096}
+      schY={-3.048}
     />
 
     <capacitor
       name="C100"
       capacitance="1uF"
       footprint="0603"
-      schX={9.906}
-      schY={8.763}
+      schX={7.9248}
+      schY={7.0104}
       schRotation={270}
     />
     <capacitor
       name="C101"
       capacitance="0.1uF"
       footprint="0402"
-      schX={13.716}
-      schY={8.763}
+      schX={10.9728}
+      schY={7.0104}
       schRotation={270}
     />
 
@@ -207,46 +218,32 @@ export const RadarQspiFlash_MX25V1635FZNQ = (props: SubcircuitProps) => (
 
     <netlabel
       net="PMIC_3V3"
-      schX={7.62}
-      schY={11.43}
+      schX={6.096}
+      schY={9.144}
       anchorSide="bottom"
       connectsTo=".U9 > .VCC"
     />
     <netlabel
       net="PMIC_3V3"
-      schX={-9.906}
-      schY={6.858}
+      schX={-7.9248}
+      schY={5.4864}
       anchorSide="bottom"
       connectsTo=".R43 > .pin2"
     />
     <netlabel
       net="GND"
-      schX={23.622}
-      schY={-5.334}
+      schX={18.8976}
+      schY={-4.2672}
       anchorSide="top"
       connectsTo=".U9 > .GND"
     />
     <netlabel
       net="GND"
-      schX={9.906}
-      schY={5.334}
+      schX={7.9248}
+      schY={4.2672}
       anchorSide="top"
       connectsTo=".C100 > .pin1"
     />
-    {[
-      "AR_QSPI_CS",
-      "AR_QSPI_CLK",
-      "AR_QSPI_D0",
-      "AR_QSPI_D1",
-      "AR_QSPI_D2",
-      "AR_QSPI_D3",
-      "PMIC_3V3",
-      "GND",
-    ].map((net) => (
-      <Fragment key={`port-${net}`}>
-        <port name={`INTERFACE_${net}`} connectsTo={`net.${net}`} />
-      </Fragment>
-    ))}
   </subcircuit>
 );
 

@@ -77,6 +77,10 @@ export const MX25V1635FZNQ = (
     supplierPartNumbers={{ jlcpcb: ["C5139359"] }}
     footprint={renderWson8Footprint()}
     pinLabels={MX25V1635FZNQ_PIN_LABELS}
+    schPinArrangement={{
+      leftSide: [8, 1, 6, 5, 2, 3, 7],
+      rightSide: [9, 4],
+    }}
     pinAttributes={{
       pin4: { requiresGround: true },
       pin8: { requiresPower: true },

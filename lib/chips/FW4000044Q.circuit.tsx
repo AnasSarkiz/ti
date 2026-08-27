@@ -69,6 +69,18 @@ export const FW4000044Q = (props: ChipProps<typeof FW4000044Q_PIN_LABELS>) => (
       modelOriginPosition: { x: -0.0000762, y: 0, z: -0.01 },
     }}
     pinLabels={FW4000044Q_PIN_LABELS}
+    schPinArrangement={{
+      leftSide: [1, 2],
+      rightSide: [3, 4],
+    }}
+    schPinStyle={{
+      pin1: { marginTop: 0.508, marginBottom: 0.308 },
+      pin2: { marginBottom: 0.254 },
+      pin3: { marginTop: 0.508 },
+      pin4: { marginTop: 0.308, marginBottom: 0.254 },
+    }}
+    schWidth={2.286}
+    schHeight={1.27}
     {...props}
   />
 );

@@ -1,6 +1,11 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import { FW4000044Q } from "../chips/FW4000044Q.circuit.tsx";
 
+interface RadarClockSectionProps {
+  schSectionName?: string;
+  showTitle?: boolean;
+}
+
 /**
  * TIDEP-01024 AOP_IO 40 MHz crystal section (Y1, C14, and C71).
  *
@@ -8,21 +13,32 @@ import { FW4000044Q } from "../chips/FW4000044Q.circuit.tsx";
  *   schX = (sourceX - 275) * 0.0254
  *   schY = (sourceY - 870) * 0.0254
  */
-export const RadarClock_FW4000044Q = (props: SubcircuitProps) => (
-  <subcircuit {...props}>
-    <schematictext
-      text="40MHz CRYSTAL"
-      schX={-1.9}
-      schY={1.55}
-      fontSize={0.46}
-      anchor="center"
-    />
+export const RadarClockSection_FW4000044Q = ({
+  schSectionName,
+  showTitle = true,
+}: RadarClockSectionProps) => (
+  <>
+    {showTitle && (
+      <schematictext
+        text="40MHz CRYSTAL"
+        schX={-1.9}
+        schY={1.55}
+        fontSize={0.46}
+        anchor="center"
+      />
+    )}
 
-    <FW4000044Q name="Y1" schX={0} schY={0} />
+    <FW4000044Q
+      name="Y1"
+      schSectionName={schSectionName}
+      schX={0}
+      schY={0.127}
+    />
     <capacitor
       name="C14"
       capacitance="4.7pF"
       footprint="0201"
+      schSectionName={schSectionName}
       schX={-2.921}
       schY={-0.381}
       schRotation={270}
@@ -31,6 +47,7 @@ export const RadarClock_FW4000044Q = (props: SubcircuitProps) => (
       name="C71"
       capacitance="4.7pF"
       footprint="0201"
+      schSectionName={schSectionName}
       schX={2.667}
       schY={-0.381}
       schRotation={270}
@@ -75,9 +92,12 @@ export const RadarClock_FW4000044Q = (props: SubcircuitProps) => (
       fontSize={0.24}
       anchor="center"
     />
-    <port name="INTERFACE_AR_XTAL_P" connectsTo="net.AR_XTAL_P" />
-    <port name="INTERFACE_AR_XTAL_N" connectsTo="net.AR_XTAL_N" />
-    <port name="INTERFACE_GND" connectsTo="net.GND" />
+  </>
+);
+
+export const RadarClock_FW4000044Q = (props: SubcircuitProps) => (
+  <subcircuit {...props}>
+    <RadarClockSection_FW4000044Q />
   </subcircuit>
 );
 

@@ -1,16 +1,429 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import { Fragment } from "react";
-import { AWR1843ARBGALPQ1 } from "../chips/AWR1843ARBGALPQ1.circuit.tsx";
+import {
+  AWR1843ARBGALPQ1,
+  AWR1843ARBGALPQ1_BALLS,
+} from "../chips/AWR1843ARBGALPQ1.circuit.tsx";
 import { CHS01TA } from "../chips/CHS01TA.circuit.tsx";
+import { RadarClockSection_FW4000044Q } from "./RadarClock_FW4000044Q.circuit.tsx";
 
-const SOURCE_SCALE = 0.0254;
-const POWER_SHEET_OFFSET_X = 45;
+const SOURCE_X_SCALE = 0.01778;
+const IO_SOURCE_Y_SCALE = 0.0254;
+const POWER_SOURCE_Y_SCALE = 0.01778;
+const IO_PULLUP_SOURCE_Y_SCALE = 0.035;
+const IO_PULLUP_SOURCE_CENTER_Y = 375;
+const NATIVE_SCHEMATIC_PIN_PITCH = 0.2;
+const NATIVE_SCHEMATIC_BOX_VERTICAL_PADDING = 0.8;
+export const RADAR_SOC_IO_SHEET_NAME = "aop_io";
+export const RADAR_SOC_POWER_SHEET_NAME = "aop_power";
+const RADAR_CLOCK_SECTION_NAME = "aop_io_40mhz_crystal";
 
-const toSchX = (sourceX: number, sheet: "io" | "power") =>
-  (sourceX - 850) * SOURCE_SCALE +
-  (sheet === "power" ? POWER_SHEET_OFFSET_X : 0);
+const toSchX = (sourceX: number) => (sourceX - 850) * SOURCE_X_SCALE;
 
-const toSchY = (sourceY: number) => (sourceY - 550) * SOURCE_SCALE;
+const toIoSchY = (sourceY: number) => (sourceY - 550) * IO_SOURCE_Y_SCALE;
+
+const toPowerSchY = (sourceY: number) => (sourceY - 550) * POWER_SOURCE_Y_SCALE;
+
+const toIoPullupSchY = (sourceY: number) =>
+  toIoSchY(IO_PULLUP_SOURCE_CENTER_Y) +
+  (sourceY - IO_PULLUP_SOURCE_CENTER_Y) * IO_PULLUP_SOURCE_Y_SCALE;
+
+type AwrBall = (typeof AWR1843ARBGALPQ1_BALLS)[number]["ball"];
+
+interface AwrPinPlacement {
+  ball: AwrBall;
+  sourceY: number;
+}
+
+interface AwrSchematicBoxDefinition {
+  key: string;
+  schematicName: string;
+  sheet: "io" | "power";
+  sourceCenterX: number;
+  sourceCenterY: number;
+  sourceWidth: number;
+  sourceHeight: number;
+  minimumSchematicHeight?: number;
+  leftSide: readonly AwrPinPlacement[];
+  rightSide: readonly AwrPinPlacement[];
+}
+
+const getAwrBallDefinition = (ball: AwrBall) => {
+  const ballDefinition = AWR1843ARBGALPQ1_BALLS.find(
+    (candidate) => candidate.ball === ball,
+  );
+  if (!ballDefinition) {
+    throw new Error(`Missing AWR1843AoP ball definition for ${ball}`);
+  }
+  return ballDefinition;
+};
+
+const getAwrSchematicBoxPinLabels = (placements: readonly AwrPinPlacement[]) =>
+  Object.fromEntries(
+    placements.map(({ ball }) => {
+      const ballDefinition = getAwrBallDefinition(ball);
+      return [`pin${ballDefinition.pinNumber}`, [ballDefinition.signal, ball]];
+    }),
+  );
+
+type AwrPinStyle = Record<
+  string,
+  { marginBottom?: number; marginTop?: number }
+>;
+
+const addAwrPinMargin = ({
+  pinStyle,
+  ball,
+  marginName,
+  margin,
+}: {
+  pinStyle: AwrPinStyle;
+  ball: AwrBall;
+  marginName: "marginBottom" | "marginTop";
+  margin: number;
+}) => {
+  if (margin <= 0) return;
+  const pinKey = `pin${getAwrBallDefinition(ball).pinNumber}`;
+  pinStyle[pinKey] = {
+    ...pinStyle[pinKey],
+    [marginName]: (pinStyle[pinKey]?.[marginName] ?? 0) + margin,
+  };
+};
+
+const getAwrSchematicBoxPinStyle = (box: AwrSchematicBoxDefinition) => {
+  const pinStyle: AwrPinStyle = {};
+  const sourceYScale =
+    box.sheet === "io" ? IO_SOURCE_Y_SCALE : POWER_SOURCE_Y_SCALE;
+  const sourceTop = box.sourceCenterY + box.sourceHeight / 2;
+  const sourceBottom = box.sourceCenterY - box.sourceHeight / 2;
+
+  box.leftSide.slice(0, -1).forEach((placement, index) => {
+    const nextPlacement = box.leftSide[index + 1];
+    if (!nextPlacement) return;
+    const marginBottom =
+      (placement.sourceY - nextPlacement.sourceY) * sourceYScale - 0.2;
+    addAwrPinMargin({
+      pinStyle,
+      ball: placement.ball,
+      marginName: "marginBottom",
+      margin: marginBottom,
+    });
+  });
+
+  const firstLeftPin = box.leftSide[0];
+  const lastLeftPin = box.leftSide.at(-1);
+  if (firstLeftPin && lastLeftPin) {
+    addAwrPinMargin({
+      pinStyle,
+      ball: firstLeftPin.ball,
+      marginName: "marginTop",
+      margin: (sourceTop - firstLeftPin.sourceY) * sourceYScale,
+    });
+    addAwrPinMargin({
+      pinStyle,
+      ball: lastLeftPin.ball,
+      marginName: "marginBottom",
+      margin: (lastLeftPin.sourceY - sourceBottom) * sourceYScale,
+    });
+  }
+
+  box.rightSide.slice(1).forEach((placement, index) => {
+    const previousPlacement = box.rightSide[index];
+    if (!previousPlacement) return;
+    const marginTop =
+      (previousPlacement.sourceY - placement.sourceY) * sourceYScale - 0.2;
+    addAwrPinMargin({
+      pinStyle,
+      ball: placement.ball,
+      marginName: "marginTop",
+      margin: marginTop,
+    });
+  });
+
+  const firstRightPin = box.rightSide[0];
+  const lastRightPin = box.rightSide.at(-1);
+  if (firstRightPin && lastRightPin) {
+    addAwrPinMargin({
+      pinStyle,
+      ball: firstRightPin.ball,
+      marginName: "marginTop",
+      margin: (sourceTop - firstRightPin.sourceY) * sourceYScale,
+    });
+    addAwrPinMargin({
+      pinStyle,
+      ball: lastRightPin.ball,
+      marginName: "marginBottom",
+      margin: (lastRightPin.sourceY - sourceBottom) * sourceYScale,
+    });
+  }
+
+  return pinStyle;
+};
+
+const getAwrSchematicBoxHeight = (box: AwrSchematicBoxDefinition) => {
+  const sourceYScale =
+    box.sheet === "io" ? IO_SOURCE_Y_SCALE : POWER_SOURCE_Y_SCALE;
+  const maximumSidePinCount = Math.max(
+    box.leftSide.length,
+    box.rightSide.length,
+  );
+  const nativePinStackHeight =
+    Math.max(0, maximumSidePinCount - 1) * NATIVE_SCHEMATIC_PIN_PITCH +
+    NATIVE_SCHEMATIC_BOX_VERTICAL_PADDING;
+
+  return Math.max(
+    box.sourceHeight * sourceYScale,
+    nativePinStackHeight,
+    box.minimumSchematicHeight ?? 0,
+  );
+};
+
+const AWR_SCHEMATIC_BOXES: readonly AwrSchematicBoxDefinition[] = [
+  {
+    key: "io-control",
+    schematicName: "U2A",
+    sheet: "io",
+    sourceCenterX: 865,
+    sourceCenterY: 755,
+    sourceWidth: 170,
+    sourceHeight: 290,
+    minimumSchematicHeight: 9.4,
+    leftSide: [
+      { ball: "U11", sourceY: 880 },
+      { ball: "U13", sourceY: 860 },
+      { ball: "A14", sourceY: 830 },
+      { ball: "U12", sourceY: 800 },
+      { ball: "M3", sourceY: 790 },
+      { ball: "U14", sourceY: 760 },
+      { ball: "U15", sourceY: 750 },
+      { ball: "V10", sourceY: 720 },
+      { ball: "V13", sourceY: 700 },
+      { ball: "A7", sourceY: 670 },
+      { ball: "B7", sourceY: 660 },
+      { ball: "U3", sourceY: 630 },
+      { ball: "U4", sourceY: 620 },
+    ],
+    rightSide: [
+      { ball: "U7", sourceY: 880 },
+      { ball: "U6", sourceY: 870 },
+      { ball: "V5", sourceY: 860 },
+      { ball: "U5", sourceY: 850 },
+      { ball: "V3", sourceY: 840 },
+      { ball: "M1", sourceY: 830 },
+      { ball: "L2", sourceY: 820 },
+      { ball: "L1", sourceY: 810 },
+      { ball: "C3", sourceY: 800 },
+      { ball: "B3", sourceY: 790 },
+      { ball: "C4", sourceY: 780 },
+      { ball: "A3", sourceY: 770 },
+      { ball: "B4", sourceY: 760 },
+      { ball: "A4", sourceY: 750 },
+      { ball: "C5", sourceY: 740 },
+      { ball: "B5", sourceY: 730 },
+      { ball: "P18", sourceY: 710 },
+      { ball: "P17", sourceY: 690 },
+      { ball: "R18", sourceY: 670 },
+      { ball: "T18", sourceY: 650 },
+      { ball: "C9", sourceY: 630 },
+      { ball: "C10", sourceY: 610 },
+      { ball: "M2", sourceY: 590 },
+      { ball: "L3", sourceY: 570 },
+      { ball: "K3", sourceY: 550 },
+    ],
+  },
+  {
+    key: "io-serial",
+    schematicName: "U2B",
+    sheet: "io",
+    sourceCenterX: 795,
+    sourceCenterY: 355,
+    sourceWidth: 230,
+    sourceHeight: 250,
+    leftSide: [
+      { ball: "U16", sourceY: 460 },
+      { ball: "V16", sourceY: 450 },
+      { ball: "U9", sourceY: 410 },
+      { ball: "U10", sourceY: 400 },
+      { ball: "T3", sourceY: 390 },
+      { ball: "U8", sourceY: 380 },
+      { ball: "R1", sourceY: 340 },
+      { ball: "R2", sourceY: 330 },
+      { ball: "T1", sourceY: 310 },
+      { ball: "T2", sourceY: 300 },
+      { ball: "N1", sourceY: 280 },
+      { ball: "N2", sourceY: 270 },
+      { ball: "P1", sourceY: 250 },
+      { ball: "P2", sourceY: 240 },
+    ],
+    rightSide: [
+      { ball: "H3", sourceY: 460 },
+      { ball: "G2", sourceY: 450 },
+      { ball: "J3", sourceY: 440 },
+      { ball: "K2", sourceY: 430 },
+      { ball: "J2", sourceY: 410 },
+      { ball: "H2", sourceY: 400 },
+      { ball: "D2", sourceY: 370 },
+      { ball: "C2", sourceY: 360 },
+      { ball: "E2", sourceY: 340 },
+      { ball: "D3", sourceY: 330 },
+      { ball: "B2", sourceY: 310 },
+      { ball: "F2", sourceY: 280 },
+      { ball: "D1", sourceY: 270 },
+      { ball: "G1", sourceY: 250 },
+      { ball: "G3", sourceY: 240 },
+    ],
+  },
+  {
+    key: "power",
+    schematicName: "U2C",
+    sheet: "power",
+    sourceCenterX: 290,
+    sourceCenterY: 810,
+    sourceWidth: 180,
+    sourceHeight: 440,
+    leftSide: [
+      { ball: "E1", sourceY: 1010 },
+      { ball: "J1", sourceY: 1000 },
+      { ball: "V4", sourceY: 990 },
+      { ball: "V8", sourceY: 980 },
+      { ball: "V15", sourceY: 970 },
+      { ball: "V2", sourceY: 950 },
+      { ball: "A16", sourceY: 930 },
+      { ball: "V9", sourceY: 910 },
+      { ball: "H1", sourceY: 890 },
+      { ball: "V11", sourceY: 870 },
+      { ball: "K1", sourceY: 860 },
+      { ball: "B1", sourceY: 850 },
+      { ball: "F1", sourceY: 840 },
+      { ball: "U2", sourceY: 830 },
+      { ball: "J16", sourceY: 800 },
+      { ball: "J17", sourceY: 790 },
+      { ball: "J18", sourceY: 780 },
+      { ball: "H16", sourceY: 760 },
+      { ball: "H17", sourceY: 750 },
+      { ball: "H18", sourceY: 740 },
+      { ball: "M16", sourceY: 720 },
+      { ball: "M17", sourceY: 710 },
+      { ball: "M18", sourceY: 700 },
+      { ball: "C15", sourceY: 680 },
+      { ball: "C18", sourceY: 670 },
+      { ball: "A12", sourceY: 650 },
+      { ball: "C11", sourceY: 640 },
+      { ball: "V12", sourceY: 620 },
+      { ball: "V6", sourceY: 610 },
+      { ball: "A5", sourceY: 600 },
+    ],
+    rightSide: [
+      { ball: "V14", sourceY: 1010 },
+      { ball: "V7", sourceY: 1000 },
+      { ball: "C1", sourceY: 990 },
+      { ball: "G16", sourceY: 950 },
+      { ball: "G17", sourceY: 940 },
+      { ball: "G18", sourceY: 930 },
+      { ball: "A10", sourceY: 890 },
+      { ball: "A9", sourceY: 880 },
+    ],
+  },
+  {
+    key: "ground-left",
+    schematicName: "U2D",
+    sheet: "power",
+    sourceCenterX: 160,
+    sourceCenterY: 295,
+    sourceWidth: 40,
+    sourceHeight: 390,
+    leftSide: [],
+    rightSide: [
+      { ball: "A1", sourceY: 470 },
+      { ball: "A2", sourceY: 460 },
+      { ball: "E3", sourceY: 450 },
+      { ball: "F3", sourceY: 440 },
+      { ball: "N3", sourceY: 430 },
+      { ball: "P3", sourceY: 420 },
+      { ball: "R3", sourceY: 410 },
+      { ball: "T4", sourceY: 400 },
+      { ball: "T5", sourceY: 390 },
+      { ball: "T6", sourceY: 380 },
+      { ball: "T7", sourceY: 370 },
+      { ball: "T8", sourceY: 360 },
+      { ball: "T9", sourceY: 350 },
+      { ball: "T10", sourceY: 340 },
+      { ball: "T11", sourceY: 330 },
+      { ball: "T12", sourceY: 320 },
+      { ball: "T13", sourceY: 310 },
+      { ball: "T14", sourceY: 300 },
+      { ball: "T15", sourceY: 290 },
+      { ball: "T16", sourceY: 280 },
+      { ball: "U1", sourceY: 270 },
+      { ball: "V1", sourceY: 260 },
+      { ball: "A6", sourceY: 250 },
+      { ball: "A8", sourceY: 240 },
+      { ball: "A11", sourceY: 230 },
+      { ball: "A13", sourceY: 220 },
+      { ball: "A15", sourceY: 210 },
+      { ball: "A17", sourceY: 200 },
+      { ball: "A18", sourceY: 190 },
+      { ball: "B6", sourceY: 180 },
+      { ball: "B8", sourceY: 170 },
+      { ball: "B9", sourceY: 160 },
+      { ball: "T17", sourceY: 150 },
+      { ball: "U17", sourceY: 140 },
+      { ball: "U18", sourceY: 130 },
+      { ball: "V17", sourceY: 120 },
+      { ball: "V18", sourceY: 110 },
+    ],
+  },
+  {
+    key: "ground-right",
+    schematicName: "U2E",
+    sheet: "power",
+    sourceCenterX: 340,
+    sourceCenterY: 290,
+    sourceWidth: 40,
+    sourceHeight: 400,
+    leftSide: [],
+    rightSide: [
+      { ball: "B10", sourceY: 470 },
+      { ball: "B11", sourceY: 460 },
+      { ball: "B12", sourceY: 450 },
+      { ball: "B13", sourceY: 440 },
+      { ball: "B14", sourceY: 430 },
+      { ball: "B15", sourceY: 420 },
+      { ball: "B16", sourceY: 410 },
+      { ball: "B17", sourceY: 400 },
+      { ball: "B18", sourceY: 390 },
+      { ball: "C6", sourceY: 380 },
+      { ball: "C7", sourceY: 370 },
+      { ball: "C8", sourceY: 360 },
+      { ball: "C12", sourceY: 350 },
+      { ball: "C13", sourceY: 340 },
+      { ball: "C14", sourceY: 330 },
+      { ball: "C16", sourceY: 320 },
+      { ball: "C17", sourceY: 310 },
+      { ball: "D16", sourceY: 300 },
+      { ball: "D17", sourceY: 290 },
+      { ball: "D18", sourceY: 280 },
+      { ball: "E16", sourceY: 270 },
+      { ball: "E17", sourceY: 260 },
+      { ball: "E18", sourceY: 250 },
+      { ball: "F16", sourceY: 240 },
+      { ball: "F17", sourceY: 230 },
+      { ball: "F18", sourceY: 220 },
+      { ball: "K16", sourceY: 210 },
+      { ball: "K17", sourceY: 200 },
+      { ball: "K18", sourceY: 190 },
+      { ball: "L16", sourceY: 180 },
+      { ball: "L17", sourceY: 170 },
+      { ball: "L18", sourceY: 160 },
+      { ball: "N16", sourceY: 150 },
+      { ball: "N17", sourceY: 140 },
+      { ball: "N18", sourceY: 130 },
+      { ball: "P16", sourceY: 120 },
+      { ball: "R16", sourceY: 110 },
+      { ball: "R17", sourceY: 100 },
+    ],
+  },
+];
 
 const AWR_NET_CONNECTIONS = [
   { net: "AR_1P0_RF1", balls: ["J16", "J17", "J18"] },
@@ -63,12 +476,6 @@ const AWR_NET_CONNECTIONS = [
   { net: "AR_DP5", balls: ["M1"] },
   { net: "AR_DP6", balls: ["L2"] },
   { net: "AR_DP7", balls: ["L1"] },
-  { net: "AR_GPADC_1", balls: ["P18"] },
-  { net: "AR_GPADC_2", balls: ["P17"] },
-  { net: "AR_GPADC_3", balls: ["R18"] },
-  { net: "AR_GPADC_4", balls: ["T18"] },
-  { net: "AR_GPADC_5", balls: ["C9"] },
-  { net: "AR_GPADC_6", balls: ["C10"] },
   { net: "AR_GPIO_0", balls: ["M2"] },
   { net: "AR_GPIO_1", balls: ["L3"] },
   { net: "AR_GPIO_2", balls: ["K3"] },
@@ -195,114 +602,40 @@ const AWR_NET_CONNECTIONS = [
   { net: "PMIC_3V3", balls: ["V9"] },
 ] as const;
 
+const AWR_GPADC_TEST_CONNECTIONS = [
+  { net: "AR_GPADC_1", ball: "P18", testpoint: "TP9" },
+  { net: "AR_GPADC_2", ball: "P17", testpoint: "TP8" },
+  { net: "AR_GPADC_3", ball: "R18", testpoint: "TP7" },
+  { net: "AR_GPADC_4", ball: "T18", testpoint: "TP6" },
+  { net: "AR_GPADC_5", ball: "C9", testpoint: "TP3" },
+  { net: "AR_GPADC_6", ball: "C10", testpoint: "TP2" },
+] as const;
+
 export const RADAR_SOC_INTERFACE_NETS = [
   ...AWR_NET_CONNECTIONS.map(({ net }) => net),
+  ...AWR_GPADC_TEST_CONNECTIONS.map(({ net }) => net),
   "PMIC_CLK",
   "SOP0",
   "SOP1",
 ];
 
-const IO_PORT_LABELS = [
-  { net: "PMIC_CLK", sourceX: 1200, sourceY: 830 },
-  { net: "SOP1", sourceX: 1370, sourceY: 630 },
-  { net: "SOP0", sourceX: 1370, sourceY: 440 },
-  { net: "AR_SCL", sourceX: 1030, sourceY: 240 },
-  { net: "AR_MISO1", sourceX: 1030, sourceY: 270 },
-  { net: "AR_MOSI1", sourceX: 1030, sourceY: 280 },
-  { net: "AR_SDA", sourceX: 1030, sourceY: 250 },
-  { net: "AR_QSPI_D0", sourceX: 1030, sourceY: 460 },
-  { net: "AR_QSPI_D1", sourceX: 1030, sourceY: 450 },
-  { net: "AR_QSPI_D2", sourceX: 1030, sourceY: 440 },
-  { net: "AR_QSPI_D3", sourceX: 1030, sourceY: 430 },
-  { net: "AR_RS232TX", sourceX: 470, sourceY: 460 },
-  { net: "AR_RS232RX", sourceX: 470, sourceY: 450 },
-  { net: "AR_TDO_SOP0", sourceX: 460, sourceY: 400 },
-  { net: "AR_TCK", sourceX: 490, sourceY: 390 },
-  { net: "AR_TMS", sourceX: 490, sourceY: 380 },
-  { net: "AR_TDI", sourceX: 490, sourceY: 410 },
-  { net: "AR_LVDS_CLK_N", sourceX: 450, sourceY: 330 },
-  { net: "AR_LVDS_CLK_P", sourceX: 450, sourceY: 340 },
-  { net: "AR_LVDS_FRCLK_N", sourceX: 440, sourceY: 300 },
-  { net: "AR_LVDS_FRCLK_P", sourceX: 440, sourceY: 310 },
-  { net: "AR_CS1", sourceX: 1030, sourceY: 360 },
-  { net: "AR_BSS_LOGGER", sourceX: 1030, sourceY: 330 },
-  { net: "AR_HOSTINTR1", sourceX: 1030, sourceY: 310 },
-  { net: "AR_SPICLK1", sourceX: 1030, sourceY: 370 },
-  { net: "AR_MSS_LOGGER", sourceX: 1030, sourceY: 340 },
-  { net: "AR_QSPI_CLK", sourceX: 1030, sourceY: 400 },
-  { net: "AR_QSPI_CS", sourceX: 1030, sourceY: 410 },
-  { net: "AR_DP0", sourceX: 1070, sourceY: 880 },
-  { net: "AR_DP1", sourceX: 1070, sourceY: 870 },
-  { net: "AR_DP2", sourceX: 1070, sourceY: 860 },
-  { net: "AR_DP3", sourceX: 1070, sourceY: 850 },
-  { net: "AR_DP4", sourceX: 1070, sourceY: 840 },
-  { net: "AR_DP5", sourceX: 1070, sourceY: 830 },
-  { net: "AR_DP6", sourceX: 1070, sourceY: 820 },
-  { net: "AR_DP7", sourceX: 1070, sourceY: 810 },
-  { net: "AR_GPIO_0", sourceX: 1020, sourceY: 640 },
-  { net: "AR_GPIO_1", sourceX: 1020, sourceY: 630 },
-  { net: "AR_GPIO_2", sourceX: 1020, sourceY: 620 },
-  { net: "AR_DMM_SYNC", sourceX: 550, sourceY: 620 },
-  { net: "AR_DMM_CLK", sourceX: 550, sourceY: 630 },
-  { net: "AR_SYNC_IN", sourceX: 560, sourceY: 800 },
-  { net: "AR_SYNC_OUT_SOP1", sourceX: 520, sourceY: 790 },
-  { net: "AR_PMIC_CLKOUT_SOP2", sourceX: 510, sourceY: 720 },
-  { net: "AR_MCUCLKOUT", sourceX: 550, sourceY: 700 },
-  { net: "AR_NERRIN", sourceX: 570, sourceY: 760 },
-  { net: "AR_NERR_OUT", sourceX: 550, sourceY: 750 },
-  { net: "AR_NRST", sourceX: 570, sourceY: 880 },
-  { net: "AR_WARMRST", sourceX: 550, sourceY: 860 },
-  { net: "AR_OSC_CLKOUT", sourceX: 430, sourceY: 830 },
-  { net: "AR_LVDS_0_N", sourceX: 460, sourceY: 280 },
-  { net: "AR_LVDS_0_P", sourceX: 460, sourceY: 270 },
-  { net: "AR_LVDS_1_P", sourceX: 460, sourceY: 240 },
-  { net: "AR_LVDS_1_N", sourceX: 460, sourceY: 250 },
-] as const;
-
-const POWER_PORT_LABELS = [
-  { net: "GND", sourceX: 630, sourceY: 690 },
-  { net: "GND", sourceX: 880, sourceY: 690 },
-  { net: "GND", sourceX: 1050, sourceY: 690 },
-  { net: "GND", sourceX: 1250, sourceY: 690 },
-  { net: "GND", sourceX: 1290, sourceY: 440 },
-  { net: "GND", sourceX: 1420, sourceY: 440 },
-  { net: "GND", sourceX: 540, sourceY: 440 },
-  { net: "GND", sourceX: 790, sourceY: 440 },
-  { net: "GND", sourceX: 1050, sourceY: 440 },
-  { net: "GND", sourceX: 1330, sourceY: 210 },
-  { net: "GND", sourceX: 1460, sourceY: 210 },
-  { net: "GND", sourceX: 850, sourceY: 200 },
-  { net: "GND", sourceX: 760, sourceY: 200 },
-  { net: "GND", sourceX: 690, sourceY: 200 },
-  { net: "PMIC_3V3", sourceX: 1050, sourceY: 530 },
-  { net: "AR_1V8", sourceX: 630, sourceY: 770 },
-  { net: "AR_1V8", sourceX: 880, sourceY: 780 },
-  { net: "AR_1V8", sourceX: 1050, sourceY: 780 },
-  { net: "AR_VBGAP", sourceX: 1290, sourceY: 530 },
-  { net: "AR_1P0_RF2", sourceX: 1420, sourceY: 530 },
-  { net: "AR_1P0_RF1", sourceX: 540, sourceY: 530 },
-  { net: "AR_1P0_RF2", sourceX: 790, sourceY: 530 },
-  { net: "AR_1V4_SYNTH", sourceX: 1330, sourceY: 300 },
-  { net: "AR_1V4_APLL", sourceX: 1460, sourceY: 300 },
-  { net: "AR_1P2", sourceX: 690, sourceY: 310 },
-  { net: "GND", sourceX: 400, sourceY: 90 },
-  { net: "GND", sourceX: 220, sourceY: 100 },
-  { net: "AR_1V8", sourceX: 140, sourceY: 720 },
-  { net: "AR_1V8", sourceX: 140, sourceY: 650 },
-  { net: "AR_1V8", sourceX: 140, sourceY: 680 },
-  { net: "AR_1P0_RF1", sourceX: 140, sourceY: 800 },
-  { net: "AR_1P0_RF2", sourceX: 140, sourceY: 760 },
-  { net: "AR_1P0_RF2", sourceX: 440, sourceY: 950 },
-  { net: "AR_1V4_APLL", sourceX: 420, sourceY: 900 },
-  { net: "AR_1V4_SYNTH", sourceX: 470, sourceY: 880 },
-  { net: "AR_1P2", sourceX: 120, sourceY: 620 },
-  { net: "AR_1V8", sourceX: 140, sourceY: 870 },
-  { net: "AR_1P2", sourceX: 440, sourceY: 1010 },
-  { net: "AR_1P2", sourceX: 140, sourceY: 1010 },
-  { net: "PMIC_3V3", sourceX: 140, sourceY: 910 },
-  { net: "AR_VBGAP", sourceX: 90, sourceY: 930 },
-  { net: "AR_1V8", sourceX: 1250, sourceY: 780 },
-] as const;
+export const RADAR_SOC_INTERFACE_ENDPOINTS: Record<string, string> = {
+  ...Object.fromEntries(
+    AWR_NET_CONNECTIONS.map(({ net, balls }) => [
+      net,
+      `.aop_io_sheet_content > .U2 > .${balls[0]}`,
+    ]),
+  ),
+  ...Object.fromEntries(
+    AWR_GPADC_TEST_CONNECTIONS.map(({ net, ball }) => [
+      net,
+      `.aop_io_sheet_content > .U2 > .${ball}`,
+    ]),
+  ),
+  PMIC_CLK: ".aop_io_sheet_content > .R103 > .pin2",
+  SOP0: ".aop_io_sheet_content > .R159 > .pin2",
+  SOP1: ".aop_io_sheet_content > .R171 > .pin2",
+};
 
 const IO_RESISTORS = [
   {
@@ -326,7 +659,7 @@ const IO_RESISTORS = [
     resistance: "10k",
     sourceX: 120,
     sourceY: 480,
-    rotation: 0,
+    rotation: 180,
     doNotPlace: false,
   },
   {
@@ -334,7 +667,7 @@ const IO_RESISTORS = [
     resistance: "10k",
     sourceX: 120,
     sourceY: 460,
-    rotation: 0,
+    rotation: 180,
     doNotPlace: false,
   },
   {
@@ -342,7 +675,7 @@ const IO_RESISTORS = [
     resistance: "10k",
     sourceX: 120,
     sourceY: 440,
-    rotation: 0,
+    rotation: 180,
     doNotPlace: false,
   },
   {
@@ -350,7 +683,7 @@ const IO_RESISTORS = [
     resistance: "10k",
     sourceX: 120,
     sourceY: 270,
-    rotation: 0,
+    rotation: 180,
     doNotPlace: false,
   },
   {
@@ -358,7 +691,7 @@ const IO_RESISTORS = [
     resistance: "10k",
     sourceX: 120,
     sourceY: 380,
-    rotation: 0,
+    rotation: 180,
     doNotPlace: false,
   },
   {
@@ -366,7 +699,7 @@ const IO_RESISTORS = [
     resistance: "10k",
     sourceX: 120,
     sourceY: 360,
-    rotation: 0,
+    rotation: 180,
     doNotPlace: false,
   },
   {
@@ -374,7 +707,7 @@ const IO_RESISTORS = [
     resistance: "10k",
     sourceX: 120,
     sourceY: 420,
-    rotation: 0,
+    rotation: 180,
     doNotPlace: false,
   },
   {
@@ -398,7 +731,7 @@ const IO_RESISTORS = [
     resistance: "0",
     sourceX: 1340,
     sourceY: 780,
-    rotation: 270,
+    rotation: 90,
     doNotPlace: true,
   },
   {
@@ -438,7 +771,7 @@ const IO_RESISTORS = [
     resistance: "7.87k",
     sourceX: 1530,
     sourceY: 740,
-    rotation: 0,
+    rotation: 180,
     doNotPlace: false,
   },
   {
@@ -446,7 +779,7 @@ const IO_RESISTORS = [
     resistance: "82.5k",
     sourceX: 1480,
     sourceY: 700,
-    rotation: 270,
+    rotation: 90,
     doNotPlace: false,
   },
   {
@@ -454,7 +787,7 @@ const IO_RESISTORS = [
     resistance: "750",
     sourceX: 1480,
     sourceY: 590,
-    rotation: 270,
+    rotation: 90,
     doNotPlace: false,
   },
   {
@@ -462,7 +795,7 @@ const IO_RESISTORS = [
     resistance: "82.5k",
     sourceX: 1480,
     sourceY: 510,
-    rotation: 270,
+    rotation: 90,
     doNotPlace: false,
   },
   {
@@ -470,7 +803,7 @@ const IO_RESISTORS = [
     resistance: "7.87k",
     sourceX: 1520,
     sourceY: 360,
-    rotation: 0,
+    rotation: 180,
     doNotPlace: false,
   },
   {
@@ -478,7 +811,7 @@ const IO_RESISTORS = [
     resistance: "750",
     sourceX: 1480,
     sourceY: 400,
-    rotation: 270,
+    rotation: 90,
     doNotPlace: false,
   },
   {
@@ -486,19 +819,19 @@ const IO_RESISTORS = [
     resistance: "82.5k",
     sourceX: 1480,
     sourceY: 320,
-    rotation: 270,
+    rotation: 90,
     doNotPlace: false,
   },
 ] as const;
 
 const IO_TESTPOINTS = [
   { name: "TP14", sourceX: 320, sourceY: 480 },
-  { name: "TP8", sourceX: 1000, sourceY: 700 },
-  { name: "TP7", sourceX: 1000, sourceY: 690 },
-  { name: "TP6", sourceX: 1000, sourceY: 680 },
-  { name: "TP3", sourceX: 1000, sourceY: 670 },
-  { name: "TP2", sourceX: 1000, sourceY: 660 },
-  { name: "TP9", sourceX: 1000, sourceY: 710 },
+  { name: "TP9", sourceX: 1100, sourceY: 740 },
+  { name: "TP8", sourceX: 1100, sourceY: 720 },
+  { name: "TP7", sourceX: 1100, sourceY: 700 },
+  { name: "TP6", sourceX: 1100, sourceY: 680 },
+  { name: "TP3", sourceX: 1100, sourceY: 660 },
+  { name: "TP2", sourceX: 1100, sourceY: 640 },
   { name: "TP17", sourceX: 530, sourceY: 810 },
 ] as const;
 
@@ -847,74 +1180,50 @@ const POWER_CAPACITORS = [
   },
 ] as const;
 
-const renderInterfaceLabels = () => (
-  <>
-    {IO_PORT_LABELS.map((label) => (
-      <Fragment key={`io-${label.net}-${label.sourceX}-${label.sourceY}`}>
-        <netlabel
-          net={label.net}
-          schX={toSchX(label.sourceX, "io")}
-          schY={toSchY(label.sourceY)}
-          anchorSide={label.sourceX < 850 ? "right" : "left"}
+const getAwrBallSheet = (ball: AwrBall) => {
+  const box = AWR_SCHEMATIC_BOXES.find(({ leftSide, rightSide }) =>
+    [...leftSide, ...rightSide].some((placement) => placement.ball === ball),
+  );
+  if (!box) {
+    throw new Error(`Missing AWR1843AoP schematic unit for ${ball}`);
+  }
+  return box.sheet;
+};
+
+const renderAwrSchematicBoxes = (sheet: "io" | "power") =>
+  AWR_SCHEMATIC_BOXES.filter((box) => box.sheet === sheet).map((box) => {
+    const placements = [...box.leftSide, ...box.rightSide];
+    const toSheetSchY = box.sheet === "io" ? toIoSchY : toPowerSchY;
+    return (
+      <Fragment key={box.key}>
+        <schematicbox
+          name={box.schematicName}
+          chipRef=".U2"
+          pinLabels={getAwrSchematicBoxPinLabels(placements)}
+          schPinArrangement={{
+            leftSide: box.leftSide.map(
+              ({ ball }) => getAwrBallDefinition(ball).pinNumber,
+            ),
+            rightSide: box.rightSide.map(
+              ({ ball }) => getAwrBallDefinition(ball).pinNumber,
+            ),
+          }}
+          schPinStyle={getAwrSchematicBoxPinStyle(box)}
+          schX={toSchX(box.sourceCenterX)}
+          schY={toSheetSchY(box.sourceCenterY)}
+          width={box.sourceWidth * SOURCE_X_SCALE}
+          height={getAwrSchematicBoxHeight(box)}
         />
       </Fragment>
-    ))}
-    {POWER_PORT_LABELS.map((label) => (
-      <Fragment key={`power-${label.net}-${label.sourceX}-${label.sourceY}`}>
-        <netlabel
-          net={label.net}
-          schX={toSchX(label.sourceX, "power")}
-          schY={toSchY(label.sourceY)}
-          anchorSide={label.net === "GND" ? "top" : "bottom"}
-        />
-      </Fragment>
-    ))}
-  </>
-);
+    );
+  });
 
-/**
- * TIDEP-01024 AWR1843AoP I/O and AOP power sheets.
- *
- * One U2 component renders all five Altium units so the 180-ball package is
- * electrically and physically represented only once.
- *
- * Coordinate transform:
- *   schX = (AltiumX - 850) * 0.0254 + sheetOffsetX
- *   schY = (AltiumY - 550) * 0.0254
- * AOP_IO uses sheetOffsetX=0; AOP_PWR uses sheetOffsetX=45 mm.
- */
-export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
-  <subcircuit {...props}>
-    <schematictext
-      text="AOP IO"
-      schX={0}
-      schY={12.2}
-      fontSize={0.6}
-      anchor="center"
-    />
-    <schematictext
-      text="AOP POWER"
-      schX={45}
-      schY={12.2}
-      fontSize={0.6}
-      anchor="center"
-    />
-    <schematictext
-      text="DECOUPLING CAPS"
-      schX={50}
-      schY={9.7}
-      fontSize={0.46}
-      anchor="center"
-    />
-
-    <AWR1843ARBGALPQ1
-      name="U2"
-      noConnect={["A3", "A4", "B3", "B4", "B5", "C3", "C4", "C5"]}
-    />
-
-    {AWR_NET_CONNECTIONS.map((connection) => (
-      <Fragment key={connection.net}>
-        {connection.balls.map((ball) => (
+const renderAwrNetConnections = (sheet: "io" | "power") =>
+  AWR_NET_CONNECTIONS.map((connection) => (
+    <Fragment key={`${sheet}-${connection.net}`}>
+      {connection.balls
+        .filter((ball) => getAwrBallSheet(ball) === sheet)
+        .map((ball) => (
           <Fragment key={`${connection.net}-${ball}`}>
             <trace
               name={`U2_${connection.net}_${ball}`}
@@ -923,183 +1232,328 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
             />
           </Fragment>
         ))}
-      </Fragment>
-    ))}
+    </Fragment>
+  ));
 
-    {IO_RESISTORS.map((resistor) => (
-      <resistor
-        key={resistor.name}
-        name={resistor.name}
-        resistance={resistor.resistance}
-        footprint="0201"
-        schX={toSchX(resistor.sourceX, "io")}
-        schY={toSchY(resistor.sourceY)}
-        schRotation={resistor.rotation}
-        doNotPlace={resistor.doNotPlace}
+/**
+ * TIDEP-01024 AWR1843AoP I/O and AOP power sheets.
+ *
+ * One U2 component renders all five Altium units so the 180-ball package is
+ * electrically and physically represented only once.
+ *
+ * Coordinate transform on each native schematic sheet:
+ *   schX = (AltiumX - 850) * 0.01778
+ *   schY = (AltiumY - 550) * 0.0254 on AOP_IO
+ *   schY = (AltiumY - 550) * 0.01778 on AOP_PWR
+ * AOP_IO and AOP_PWR retain their original independent coordinate systems.
+ * The native sheet is A4 while TI's source sheet is ANSI B. X is scaled to fit
+ * the wider source inside A4. AOP_IO keeps full mil-to-mm Y spacing. AOP_PWR
+ * uses the same A4 fit as X because its functional boxes are taller.
+ * The left AOP_IO resistor bank stays anchored at source Y=375 and uses a
+ * 0.035 Y scale so adjacent native resistor reference/value bounds do not
+ * overlap; component ordering and all source X coordinates remain unchanged.
+ */
+export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
+  <subcircuit {...props}>
+    <schematicsheet
+      name={RADAR_SOC_IO_SHEET_NAME}
+      displayName="AWR1843AoP I/O"
+      sheetIndex={0}
+    />
+    <schematicsheet
+      name={RADAR_SOC_POWER_SHEET_NAME}
+      displayName="AWR1843AoP Power"
+      sheetIndex={1}
+    />
+
+    <group
+      name="aop_io_sheet_content"
+      schSheetName={RADAR_SOC_IO_SHEET_NAME}
+      schX={0}
+      schY={0}
+    >
+      <schematicsection name={RADAR_CLOCK_SECTION_NAME} />
+      <schematictext
+        text="AOP IO"
+        schX={0}
+        schY={12.2}
+        fontSize={0.6}
+        anchor="center"
       />
-    ))}
-    <capacitor
-      name="C130"
-      capacitance="0.1uF"
-      footprint="0402"
-      schX={toSchX(270, "io")}
-      schY={toSchY(455)}
-      schRotation={270}
-    />
-    <CHS01TA name="S3" schX={toSchX(1600, "io")} schY={toSchY(740)} />
 
-    {IO_TESTPOINTS.map((testpoint) => (
-      <testpoint
-        key={testpoint.name}
-        name={testpoint.name}
-        footprintVariant="pad"
-        padShape="circle"
-        width="1mm"
-        height="1mm"
-        schX={toSchX(testpoint.sourceX, "io")}
-        schY={toSchY(testpoint.sourceY)}
+      <group name="radar_clock" schX={-10.2235} schY={8.128}>
+        <RadarClockSection_FW4000044Q
+          schSectionName={RADAR_CLOCK_SECTION_NAME}
+          showTitle
+        />
+      </group>
+
+      <AWR1843ARBGALPQ1
+        name="U2"
+        noSchematicRepresentation
+        noConnect={["A3", "A4", "B3", "B4", "B5", "C3", "C4", "C5"]}
       />
-    ))}
 
-    {[
-      ".R59 > .pin2",
-      ".R23 > .pin2",
-      ".R22 > .pin2",
-      ".R21 > .pin2",
-      ".R9 > .pin1",
-      ".R8 > .pin2",
-      ".R7 > .pin2",
-      ".R5 > .pin1",
-      ".R4 > .pin1",
-      ".R75 > .pin1",
-    ].map((port, index) => (
-      <Fragment key={`io-pullup-${index}`}>
-        <trace name={`IO_PULLUP_RAIL_${index}`} from={port} to="net.PMIC_3V3" />
-      </Fragment>
-    ))}
-    <trace name="NRST_R59_C130" from=".R59 > .pin1" to=".C130 > .pin2" />
-    <trace name="NRST_C130_TP14" from=".C130 > .pin2" to=".TP14 > .pin1" />
-    <trace name="NRST_INTERFACE" from=".TP14 > .pin1" to="net.AR_NRST" />
-    <trace name="WARMRST_PULLUP" from=".R23 > .pin1" to="net.AR_WARMRST" />
-    <trace name="NERRIN_PULLUP" from=".R22 > .pin1" to="net.AR_NERRIN" />
-    <trace name="NERROUT_PULLUP" from=".R21 > .pin1" to="net.AR_NERR_OUT" />
-    <trace name="CS1_PULLUP" from=".R9 > .pin2" to="net.AR_CS1" />
-    <trace name="SCL_PULLUP" from=".R8 > .pin1" to="net.AR_SCL" />
-    <trace name="SDA_PULLUP" from=".R7 > .pin1" to="net.AR_SDA" />
-    <trace name="RS232RX_PULLUP" from=".R5 > .pin2" to="net.AR_RS232RX" />
-    <trace name="RS232TX_PULLUP" from=".R4 > .pin2" to="net.AR_RS232TX" />
-    <trace name="SPICLK1_PULLUP" from=".R75 > .pin2" to="net.AR_SPICLK1" />
-    <trace name="HOSTINTR1_PULLDOWN" from=".R3 > .pin1" to="net.AR_HOSTINTR1" />
-    {[
-      ".R3 > .pin2",
-      ".C130 > .pin1",
-      ".R172 > .pin1",
-      ".R170 > .pin1",
-      ".R158 > .pin1",
-    ].map((port, index) => (
-      <Fragment key={`io-ground-${index}`}>
-        <trace name={`IO_GROUND_${index}`} from={port} to="net.GND" />
-      </Fragment>
-    ))}
+      {renderAwrSchematicBoxes("io")}
+      {renderAwrNetConnections("io")}
 
-    <trace name="GPADC1_TEST" from=".TP9 > .pin1" to="net.AR_GPADC_1" />
-    <trace name="GPADC2_TEST" from=".TP8 > .pin1" to="net.AR_GPADC_2" />
-    <trace name="GPADC3_TEST" from=".TP7 > .pin1" to="net.AR_GPADC_3" />
-    <trace name="GPADC4_TEST" from=".TP6 > .pin1" to="net.AR_GPADC_4" />
-    <trace name="GPADC5_TEST" from=".TP3 > .pin1" to="net.AR_GPADC_5" />
-    <trace name="GPADC6_TEST" from=".TP2 > .pin1" to="net.AR_GPADC_6" />
-    <trace name="OSC_CLKOUT_TEST" from=".TP17 > .pin1" to="net.AR_OSC_CLKOUT" />
-
-    <trace name="SOP2_SOURCE" from=".R103 > .pin1" to=".R85 > .pin1" />
-    <trace
-      name="SOP2_SOURCE_INTERFACE"
-      from=".R85 > .pin1"
-      to="net.AR_PMIC_CLKOUT_SOP2"
-    />
-    <trace name="PMIC_CLK_DNP" from=".R103 > .pin2" to="net.PMIC_CLK" />
-    <trace
-      name="SOP2_DIVIDER_R85_R176"
-      from=".R85 > .pin2"
-      to=".R176 > .pin2"
-    />
-    <trace
-      name="SOP2_DIVIDER_R176_R172"
-      from=".R176 > .pin2"
-      to=".R172 > .pin2"
-    />
-    <trace name="SOP2_SWITCH" from=".R176 > .pin1" to=".S3 > .pin1" />
-    <trace name="SOP2_SWITCH_SUPPLY" from=".S3 > .pin2" to="net.PMIC_3V3" />
-
-    <trace name="SOP1_SOURCE" from=".R84 > .pin1" to="net.AR_SYNC_OUT_SOP1" />
-    <trace
-      name="SOP1_DIVIDER_R84_R171"
-      from=".R84 > .pin2"
-      to=".R171 > .pin1"
-    />
-    <trace
-      name="SOP1_DIVIDER_R171_R170"
-      from=".R171 > .pin1"
-      to=".R170 > .pin2"
-    />
-    <trace name="SOP1_STRAP" from=".R171 > .pin2" to="net.SOP1" />
-
-    <trace name="SOP0_SOURCE" from=".R83 > .pin1" to="net.AR_TDO_SOP0" />
-    <trace
-      name="SOP0_DIVIDER_R83_R174"
-      from=".R83 > .pin2"
-      to=".R174 > .pin2"
-    />
-    <trace
-      name="SOP0_DIVIDER_R174_R159"
-      from=".R174 > .pin2"
-      to=".R159 > .pin1"
-    />
-    <trace
-      name="SOP0_DIVIDER_R159_R158"
-      from=".R159 > .pin1"
-      to=".R158 > .pin2"
-    />
-    <trace name="SOP0_STRAP" from=".R159 > .pin2" to="net.SOP0" />
-    <trace name="SOP0_SUPPLY" from=".R174 > .pin1" to=".R2 > .pin1" />
-    <trace name="SOP0_SUPPLY_LINK" from=".R2 > .pin2" to="net.PMIC_3V3" />
-
-    {POWER_CAPACITORS.map((capacitor) => (
-      <Fragment key={capacitor.name}>
-        <capacitor
-          name={capacitor.name}
-          capacitance={capacitor.capacitance}
-          footprint={capacitor.footprint}
-          schX={toSchX(capacitor.sourceX, "power")}
-          schY={toSchY(capacitor.sourceY)}
-          schRotation={capacitor.rotation}
+      {IO_RESISTORS.map((resistor) => (
+        <resistor
+          key={resistor.name}
+          name={resistor.name}
+          resistance={resistor.resistance}
+          footprint="0201"
+          schX={toSchX(resistor.sourceX)}
+          schY={
+            resistor.sourceX === 120
+              ? toIoPullupSchY(resistor.sourceY)
+              : toIoSchY(resistor.sourceY)
+          }
+          schRotation={resistor.rotation}
+          doNotPlace={resistor.doNotPlace}
         />
-        <trace
-          name={`${capacitor.name}_SUPPLY`}
-          from={`.${capacitor.name} > .${
-            capacitor.name === "C91" || capacitor.name === "C92"
-              ? "pin2"
-              : "pin1"
-          }`}
-          to={`net.${capacitor.supply}`}
-        />
-        <trace
-          name={`${capacitor.name}_GND`}
-          from={`.${capacitor.name} > .${
-            capacitor.name === "C91" || capacitor.name === "C92"
-              ? "pin1"
-              : "pin2"
-          }`}
-          to="net.GND"
-        />
-      </Fragment>
-    ))}
+      ))}
+      <capacitor
+        name="C130"
+        capacitance="0.1uF"
+        footprint="0402"
+        schX={toSchX(270)}
+        schY={toIoPullupSchY(455)}
+        schRotation={270}
+      />
+      <CHS01TA name="S3" schX={toSchX(1600)} schY={toIoSchY(740)} />
 
-    {renderInterfaceLabels()}
-    {RADAR_SOC_INTERFACE_NETS.map((net) => (
-      <Fragment key={`port-${net}`}>
-        <port name={`INTERFACE_${net}`} connectsTo={`net.${net}`} />
-      </Fragment>
-    ))}
+      {IO_TESTPOINTS.map((testpoint) => (
+        <testpoint
+          key={testpoint.name}
+          name={testpoint.name}
+          footprintVariant="pad"
+          padShape="circle"
+          width="1mm"
+          height="1mm"
+          schX={toSchX(testpoint.sourceX)}
+          schY={
+            testpoint.name === "TP14"
+              ? toIoPullupSchY(testpoint.sourceY)
+              : toIoSchY(testpoint.sourceY)
+          }
+        />
+      ))}
+
+      {[
+        ".R59 > .pin2",
+        ".R23 > .pin2",
+        ".R22 > .pin2",
+        ".R21 > .pin2",
+        ".R9 > .pin1",
+        ".R8 > .pin2",
+        ".R7 > .pin2",
+        ".R5 > .pin1",
+        ".R4 > .pin1",
+        ".R75 > .pin1",
+      ].map((port, index, railPorts) =>
+        index === railPorts.length - 1 ? null : (
+          <Fragment key={`io-pullup-${index}`}>
+            <trace from={port} to={railPorts[index + 1]} />
+          </Fragment>
+        ),
+      )}
+      <netlabel
+        net="PMIC_3V3"
+        schX={toSchX(70)}
+        schY={toIoPullupSchY(490)}
+        anchorSide="bottom"
+        connectsTo=".R59 > .pin2"
+      />
+      <trace name="NRST_R59_C130" from=".R59 > .pin1" to=".C130 > .pin2" />
+      <trace name="NRST_C130_TP14" from=".C130 > .pin2" to=".TP14 > .pin1" />
+      <trace name="NRST_INTERFACE" from=".TP14 > .pin1" to="net.AR_NRST" />
+      <trace name="WARMRST_PULLUP" from=".R23 > .pin1" to="net.AR_WARMRST" />
+      <trace name="NERRIN_PULLUP" from=".R22 > .pin1" to="net.AR_NERRIN" />
+      <trace name="NERROUT_PULLUP" from=".R21 > .pin1" to="net.AR_NERR_OUT" />
+      <trace name="CS1_PULLUP" from=".R9 > .pin2" to="net.AR_CS1" />
+      <trace name="SCL_PULLUP" from=".R8 > .pin1" to="net.AR_SCL" />
+      <trace name="SDA_PULLUP" from=".R7 > .pin1" to="net.AR_SDA" />
+      <trace name="RS232RX_PULLUP" from=".R5 > .pin2" to="net.AR_RS232RX" />
+      <trace name="RS232TX_PULLUP" from=".R4 > .pin2" to="net.AR_RS232TX" />
+      <trace name="SPICLK1_PULLUP" from=".R75 > .pin2" to="net.AR_SPICLK1" />
+      <trace
+        name="HOSTINTR1_PULLDOWN"
+        from=".R3 > .pin1"
+        to="net.AR_HOSTINTR1"
+      />
+      <netlabel
+        net="GND"
+        schX={toSchX(70)}
+        schY={toIoPullupSchY(260)}
+        anchorSide="top"
+        connectsTo=".R3 > .pin2"
+      />
+      <netlabel
+        net="GND"
+        schX={toSchX(270)}
+        schY={toIoPullupSchY(430)}
+        anchorSide="top"
+        connectsTo=".C130 > .pin1"
+      />
+      <netlabel
+        net="GND"
+        schX={toSchX(1480)}
+        schY={toIoSchY(670)}
+        anchorSide="top"
+        connectsTo=".R172 > .pin1"
+      />
+      <netlabel
+        net="GND"
+        schX={toSchX(1480)}
+        schY={toIoSchY(480)}
+        anchorSide="top"
+        connectsTo=".R170 > .pin1"
+      />
+      <netlabel
+        net="GND"
+        schX={toSchX(1480)}
+        schY={toIoSchY(290)}
+        anchorSide="top"
+        connectsTo=".R158 > .pin1"
+      />
+
+      {AWR_GPADC_TEST_CONNECTIONS.map(({ ball, testpoint }) => (
+        <Fragment key={`${ball}-${testpoint}`}>
+          <trace from={`.${testpoint} > .pin1`} to={`.U2 > .${ball}`} />
+        </Fragment>
+      ))}
+      <trace
+        name="OSC_CLKOUT_TEST"
+        from=".TP17 > .pin1"
+        to="net.AR_OSC_CLKOUT"
+      />
+
+      <trace from=".R103 > .pin1" to=".R85 > .pin1" />
+      <netlabel
+        net="AR_PMIC_CLKOUT_SOP2"
+        schX={toSchX(1220)}
+        schY={toIoSchY(740)}
+        anchorSide="right"
+        connectsTo=".R85 > .pin1"
+      />
+      <netlabel
+        net="PMIC_CLK"
+        schX={toSchX(1200)}
+        schY={toIoSchY(830)}
+        anchorSide="right"
+        connectsTo=".R103 > .pin2"
+      />
+      <trace from=".R85 > .pin2" to=".R176 > .pin2" />
+      <trace from=".R176 > .pin2" to=".R172 > .pin2" />
+      <trace from=".R176 > .pin1" to=".S3 > .pin1" />
+      <netlabel
+        net="PMIC_3V3"
+        schX={toSchX(1640)}
+        schY={toIoSchY(780)}
+        anchorSide="bottom"
+        connectsTo=".S3 > .pin2"
+      />
+
+      <netlabel
+        net="AR_SYNC_OUT_SOP1"
+        schX={toSchX(1220)}
+        schY={toIoSchY(550)}
+        anchorSide="right"
+        connectsTo=".R84 > .pin1"
+      />
+      <trace from=".R84 > .pin2" to=".R171 > .pin1" />
+      <trace from=".R171 > .pin1" to=".R170 > .pin2" />
+      <netlabel
+        net="SOP1"
+        schX={toSchX(1370)}
+        schY={toIoSchY(630)}
+        anchorSide="right"
+        connectsTo=".R171 > .pin2"
+      />
+
+      <netlabel
+        net="AR_TDO_SOP0"
+        schX={toSchX(1220)}
+        schY={toIoSchY(360)}
+        anchorSide="right"
+        connectsTo=".R83 > .pin1"
+      />
+      <trace from=".R83 > .pin2" to=".R174 > .pin2" />
+      <trace from=".R174 > .pin2" to=".R159 > .pin1" />
+      <trace from=".R159 > .pin1" to=".R158 > .pin2" />
+      <netlabel
+        net="SOP0"
+        schX={toSchX(1370)}
+        schY={toIoSchY(440)}
+        anchorSide="right"
+        connectsTo=".R159 > .pin2"
+      />
+      <trace from=".R174 > .pin1" to=".R2 > .pin1" />
+      <netlabel
+        net="PMIC_3V3"
+        schX={toSchX(1640)}
+        schY={toIoSchY(380)}
+        anchorSide="bottom"
+        connectsTo=".R2 > .pin2"
+      />
+    </group>
+
+    <group
+      name="aop_power_sheet_content"
+      schSheetName={RADAR_SOC_POWER_SHEET_NAME}
+      schX={0}
+      schY={0}
+    >
+      <schematictext
+        text="AOP POWER"
+        schX={0}
+        schY={12.2}
+        fontSize={0.6}
+        anchor="center"
+      />
+      <schematictext
+        text="DECOUPLING CAPS"
+        schX={5}
+        schY={9.7}
+        fontSize={0.46}
+        anchor="center"
+      />
+
+      {renderAwrSchematicBoxes("power")}
+      {renderAwrNetConnections("power")}
+
+      {POWER_CAPACITORS.map((capacitor) => (
+        <Fragment key={capacitor.name}>
+          <capacitor
+            name={capacitor.name}
+            capacitance={capacitor.capacitance}
+            footprint={capacitor.footprint}
+            schX={toSchX(capacitor.sourceX)}
+            schY={toPowerSchY(capacitor.sourceY)}
+            schRotation={capacitor.rotation}
+          />
+          <trace
+            name={`${capacitor.name}_SUPPLY`}
+            from={`.${capacitor.name} > .${
+              capacitor.name === "C91" || capacitor.name === "C92"
+                ? "pin2"
+                : "pin1"
+            }`}
+            to={`net.${capacitor.supply}`}
+          />
+          <trace
+            name={`${capacitor.name}_GND`}
+            from={`.${capacitor.name} > .${
+              capacitor.name === "C91" || capacitor.name === "C92"
+                ? "pin1"
+                : "pin2"
+            }`}
+            to="net.GND"
+          />
+        </Fragment>
+      ))}
+    </group>
   </subcircuit>
 );
 
