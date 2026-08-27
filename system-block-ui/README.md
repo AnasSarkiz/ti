@@ -102,7 +102,10 @@ as a vector PDF.
 The currently published eval worker predates `schematicgraphic`, so preview
 evaluation temporarily omits the intrinsic and attaches the exact same inline
 SVG to the System Diagram sheet in Circuit JSON before rendering. Exported TSX
-uses the native tscircuit element and needs no compatibility wrapper.
+uses the native tscircuit element and requires `@tscircuit/core` 0.0.1784 or a
+newer `tscircuit` release that includes it. The nested package pins the
+feature-compatible core, props, Circuit JSON, and SVG renderer versions. The
+worker bridge can be removed once the published eval worker catches up.
 
 The preview needs network access because `@tsci/tscircuit.ti` imports are loaded
 from the tscircuit registry. They represent the published package, whereas the

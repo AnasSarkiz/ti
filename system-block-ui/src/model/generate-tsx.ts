@@ -24,6 +24,17 @@ const quote = (value: string): string => JSON.stringify(value);
 const compareStrings = (left: string, right: string): number =>
   left < right ? -1 : left > right ? 1 : 0;
 
+const sanitizeJsxCommentText = (value: string): string => {
+  const sanitized = value
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/[^A-Za-z0-9._+ -]+/g, "_")
+    .slice(0, 80)
+    .trim();
+  return sanitized || "automatic";
+};
+
 const prefixSelector = (blockName: string, selector: string): string => {
   const relative = selector.trim().replace(/^>\s*/, "");
   return `.${blockName} > ${relative}`;
@@ -101,17 +112,24 @@ const prepareBlocks = (
   });
 
   const names = new Set<string>();
+  const sheetNames = new Set<string>();
   for (const item of prepared) {
     if (names.has(item.instanceName)) {
       throw new Error(`Duplicate generated block name: ${item.instanceName}`);
     }
+    if (sheetNames.has(item.sheetName)) {
+      throw new Error(
+        `Duplicate generated schematic sheet name: ${item.sheetName}`,
+      );
+    }
     names.add(item.instanceName);
+    sheetNames.add(item.sheetName);
   }
 
   return prepared.sort(
     (a, b) =>
-      a.instanceName.localeCompare(b.instanceName) ||
-      a.block.id.localeCompare(b.block.id),
+      compareStrings(a.instanceName, b.instanceName) ||
+      compareStrings(a.block.id, b.block.id),
   );
 };
 
@@ -191,13 +209,10 @@ const renderGeneratedSource = ({
 
   const lines: string[] = [];
   for (const [packageName, components] of [...packageByComponent].sort(
-    ([a], [b]) => a.localeCompare(b),
+    ([a], [b]) => compareStrings(a, b),
   )) {
     lines.push(
-      ...renderImport(
-        packageName,
-        [...components].sort((a, b) => a.localeCompare(b)),
-      ),
+      ...renderImport(packageName, [...components].sort(compareStrings)),
     );
   }
   lines.push(
@@ -255,8 +270,11 @@ const renderGeneratedSource = ({
 
   if (resolvedConnections.length > 0) lines.push("");
   for (const connection of resolvedConnections) {
+    const protocolComment = sanitizeJsxCommentText(
+      connection.protocol ?? "automatic",
+    );
     lines.push(
-      `    {/* ${connection.kind === "power" ? "Power" : "Data"}: ${connection.protocol ?? "automatic"} */}`,
+      `    {/* ${connection.kind === "power" ? "Power" : "Data"}: ${protocolComment} */}`,
     );
     for (const trace of connection.traces) {
       lines.push(...renderTrace(trace, instanceNameByBlockId));
