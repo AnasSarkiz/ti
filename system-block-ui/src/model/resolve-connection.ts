@@ -19,6 +19,9 @@ import type {
 } from "./types";
 import { ConnectionResolutionError } from "./types";
 
+const compareStrings = (left: string, right: string): number =>
+  left < right ? -1 : left > right ? 1 : 0;
+
 const COMPLEMENTARY_ROLES: ReadonlySet<string> = new Set([
   "provider:consumer",
   "consumer:provider",
@@ -328,8 +331,8 @@ export const resolveConnection = (
   candidates.sort(
     (a, b) =>
       b.score - a.score ||
-      a.fromPort.id.localeCompare(b.fromPort.id) ||
-      a.toPort.id.localeCompare(b.toPort.id),
+      compareStrings(a.fromPort.id, b.fromPort.id) ||
+      compareStrings(a.toPort.id, b.toPort.id),
   );
 
   if (candidates.length === 0) {
@@ -518,7 +521,7 @@ export const resolveDesignConnections = (
 
   const resolved: ResolvedConnection[] = [];
   for (const connection of [...connections].sort((a, b) =>
-    a.id.localeCompare(b.id),
+    compareStrings(a.id, b.id),
   )) {
     const fromBlock = blockById.get(connection.fromBlockId);
     const toBlock = blockById.get(connection.toBlockId);
