@@ -5,8 +5,8 @@ const pinLabels = {
   pin2: ["GPIO_PB14", "PB14"],
   pin3: ["GPIO_PB15", "PB15"],
   pin4: ["GPIO_PB16", "PB16"],
-  pin5: ["GPIO_PA12", "PA12"],
-  pin6: ["GPIO_PA13", "PA13", "COMP0_IN2_N"],
+  pin5: ["CAN_TX", "GPIO_PA12", "PA12"],
+  pin6: ["CAN_RX", "GPIO_PA13", "PA13", "COMP0_IN2_N"],
   pin7: ["GPIO_PA14", "PA14", "ADC0_IN12", "A0_12", "COMP0_IN2_P"],
   pin8: [
     "GPIO_PA15",
@@ -59,8 +59,8 @@ const pinLabels = {
   ],
   pin31: ["GPIO_PA27", "PA27", "ADC0_IN0", "A0_0", "COMP0_IN0_N", "OPA0_IN0_N"],
   pin32: "VCORE",
-  pin33: ["GPIO_PA0", "PA0"],
-  pin34: ["GPIO_PA1", "PA1"],
+  pin33: ["I2C0_SDA", "GPIO_PA0", "PA0"],
+  pin34: ["I2C0_SCL", "GPIO_PA1", "PA1"],
   pin35: ["GPIO_PA28", "PA28"],
   pin36: ["GPIO_PA29", "PA29"],
   pin37: ["GPIO_PA30", "PA30"],
@@ -101,6 +101,7 @@ export const MSPM0G3507SPMR = (props: ChipProps<typeof pinLabels>) => {
         jlcpcb: ["C22389960"],
       }}
       manufacturerPartNumber="MSPM0G3507SPMR"
+      datasheetUrl="https://www.ti.com/lit/ds/symlink/mspm0g3507.pdf"
       footprint="lga64_grid16x16_pillpads_w12.88mm_h12.9mm_pw0.3mm_pl1.5mm_pin1location(bottomside,left)"
       cadModel={{
         objUrl:
@@ -113,12 +114,55 @@ export const MSPM0G3507SPMR = (props: ChipProps<typeof pinLabels>) => {
       schPinArrangement={{
         leftSide: {
           direction: "top-to-bottom",
-          pins: ["VDD", "VSS", "VCORE", "NRST"],
+          pins: [
+            "VDD",
+            "VSS",
+            "VCORE",
+            "NRST",
+            "CAN_RX",
+            "PA27",
+            "PA8",
+            "PA9",
+            "PA15",
+            "PA14",
+          ],
         },
         rightSide: {
           direction: "top-to-bottom",
-          pins: ["PA2", "PA0", "PA1", "PA19", "PA20"],
+          pins: [
+            "CAN_TX",
+            "PA7",
+            "I2C0_SCL",
+            "I2C0_SDA",
+            "PA10",
+            "PA11",
+            "PA16",
+            "PA2",
+            "PA19",
+            "PA20",
+          ],
         },
+      }}
+      pinAttributes={{
+        VDD: { requiresPower: true },
+        VSS: { requiresGround: true },
+        VCORE: { providesPower: true },
+        NRST: { requiresPower: true },
+        CAN_RX: { requiresPower: true },
+        CAN_TX: { providesPower: true },
+        I2C0_SCL: { requiresPower: true, providesPower: true },
+        I2C0_SDA: { requiresPower: true, providesPower: true },
+        PA7: { providesPower: true },
+        PA8: { requiresPower: true },
+        PA9: { requiresPower: true },
+        PA10: { providesPower: true },
+        PA11: { providesPower: true },
+        PA14: { requiresPower: true },
+        PA15: { requiresPower: true },
+        PA16: { providesPower: true },
+        PA19: { requiresPower: true, providesPower: true },
+        PA20: { requiresPower: true },
+        PA27: { requiresPower: true },
       }}
       schPinStyle={{
         VDD: {
@@ -132,24 +176,17 @@ export const MSPM0G3507SPMR = (props: ChipProps<typeof pinLabels>) => {
         },
         NRST: {
           marginTop: 1.5,
+          marginBottom: 0.7,
         },
-        PA2: {
-          marginTop: 0.4,
-        },
-        PA0: {
-          marginTop: 1.9,
-        },
-        PA1: {
-          marginTop: 0.3,
-        },
-        PA19: {
-          marginTop: 1.2,
-        },
-        PA20: {
-          marginTop: 0.3,
-        },
+        CAN_RX: { marginBottom: 0.4 },
+        PA9: { marginBottom: 0.4 },
+        PA14: { marginTop: 0.4 },
+        PA7: { marginBottom: 0.4 },
+        I2C0_SDA: { marginBottom: 0.4 },
+        PA16: { marginBottom: 0.4 },
+        PA2: { marginBottom: 0.4 },
       }}
-      schHeight={5.3}
+      schHeight={7.6}
       {...props}
     />
   );
