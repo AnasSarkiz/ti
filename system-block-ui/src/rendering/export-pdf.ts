@@ -6,11 +6,7 @@ export { downloadBlob } from "./download-blob";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const DEFAULT_FILE_NAME = "system-schematic.pdf";
-const DEFAULT_MARGIN_MM = 10;
 const DEFAULT_ORIENTATION = "landscape";
-const SHEET_HEADER_BAND_MM = 8;
-const SHEET_HEADER_BASELINE_OFFSET_MM = 4.2;
-const SHEET_HEADER_DIVIDER_OFFSET_MM = 6.2;
 
 /** The evaluator's richer sheet objects are structurally assignable here. */
 export interface SchematicPdfSheet {
@@ -24,8 +20,7 @@ export interface SchematicPdfOptions {
   /** Fixed orientation used by every page. Defaults to A4 landscape. */
   orientation?: "portrait" | "landscape";
   format?: string | readonly [number, number];
-  marginMm?: number;
-  /** PDF document metadata title; sheet titles come from the input array. */
+  /** PDF document metadata title. */
   title?: string;
 }
 
@@ -41,10 +36,6 @@ interface SvgDimensions {
 export interface SchematicPdfPageLayoutRequest {
   pageWidthMm: number;
   pageHeightMm: number;
-  svgWidth: number;
-  svgHeight: number;
-  marginMm: number;
-  hasHeader: boolean;
 }
 
 export interface SchematicPdfPageLayout {
@@ -52,14 +43,10 @@ export interface SchematicPdfPageLayout {
   y: number;
   width: number;
   height: number;
-  headerBaselineY?: number;
-  headerDividerY?: number;
 }
 
 interface PreparedSheet {
   element: Element;
-  dimensions: SvgDimensions;
-  title?: string;
 }
 
 const parseSvg = (svg: string): Element => {
@@ -144,12 +131,12 @@ const normalizeSvgViewport = (
 ): void => {
   // circuit-to-svg currently emits width/height without a viewBox. svg2pdf's
   // width/height options resize its viewport but do not scale that SVG's user
-  // coordinate system, which clips the drawing. Supplying this viewBox makes
-  // the requested PDF dimensions an actual aspect-preserving transform.
+  // coordinate system, which clips the drawing. Supplying this viewBox and
+  // disabling aspect preservation stretches the viewport over the full page.
   if (!svg.hasAttribute("viewBox")) {
     svg.setAttribute("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
   }
-  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  svg.setAttribute("preserveAspectRatio", "none");
 };
 
 const validateFinitePositive = (name: string, value: number): void => {
@@ -158,63 +145,21 @@ const validateFinitePositive = (name: string, value: number): void => {
   }
 };
 
-const validateMargin = (marginMm: number): void => {
-  if (!Number.isFinite(marginMm) || marginMm < 0) {
-    throw new RangeError("marginMm must be a non-negative finite number");
-  }
-};
-
-/**
- * Aspect-fit one schematic inside a PDF page without crossing its margins.
- * A headed page reserves a compact band above the schematic viewport.
- */
+/** Stretches one schematic over the full PDF page. */
 export function calculateSchematicPdfPageLayout({
   pageWidthMm,
   pageHeightMm,
-  svgWidth,
-  svgHeight,
-  marginMm,
-  hasHeader,
 }: SchematicPdfPageLayoutRequest): SchematicPdfPageLayout {
   validateFinitePositive("pageWidthMm", pageWidthMm);
   validateFinitePositive("pageHeightMm", pageHeightMm);
-  validateFinitePositive("svgWidth", svgWidth);
-  validateFinitePositive("svgHeight", svgHeight);
-  validateMargin(marginMm);
-
-  const headerBand = hasHeader ? SHEET_HEADER_BAND_MM : 0;
-  const contentTop = marginMm + headerBand;
-  const availableWidth = pageWidthMm - marginMm * 2;
-  const availableHeight = pageHeightMm - contentTop - marginMm;
-  if (availableWidth <= 0 || availableHeight <= 0) {
-    throw new RangeError("marginMm leaves no printable area on the PDF page");
-  }
-
-  const scale = Math.min(
-    availableWidth / svgWidth,
-    availableHeight / svgHeight,
-  );
-  const width = svgWidth * scale;
-  const height = svgHeight * scale;
 
   return {
-    x: marginMm + (availableWidth - width) / 2,
-    y: contentTop + (availableHeight - height) / 2,
-    width,
-    height,
-    ...(hasHeader
-      ? {
-          headerBaselineY: marginMm + SHEET_HEADER_BASELINE_OFFSET_MM,
-          headerDividerY: marginMm + SHEET_HEADER_DIVIDER_OFFSET_MM,
-        }
-      : {}),
+    x: 0,
+    y: 0,
+    width: pageWidthMm,
+    height: pageHeightMm,
   };
 }
-
-const normalizeSheetTitle = (title: string | undefined): string | undefined => {
-  const normalized = title?.replace(/\s+/g, " ").trim();
-  return normalized || undefined;
-};
 
 const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
   const sheets: readonly SchematicPdfSheet[] =
@@ -232,84 +177,8 @@ const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
     const element = parseSvg(sheet.svg);
     const dimensions = getSvgDimensions(element);
     normalizeSvgViewport(element, dimensions);
-    return {
-      element,
-      dimensions,
-      title: normalizeSheetTitle(sheet.title),
-    };
+    return { element };
   });
-};
-
-const fitTitle = (pdf: jsPDF, title: string, maxWidth: number): string => {
-  if (pdf.getTextWidth(title) <= maxWidth) return title;
-
-  const suffix = "...";
-  let end = title.length;
-  while (
-    end > 0 &&
-    pdf.getTextWidth(`${title.slice(0, end)}${suffix}`) > maxWidth
-  ) {
-    end -= 1;
-  }
-  return `${title.slice(0, end).trimEnd()}${suffix}`;
-};
-
-const renderSheetHeader = ({
-  pdf,
-  title,
-  pageNumber,
-  pageCount,
-  pageWidth,
-  marginMm,
-  layout,
-}: {
-  pdf: jsPDF;
-  title?: string;
-  pageNumber: number;
-  pageCount: number;
-  pageWidth: number;
-  marginMm: number;
-  layout: SchematicPdfPageLayout;
-}): void => {
-  if (
-    layout.headerBaselineY === undefined ||
-    layout.headerDividerY === undefined
-  ) {
-    return;
-  }
-
-  const pageLabel = `Page ${pageNumber} / ${pageCount}`;
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(9);
-  pdf.setTextColor(85, 95, 110);
-  pdf.text(pageLabel, pageWidth - marginMm, layout.headerBaselineY, {
-    align: "right",
-  });
-
-  if (title) {
-    const labelWidth = pdf.getTextWidth(pageLabel);
-    const maxTitleWidth = Math.max(
-      1,
-      pageWidth - marginMm * 2 - labelWidth - 8,
-    );
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(11);
-    pdf.setTextColor(45, 55, 72);
-    pdf.text(
-      fitTitle(pdf, title, maxTitleWidth),
-      marginMm,
-      layout.headerBaselineY,
-    );
-  }
-
-  pdf.setDrawColor(210, 215, 222);
-  pdf.setLineWidth(0.25);
-  pdf.line(
-    marginMm,
-    layout.headerDividerY,
-    pageWidth - marginMm,
-    layout.headerDividerY,
-  );
 };
 
 /** Converts one or more schematic SVGs into a vector, one-sheet-per-page PDF. */
@@ -318,8 +187,6 @@ export async function createSchematicPdfBlob(
   options: SchematicPdfOptions = {},
 ): Promise<Blob> {
   const sheets = prepareSheets(input);
-  const marginMm = options.marginMm ?? DEFAULT_MARGIN_MM;
-  validateMargin(marginMm);
 
   const format: string | number[] =
     typeof options.format === "string" || options.format === undefined
@@ -343,27 +210,11 @@ export async function createSchematicPdfBlob(
 
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const hasHeader = Boolean(sheet.title) || sheets.length > 1;
     const layout = calculateSchematicPdfPageLayout({
       pageWidthMm: pageWidth,
       pageHeightMm: pageHeight,
-      svgWidth: sheet.dimensions.width,
-      svgHeight: sheet.dimensions.height,
-      marginMm,
-      hasHeader,
     });
 
-    if (hasHeader) {
-      renderSheetHeader({
-        pdf,
-        title: sheet.title,
-        pageNumber: index + 1,
-        pageCount: sheets.length,
-        pageWidth,
-        marginMm,
-        layout,
-      });
-    }
     await svg2pdf(sheet.element, pdf, {
       x: layout.x,
       y: layout.y,

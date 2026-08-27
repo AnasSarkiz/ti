@@ -2,78 +2,38 @@ import { describe, expect, test } from "bun:test";
 
 import { calculateSchematicPdfPageLayout } from "./export-pdf";
 
-const expectInsidePage = (
-  layout: ReturnType<typeof calculateSchematicPdfPageLayout>,
-  pageWidth: number,
-  pageHeight: number,
-  margin: number,
-): void => {
-  expect(layout.x).toBeGreaterThanOrEqual(margin);
-  expect(layout.y).toBeGreaterThanOrEqual(margin);
-  expect(layout.x + layout.width).toBeLessThanOrEqual(
-    pageWidth - margin + 1e-9,
-  );
-  expect(layout.y + layout.height).toBeLessThanOrEqual(
-    pageHeight - margin + 1e-9,
-  );
-};
-
 describe("schematic PDF page layout", () => {
-  test("aspect-fits a wide schematic below its header on A4 landscape", () => {
+  test("stretches a schematic over an entire A4 landscape page", () => {
     const layout = calculateSchematicPdfPageLayout({
       pageWidthMm: 297,
       pageHeightMm: 210,
-      svgWidth: 1400,
-      svgHeight: 900,
-      marginMm: 10,
-      hasHeader: true,
     });
 
-    expect(layout.headerBaselineY).toBeGreaterThan(10);
-    expect(layout.headerDividerY).toBeLessThan(layout.y);
-    expect(layout.width / layout.height).toBeCloseTo(1400 / 900, 10);
-    expectInsidePage(layout, 297, 210, 10);
+    expect(layout).toEqual({ x: 0, y: 0, width: 297, height: 210 });
   });
 
-  test("centers a tall schematic without clipping on a landscape page", () => {
+  test("uses the full page for custom page dimensions", () => {
     const layout = calculateSchematicPdfPageLayout({
-      pageWidthMm: 297,
-      pageHeightMm: 210,
-      svgWidth: 600,
-      svgHeight: 1200,
-      marginMm: 12,
-      hasHeader: false,
+      pageWidthMm: 180,
+      pageHeightMm: 320,
     });
 
-    expect(layout.height).toBe(186);
-    expect(layout.width).toBe(93);
-    expect(layout.x).toBe(102);
-    expect(layout.y).toBe(12);
-    expect(layout.headerBaselineY).toBeUndefined();
-    expectInsidePage(layout, 297, 210, 12);
+    expect(layout).toEqual({ x: 0, y: 0, width: 180, height: 320 });
   });
 
-  test("rejects dimensions or margins that cannot produce printable content", () => {
+  test("rejects invalid page dimensions", () => {
     expect(() =>
       calculateSchematicPdfPageLayout({
-        pageWidthMm: 297,
+        pageWidthMm: 0,
         pageHeightMm: 210,
-        svgWidth: 0,
-        svgHeight: 900,
-        marginMm: 10,
-        hasHeader: false,
       }),
-    ).toThrow("svgWidth must be a positive finite number");
+    ).toThrow("pageWidthMm must be a positive finite number");
 
     expect(() =>
       calculateSchematicPdfPageLayout({
         pageWidthMm: 297,
-        pageHeightMm: 210,
-        svgWidth: 1400,
-        svgHeight: 900,
-        marginMm: 106,
-        hasHeader: true,
+        pageHeightMm: Number.NaN,
       }),
-    ).toThrow("marginMm leaves no printable area");
+    ).toThrow("pageHeightMm must be a positive finite number");
   });
 });
