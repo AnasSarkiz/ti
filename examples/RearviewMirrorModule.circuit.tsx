@@ -9,7 +9,7 @@ import {
 import "tscircuit";
 
 export default () => (
-  <board routingDisabled>
+  <board>
     <PowerSupply_LM74202_TPS7E81_Q1 name="power_supply" />
     <CommunicationInterface_TCAN1042_TIDA01428 name="communication_interface" />
     <ElectrochromicMirrorDriver_TIDA01539 name="mirror_driver" />

@@ -12,7 +12,7 @@ import { TLV316QDBVTQ1 } from "../chips/TLV316QDBVTQ1.circuit.tsx";
 export const ElectrochromicMirrorDriver_TIDA01539 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit routingDisabled schMaxTraceDistance="8mm" {...props}>
+  <subcircuit schMaxTraceDistance="8mm" {...props}>
     <net name="GND" isGroundNet />
 
     <DAC101C081QISD_NOPB

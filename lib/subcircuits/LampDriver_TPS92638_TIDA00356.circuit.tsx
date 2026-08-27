@@ -15,7 +15,7 @@ const outputLedMap = [
 
 /** Eight-channel lamp-driver circuit from TIDA-00356 sheet 2. */
 export const LampDriver_TPS92638_TIDA00356 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled schMaxTraceDistance="8mm" {...props}>
+  <subcircuit schMaxTraceDistance="8mm" {...props}>
     <net name="GND" isGroundNet />
 
     <diode
@@ -26,7 +26,10 @@ export const LampDriver_TPS92638_TIDA00356 = (props: SubcircuitProps) => (
       schottky
       schX={-4.8}
       schY={5}
-      connections={{ anode: "net.VBATT_12V", cathode: "U9.SUPPLY" }}
+      connections={{
+        anode: "net.VBATT_12V",
+        cathode: ["U9.SUPPLY", "C39.pin1"],
+      }}
     />
     <capacitor
       name="C39"
@@ -36,7 +39,7 @@ export const LampDriver_TPS92638_TIDA00356 = (props: SubcircuitProps) => (
       schX={-2.8}
       schY={5}
       schOrientation="vertical"
-      connections={{ pin1: "U9.SUPPLY", pin2: "net.GND" }}
+      connections={{ pin2: "net.GND" }}
     />
 
     <pinheader
@@ -44,6 +47,8 @@ export const LampDriver_TPS92638_TIDA00356 = (props: SubcircuitProps) => (
       gender="male"
       pinCount={3}
       pitch="1.27mm"
+      holeDiameter="0.7mm"
+      platedDiameter="1mm"
       manufacturerPartNumber="GRPB031VWVN-RC"
       schFacingDirection="right"
       schRotation={180}

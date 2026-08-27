@@ -21,7 +21,6 @@ const SensorUnit = ({
 }: SensorUnitProps) => (
   <subcircuit
     name={`${reference}Sensor`}
-    routingDisabled
     schMaxTraceDistance="1.5mm"
     schX={0}
     schY={y}
@@ -63,7 +62,7 @@ const SensorUnit = ({
 
 /** Ambient-light sensor circuits from TIDA-01539 sheet 2. */
 export const LightSensor_OPT3001_TIDA01539 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled {...props}>
+  <subcircuit {...props}>
     <SensorUnit
       reference="U4"
       capacitorReference="C9"

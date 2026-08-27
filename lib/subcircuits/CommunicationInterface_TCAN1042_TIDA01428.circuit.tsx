@@ -131,7 +131,7 @@ const commonModeChokeSymbol = (
 export const CommunicationInterface_TCAN1042_TIDA01428 = (
   props: SubcircuitProps,
 ) => (
-  <subcircuit routingDisabled schMaxTraceDistance="8mm" {...props}>
+  <subcircuit schMaxTraceDistance="8mm" {...props}>
     <net name="GND" isGroundNet />
 
     <resistor
@@ -142,7 +142,10 @@ export const CommunicationInterface_TCAN1042_TIDA01428 = (
       schX={-5}
       schY={2}
       schOrientation="vertical"
-      connections={{ pin1: "net.V5P0", pin2: "U6.VCC" }}
+      connections={{
+        pin1: "net.V5P0",
+        pin2: ["U6.VCC", "C28.pin1"],
+      }}
     />
     <capacitor
       name="C28"
@@ -152,7 +155,7 @@ export const CommunicationInterface_TCAN1042_TIDA01428 = (
       schX={-5}
       schY={-2}
       schOrientation="vertical"
-      connections={{ pin1: "U6.VCC", pin2: "net.GND" }}
+      connections={{ pin2: "net.GND" }}
     />
     <resistor
       name="R22"
@@ -162,7 +165,10 @@ export const CommunicationInterface_TCAN1042_TIDA01428 = (
       schX={-3.8}
       schY={2}
       schOrientation="vertical"
-      connections={{ pin1: "net.V3P3", pin2: "U6.VIO" }}
+      connections={{
+        pin1: "net.V3P3",
+        pin2: ["U6.VIO", "C29.pin1"],
+      }}
     />
     <capacitor
       name="C29"
@@ -172,7 +178,7 @@ export const CommunicationInterface_TCAN1042_TIDA01428 = (
       schX={-3.8}
       schY={-2}
       schOrientation="vertical"
-      connections={{ pin1: "U6.VIO", pin2: "net.GND" }}
+      connections={{ pin2: "net.GND" }}
     />
 
     <TCAN1042HGVDRBQ1
