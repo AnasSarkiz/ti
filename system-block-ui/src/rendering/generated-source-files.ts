@@ -1,6 +1,6 @@
 export const GENERATED_SYSTEM_MAIN_FILE_NAME = "GeneratedSystem.circuit.tsx";
 
-interface GeneratedSystemSourceArtifacts {
+export interface GeneratedSystemSourceArtifacts {
   tsx: string;
   systemDiagramModuleFileName: string;
   systemDiagramModuleSource: string;
