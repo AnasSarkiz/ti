@@ -35,6 +35,11 @@ example composes the CC2564C Bluetooth controller, MSP430F5229 host, TAS2505
 audio amplifier, BQ24074 battery charger, and TPS7A2018 1.8 V regulator into a
 connected Bluetooth speaker schematic.
 
+The [`SeatPositionModule.circuit.tsx`](examples/SeatPositionModule.circuit.tsx)
+example stays intentionally small: it composes and electrically connects the
+reusable reference subcircuits for the power supply, communication interface,
+light driver, MCU, position feedback, and motor driver blocks.
+
 ## System Block Builder
 
 The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
@@ -257,6 +262,7 @@ The package currently exports these subcircuit components:
 - `MotorDriver_DRV8210`
 - `MotorDriver_DRV8833`
 - `MotorDriver_DRV8876`
+- `MotorDriver_DRV8305_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
 - `EnvironmentalSensor_HDC2080`
 - `EnvironmentalSensor_HDC3020`
 - `EnvironmentalSensor_HDC3022`
@@ -269,6 +275,7 @@ The package currently exports these subcircuit components:
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
 - `Microcontroller_MSPM0G3507`
+- `Microcontroller_MSPM0L1306Q1_TIDA020065` ([TIDA-020065](https://www.ti.com/tool/TIDA-020065))
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
 - `OutputUserInterface_LEDMatrix_LP5892_Q1`
@@ -291,6 +298,9 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
 - `CommunicationInterface_TCAN1042_TIDA01428` ([TIDA-01428](https://www.ti.com/tool/TIDA-01428))
+- `LightDriver_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
+- `PositionFeedback_DRV5013_TIDA01389` ([TIDA-01389](https://www.ti.com/tool/TIDA-01389))
+- `PowerSupply_LM5050_TIDA00992` ([TIDA-00992](https://www.ti.com/tool/TIDA-00992))
 - `ElectrochromicMirrorDriver_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `InputPowerProtection_TPS25910_TIDA00890` ([TIDA-00890](https://www.ti.com/tool/TIDA-00890))
@@ -314,10 +324,13 @@ chip is listed individually below, including whether it supports a
 | `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
+| `CSD19532Q5B` | `-` | `CSD19532Q5B` |
 | `DAC101C081Q` | `-` | `DAC101C081QISD_NOPB` |
+| `DRV5013Q1` | `-` | `DRV5013ADQDBZRQ1` |
 | `DRV8210` | `wson_8_ep_2x2` | `DRV8210DSGR` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
+| `DRV83053Q1` | `-` | `DRV83053QPHPQ1` |
 | `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
 | `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
@@ -327,9 +340,11 @@ chip is listed individually below, including whether it supports a
 | `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
+| `LM5050Q1` | `-` | `LM5050Q1MKX_1_NOPB` |
 | `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
+| `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
 | `PGA300ARHHR` | `-` | `PGA300ARHHR` |

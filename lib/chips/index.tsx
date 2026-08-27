@@ -9,6 +9,10 @@ export { CC2340R5 } from "./CC2340R5.circuit.tsx";
 export { CC2564C } from "./CC2564C.circuit.tsx";
 export { CC2745R10 } from "./CC2745R10.circuit.tsx";
 export { CC3235SF } from "./CC3235SF.circuit.tsx";
+export { A_282834_2 } from "./A_282834_2.circuit.tsx";
+export { BAT54CDW_7_F } from "./BAT54CDW_7_F.circuit.tsx";
+export { BC846BLT1G } from "./BC846BLT1G.circuit.tsx";
+export { CSD19532Q5B } from "./CSD19532Q5B.circuit.tsx";
 export {
   DAC101C081Q,
   DAC101C081QISD_NOPB,
@@ -16,6 +20,14 @@ export {
 export { DRV8210 } from "./DRV8210.circuit.tsx";
 export { DRV8833 } from "./DRV8833.circuit.tsx";
 export { DRV8876 } from "./DRV8876.circuit.tsx";
+export {
+  DRV5013ADQDBZRQ1,
+  DRV5013Q1,
+} from "./DRV5013ADQDBZRQ1.circuit.tsx";
+export {
+  DRV83053Q1,
+  DRV83053QPHPQ1,
+} from "./DRV83053QPHPQ1.circuit.tsx";
 export { HDC2080 } from "./HDC2080.circuit.tsx";
 export { HDC3020 } from "./HDC3020.circuit.tsx";
 export { HDC3022 } from "./HDC3022.circuit.tsx";
@@ -27,15 +39,25 @@ export {
   LM74202QPWPRQ1,
   LM74202QPWPRQ1_PIN_LABELS,
 } from "./LM74202QPWPRQ1.circuit.tsx";
+export {
+  LM5050Q1,
+  LM5050Q1MKX_1_NOPB,
+} from "./LM5050Q1MKX_1_NOPB.circuit.tsx";
 export { LMK1C1104 } from "./LMK1C1104.circuit.tsx";
 export { LP5892Q1 } from "./LP5892Q1.circuit.tsx";
 export { MSP430G2230ID } from "./MSP430G2230ID.circuit.tsx";
 export { MSP430F5229 } from "./MSP430F5229.circuit.tsx";
 export { MSPM0L1306 } from "./MSPM0L1306.circuit.tsx";
+export {
+  MSPM0L1306Q1,
+  MSPM0L1306QRHBRQ1,
+} from "./MSPM0L1306QRHBRQ1.circuit.tsx";
 export { MSPM33C3x } from "./MSPM33C3x.circuit.tsx";
 export { MSPM0G3507 } from "./MSPM0G3507.circuit.tsx";
 export { OPT3001, OPT3001IDNPRQ1 } from "./OPT3001IDNPRQ1.circuit.tsx";
 export { SN65HVD1473 } from "./SN65HVD1473.circuit.tsx";
+export { NTR5198NLT1G } from "./NTR5198NLT1G.circuit.tsx";
+export { SQJ858AEP_T1_GE3 } from "./SQJ858AEP_T1_GE3.circuit.tsx";
 export { TAS2505 } from "./TAS2505.circuit.tsx";
 export {
   TCAN1042HGV,
