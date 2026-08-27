@@ -23,7 +23,7 @@ import {
 } from "./editor";
 import {
   type BlockInstance,
-  generateTsx,
+  generateSystemDesignArtifacts,
   getSubcircuitCatalog,
   type LogicalConnection,
   resolveDesignConnections,
@@ -31,6 +31,7 @@ import {
 } from "./model";
 import { downloadBlob } from "./rendering/download-blob";
 import type { EvaluatedSchematicSheet } from "./rendering/evaluate-schematic";
+import { SchematicEvaluationCoordinator } from "./schematic-evaluation-coordinator";
 
 interface Notice {
   message: string;
@@ -184,7 +185,10 @@ export function App() {
   const noticeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined,
   );
-  const tsxRef = useRef("");
+  const evaluationCoordinatorRef = useRef<
+    SchematicEvaluationCoordinator | undefined
+  >(undefined);
+  evaluationCoordinatorRef.current ??= new SchematicEvaluationCoordinator();
 
   const [snapshot, setSnapshot] = useState<SystemBlockGraphSnapshot>(() => ({
     blocks: [...starterDesign.blocks],
@@ -226,9 +230,9 @@ export function App() {
     [],
   );
 
-  const generatedTsx = useMemo(
+  const generatedArtifacts = useMemo(
     () =>
-      generateTsx({
+      generateSystemDesignArtifacts({
         blocks: snapshot.blocks,
         connections: snapshot.connections,
         catalog,
@@ -236,7 +240,14 @@ export function App() {
       }),
     [catalog, snapshot.blocks, snapshot.connections],
   );
-  tsxRef.current = generatedTsx;
+  const generatedTsx = generatedArtifacts.tsx;
+
+  const invalidateSchematic = useCallback(() => {
+    evaluationCoordinatorRef.current?.invalidateGraph();
+    setIsRendering(false);
+    setSchematicSheets([]);
+    setPreviewError(undefined);
+  }, []);
 
   useEffect(() => {
     const container = canvasRef.current;
@@ -250,9 +261,8 @@ export function App() {
       initialGraph: starterDesign,
       onGraphChange: (nextSnapshot) => {
         if (disposed) return;
+        invalidateSchematic();
         setSnapshot(nextSnapshot);
-        setSchematicSheets([]);
-        setPreviewError(undefined);
       },
       onConnectionRejected: ({ error }) => notify(error.message, "error"),
     })
@@ -278,9 +288,10 @@ export function App() {
       disposed = true;
       if (controllerRef.current === controller)
         controllerRef.current = undefined;
+      evaluationCoordinatorRef.current?.invalidateGraph();
       controller?.destroy();
     };
-  }, [catalog, notify, starterDesign]);
+  }, [catalog, invalidateSchematic, notify, starterDesign]);
 
   useEffect(
     () => () => {
@@ -340,14 +351,16 @@ export function App() {
       return;
     }
 
-    const source = generatedTsx;
+    const coordinator = evaluationCoordinatorRef.current;
+    if (!coordinator) return;
+    const request = coordinator.startRequest();
     setIsRendering(true);
     setPreviewError(undefined);
     try {
       const { evaluateGeneratedTsx } = await import(
         "./rendering/evaluate-schematic"
       );
-      const rendered = await evaluateGeneratedTsx(source, {
+      const rendered = await evaluateGeneratedTsx(generatedArtifacts.tsx, {
         timeoutMs: 45_000,
         schematicOptions: {
           width: 1400,
@@ -355,12 +368,7 @@ export function App() {
           includeVersion: true,
         },
       });
-      if (tsxRef.current !== source) {
-        notify(
-          "The graph changed during rendering; render the updated design again.",
-        );
-        return;
-      }
+      if (!coordinator.isCurrent(request)) return;
       setSchematicSheets(
         rendered.sheets.map((sheet) => ({
           ...sheet,
@@ -374,15 +382,17 @@ export function App() {
         "success",
       );
     } catch (error) {
+      if (!coordinator.isCurrent(request)) return;
       const message = errorMessage(error);
       setPreviewError(message);
       notify(message, "error");
     } finally {
-      setIsRendering(false);
+      if (coordinator.isCurrent(request)) setIsRendering(false);
     }
-  }, [generatedTsx, notify]);
+  }, [generatedArtifacts, notify]);
 
   const resetDesign = useCallback(async () => {
+    invalidateSchematic();
     try {
       await controllerRef.current?.loadInitialGraph(starterDesign);
       await controllerRef.current?.zoomToFit();
@@ -390,7 +400,7 @@ export function App() {
     } catch (error) {
       notify(errorMessage(error), "error");
     }
-  }, [notify, starterDesign]);
+  }, [invalidateSchematic, notify, starterDesign]);
 
   const copyTsx = useCallback(async () => {
     try {

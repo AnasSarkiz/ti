@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
   createSubcircuitCatalog,
+  generateSystemDesignArtifacts,
   generateTsx,
   getSubcircuitDefinition,
   resolveConnection,
@@ -277,6 +278,99 @@ describe("automatic connection resolution", () => {
       "logic-power",
     ]);
   });
+
+  test("uses bytewise ordering for connection IDs and tied port diagnostics", () => {
+    const ordered = resolveDesignConnections(
+      [
+        block("ldo", "power-management-tps7a2018"),
+        block("amplifier", "audio-amplifier-tas2505"),
+        block("host", "bluetooth-audio-host-msp430f5229"),
+        block("controller", "bluetooth-controller-cc2564c"),
+      ],
+      [
+        {
+          id: "ä-connection",
+          fromBlockId: "ldo",
+          toBlockId: "amplifier",
+          kind: "power",
+        },
+        {
+          id: "z-connection",
+          fromBlockId: "host",
+          toBlockId: "controller",
+          kind: "data",
+        },
+      ],
+    );
+    expect(ordered.map(({ id }) => id)).toEqual([
+      "z-connection",
+      "ä-connection",
+    ]);
+
+    const source: SubcircuitDefinition = {
+      id: "bytewise-source",
+      title: "Bytewise source",
+      category: "Test",
+      componentName: "BytewiseSource",
+      importPath: "test",
+      sourcePath: "test.tsx",
+      ports: ["ä-port", "z-port"].map((id) => ({
+        id,
+        label: id,
+        kind: "data" as const,
+        role: "host" as const,
+        protocol: "gpio",
+        signals: [
+          {
+            name: "signal",
+            direction: "output" as const,
+            selectors: [`.${id}`],
+          },
+        ],
+      })),
+    };
+    const sink: SubcircuitDefinition = {
+      id: "bytewise-sink",
+      title: "Bytewise sink",
+      category: "Test",
+      componentName: "BytewiseSink",
+      importPath: "test",
+      sourcePath: "test.tsx",
+      ports: [
+        {
+          id: "input",
+          label: "input",
+          kind: "data",
+          role: "device",
+          protocol: "gpio",
+          signals: [
+            {
+              name: "signal",
+              direction: "input",
+              selectors: [".input"],
+            },
+          ],
+        },
+      ],
+    };
+
+    try {
+      resolveConnection({
+        kind: "data",
+        from: { block: block("source", source.id), definition: source },
+        to: { block: block("sink", sink.id), definition: sink },
+      });
+      throw new Error("Expected bytewise candidates to remain ambiguous");
+    } catch (error) {
+      expect(error).toBeInstanceOf(ConnectionResolutionError);
+      const candidates = (
+        (error as ConnectionResolutionError).details?.candidates as
+          | Array<{ fromPortId: string }>
+          | undefined
+      )?.map(({ fromPortId }) => fromPortId);
+      expect(candidates).toEqual(["z-port", "ä-port"]);
+    }
+  });
 });
 
 describe("catalog and TSX generation", () => {
@@ -322,8 +416,166 @@ describe("catalog and TSX generation", () => {
     expect(first).toBe(second);
     expect(first).toContain("<board routingDisabled>");
     expect(first).toContain("PowerManagement_TPS7A2018,");
+    expect(first).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
+    expect(first).toContain('displayName="System Diagram"');
+    expect(first).toContain("sheetIndex={0}");
+    expect(first).toContain("sheetIndex={1}");
+    expect(first).toContain("sheetIndex={2}");
     expect(first).toContain('from=".power_1v8 > .U1 > .VOUT"');
     expect(first).toContain('to=".audio_amplifier > .U1 > .IOVDD"');
+  });
+
+  test("emits canonical system artifacts deterministically", () => {
+    const blocks = [
+      {
+        ...block("power_1v8", "power-management-tps7a2018"),
+        schSheetName: "system_diagram",
+      },
+      block("audio_amplifier", "audio-amplifier-tas2505"),
+    ];
+    const connections = [
+      {
+        id: "power",
+        fromBlockId: "power_1v8",
+        toBlockId: "audio_amplifier",
+        kind: "Power" as const,
+      },
+    ];
+    const artifacts = generateSystemDesignArtifacts({ blocks, connections });
+    const reversed = generateSystemDesignArtifacts({
+      blocks: [...blocks].reverse(),
+      connections: [...connections].reverse(),
+    });
+
+    expect(artifacts).toEqual(reversed);
+    expect(artifacts.systemDiagramSheetName).toBe("system_diagram_2");
+    expect(artifacts.tsx).toContain(
+      '<schematicsheet\n      name="system_diagram_2"\n      displayName="System Diagram"\n      sheetIndex={0}\n    >',
+    );
+    expect(artifacts.tsx).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
+    expect(artifacts.systemDiagramSvg).toContain("Power · 1 load");
+  });
+
+  test("always emits a first system diagram sheet for an empty design", () => {
+    const artifacts = generateSystemDesignArtifacts({
+      blocks: [],
+      connections: [],
+    });
+
+    expect(artifacts.systemDiagramSheetName).toBe("system_diagram");
+    expect(artifacts.systemDiagramSvg).toContain("No system blocks yet");
+    expect(artifacts.tsx).toContain("sheetIndex={0}");
+    expect(artifacts.tsx).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
+    expect(artifacts.tsx).not.toContain("sheetIndex={1}");
+  });
+
+  test("rejects explicit sheet names which collide with generated names", () => {
+    expect(() =>
+      generateTsx({
+        blocks: [
+          {
+            id: "generated_sheet",
+            name: "shared_sheet",
+            definitionId: "power-management-tps7a2018",
+          },
+          {
+            id: "explicit_sheet",
+            name: "different_block",
+            schSheetName: "shared sheet",
+            definitionId: "audio-amplifier-tas2505",
+          },
+        ],
+        connections: [],
+      }),
+    ).toThrow("Duplicate generated schematic sheet name: shared_sheet");
+  });
+
+  test("orders imports bytewise and prevents protocol JSX-comment injection", () => {
+    const hostileProtocol = "i2c */}<intruder />{/*";
+    const makeDataDefinition = ({
+      id,
+      componentName,
+      importPath,
+      role,
+      direction,
+    }: {
+      id: string;
+      componentName: string;
+      importPath: string;
+      role: "host" | "device";
+      direction: "input" | "output";
+    }): SubcircuitDefinition => ({
+      id,
+      title: componentName,
+      category: "Test",
+      componentName,
+      importPath,
+      sourcePath: `${id}.tsx`,
+      ports: [
+        {
+          id: "data",
+          label: "Data",
+          kind: "data",
+          role,
+          protocol: hostileProtocol,
+          signals: [
+            {
+              name: "signal",
+              direction,
+              selectors: [`.${direction}`],
+            },
+          ],
+        },
+      ],
+    });
+    const catalog = [
+      makeDataDefinition({
+        id: "source",
+        componentName: "ZedSource",
+        importPath: "@test/z-package",
+        role: "host",
+        direction: "output",
+      }),
+      makeDataDefinition({
+        id: "sink",
+        componentName: "UmlautSink",
+        importPath: "@test/ä-package",
+        role: "device",
+        direction: "input",
+      }),
+    ];
+    const generated = generateTsx({
+      blocks: [block("source", "source"), block("sink", "sink")],
+      connections: [
+        {
+          id: "hostile",
+          fromBlockId: "source",
+          toBlockId: "sink",
+          kind: "data",
+          protocol: hostileProtocol,
+        },
+      ],
+      catalog,
+    });
+
+    expect(generated.indexOf('from "@test/z-package"')).toBeLessThan(
+      generated.indexOf('from "@test/ä-package"'),
+    );
+    const comment = generated
+      .split("\n")
+      .find((line) => line.includes("{/* Data:"));
+    if (!comment) throw new Error("Expected a generated data comment");
+    expect(comment.match(/\*\//g)).toHaveLength(1);
+    expect(comment).not.toContain("<intruder");
+    expect(comment).not.toContain("}{");
+    expect(comment).toContain("Data: i2c _intruder _");
+    expect(generated).not.toContain(hostileProtocol);
   });
 
   test("curated catalog is sorted and has the Bluetooth speaker building blocks", () => {
