@@ -15,17 +15,27 @@
   },
   "dependencies": {
     "@tscircuit/alphabet": "0.0.26",
+    "@tscircuit/circuit-json-util": "0.0.111",
     "@tscircuit/core": "0.0.1785",
     "@tscircuit/eval": "0.0.1294",
     "@tscircuit/props": "0.0.640",
     "@xyflow/react": "12.11.5",
     "circuit-json": "0.0.479",
+    "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#0dc762f2a8dc811ef4919d6f79a312c910bdcac0",
+    "circuit-json-to-kicad": "0.0.178",
     "circuit-to-svg": "0.0.410",
     "comlink": "4.4.2",
+    "earcut": "3.2.3",
+    "fflate": "0.8.3",
+    "format-si-unit": "0.0.12",
     "jspdf": "4.2.1",
+    "kicadts": "0.0.53",
+    "polygon-clipping": "0.15.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "schematic-symbols": "0.0.243",
     "svg2pdf.js": "2.7.0",
+    "transformation-matrix": "3.1.0",
     "zod": "3.25.76"
   },
   "devDependencies": {
@@ -37,5 +47,8 @@
     "@vitejs/plugin-react": "6.1.0",
     "typescript": "5.9.3",
     "vite": "8.2.2"
+  },
+  "overrides": {
+    "altiumts": "0.0.32"
   }
 }

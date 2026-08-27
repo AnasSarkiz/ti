@@ -99,7 +99,24 @@ editor and shows every Power and Data connection.
 Preview rendering runs the generated default export through `@tscircuit/eval`
 in a web worker with PCB generation, parts lookup, and PCB routing disabled.
 The resulting Circuit JSON is converted to schematic SVG and can be downloaded
-as a vector PDF.
+as a vector PDF or as editable KiCad and Altium project ZIPs. The project
+exporters run in lazy-loaded browser chunks and sanitize the project name before
+using it in archive entries.
+
+Because this preview intentionally evaluates with PCB generation and routing
+disabled, the CAD ZIPs are schematic-first projects. Each converter includes
+its required empty/default PCB document; it is not a routed system-board layout.
+The SVG-only System Diagram overview is omitted from these archives because the
+native KiCad and Altium converters do not support `schematic_graphic`; all
+editable detail sheets are retained.
+
+`circuit-json-to-altium` is temporarily pinned to the official repository's
+exact commit `0dc762f2a8dc811ef4919d6f79a312c910bdcac0` because that converter has
+not published its first npm release yet. The pin should become an exact npm
+version once one is available; it does not use a preview registry or floating
+Git branch. Its nested `altiumts` dependency is overridden to the equivalent
+published `altiumts@0.0.32` release so installs do not need to resolve another
+Git dependency.
 
 Preview evaluation uses the same canonical TSX shown and exported by the UI,
 with the generated system-diagram module supplied to the evaluator's virtual
