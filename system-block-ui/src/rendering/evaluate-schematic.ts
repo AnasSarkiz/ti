@@ -20,6 +20,7 @@ export {
 
 export const DEFAULT_EVALUATION_TIMEOUT_MS = 30_000;
 export const DEFAULT_MAIN_COMPONENT_PATH = "generated-system.tsx";
+const SCHEMATIC_ONLY_PLATFORM_OVERRIDES = { spiceDisabled: true } as const;
 
 export interface EvaluateGeneratedTsxOptions {
   /** Maximum time allowed for worker creation, evaluation, and rendering. */
@@ -91,6 +92,7 @@ export async function evaluateGeneratedTsx(
         pcbDisabled: true,
         routingDisabled: true,
         partsEngineDisabled: true,
+        ...SCHEMATIC_ONLY_PLATFORM_OVERRIDES,
       },
     });
 
