@@ -46,7 +46,7 @@ const truncateText = (value: string, maximumLength: number): string => {
 
 const wrapTitle = (value: string): readonly string[] => {
   const normalized = normalizeDisplayText(value) || "Untitled block";
-  const maximumLineLength = 30;
+  const maximumLineLength = 36;
   const words = normalized.split(" ");
   const lines: string[] = [];
 
@@ -70,17 +70,6 @@ const wrapTitle = (value: string): readonly string[] => {
     truncateText(lines[0] ?? "Untitled block", maximumLineLength),
     truncateText(lines.slice(1).join(" "), maximumLineLength),
   ];
-};
-
-const componentAbbreviation = (componentName: string): string => {
-  const partNumber = componentName.match(
-    /(?:_|^)([A-Z]{2,}[A-Z0-9-]*\d[A-Z0-9-]*)$/,
-  )?.[1];
-  const lastWord = (partNumber ?? componentName.replace(/_/g, " "))
-    .split(/\s+/)
-    .filter(Boolean)
-    .at(-1);
-  return normalizeDisplayText(lastWord?.toUpperCase() ?? "TI").slice(0, 4);
 };
 
 const formatProtocolLabel = (protocol: string): string => {
@@ -259,17 +248,15 @@ const renderBlock = (item: DiagramBlock): readonly string[] => {
     `    <rect x="${item.x}" y="${item.y}" width="${NODE_WIDTH}" height="${NODE_HEIGHT}" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>`,
     `    <rect x="${item.x}" y="${item.y}" width="${NODE_WIDTH}" height="24" rx="12" fill="#f1f5f9"/>`,
     `    <path d="M ${item.x} ${item.y + 24} H ${item.x + NODE_WIDTH}" stroke="#e2e8f0"/>`,
-    `    <rect x="${item.x + 14}" y="${item.y + 36}" width="44" height="44" rx="9" fill="#fff1f2" stroke="#fecdd3"/>`,
-    `    <text x="${item.x + 36}" y="${item.y + 63}" text-anchor="middle" fill="#a61b24" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">${escapeXml(componentAbbreviation(item.definition.componentName))}</text>`,
   ];
 
   titleLines.forEach((line, index) => {
     lines.push(
-      `    <text x="${item.x + 70}" y="${titleStartY + index * 18}" fill="#1f2937" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">${escapeXml(line)}</text>`,
+      `    <text x="${item.x + 16}" y="${titleStartY + index * 18}" fill="#1f2937" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">${escapeXml(line)}</text>`,
     );
   });
   lines.push(
-    `    <text x="${item.x + 70}" y="${item.y + 76}" fill="#64748b" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" letter-spacing="0.8">${escapeXml(truncateText(item.definition.category.toUpperCase(), 30))}</text>`,
+    `    <text x="${item.x + 16}" y="${item.y + 76}" fill="#64748b" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" letter-spacing="0.8">${escapeXml(truncateText(item.definition.category.toUpperCase(), 38))}</text>`,
     `    <text x="${item.x + 16}" y="${item.y + 104}" fill="#475569" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="11">${escapeXml(truncateText(item.instanceName, 34))}</text>`,
     `    <text x="${item.x + NODE_WIDTH - 14}" y="${item.y + 19}" text-anchor="end" fill="${reviewed ? "#287252" : "#9a6700"}" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">${reviewed ? "REVIEWED" : "PLACEMENT ONLY"}</text>`,
   );
@@ -333,7 +320,6 @@ export function renderSystemDiagramSvg({
     `    <marker id="system-arrow-power" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="${POWER_COLOR}"/></marker>`,
     `    <marker id="system-arrow-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="${DATA_COLOR}"/></marker>`,
     "  </defs>",
-    `  <rect width="${width}" height="${height}" fill="#f8fafc"/>`,
     `  <text x="${CONTENT_PADDING}" y="42" fill="#1f2937" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">${escapeXml(normalizedTitle)}</text>`,
     `  <text x="${CONTENT_PADDING}" y="62" fill="#64748b" font-family="Arial, Helvetica, sans-serif" font-size="11">${diagramBlocks.length} block${diagramBlocks.length === 1 ? "" : "s"} · ${connections.length} resolved link${connections.length === 1 ? "" : "s"}</text>`,
     `  <circle cx="${width - 210}" cy="42" r="5" fill="${POWER_COLOR}"/><text x="${width - 198}" y="46" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Power</text>`,

@@ -39,20 +39,6 @@ function rowMetadata(ports: readonly PortDefinition[]): string {
   return [prefix, ...details].filter(Boolean).join(" · ");
 }
 
-function componentAbbreviation(componentName: string): string {
-  const partNumber = componentName.match(
-    /(?:_|^)([A-Z]{2,}[A-Z0-9-]*\d[A-Z0-9-]*)$/,
-  )?.[1];
-  return (
-    (partNumber ?? componentName.replace(/_/g, " "))
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(-1)[0]
-      ?.slice(0, 4)
-      .toUpperCase() ?? "TI"
-  );
-}
-
 function InterfaceRow({
   summary,
   side,
@@ -107,9 +93,6 @@ export function SystemBlockNodeView({
       className={`system-block-card${selected ? " is-selected" : ""}${placementOnly ? " is-placement-only" : ""}`}
     >
       <header className="system-block-card-header">
-        <span className="system-block-card-glyph">
-          {componentAbbreviation(definition.componentName)}
-        </span>
         <span className="system-block-card-heading">
           <strong>{definition.title}</strong>
           <span>{definition.category}</span>
