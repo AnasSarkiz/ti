@@ -360,21 +360,14 @@ export function App() {
       const { evaluateGeneratedTsx } = await import(
         "./rendering/evaluate-schematic"
       );
-      const rendered = await evaluateGeneratedTsx(
-        generatedArtifacts.evaluationTsx,
-        {
-          timeoutMs: 45_000,
-          systemDiagramGraphic: {
-            sheetName: generatedArtifacts.systemDiagramSheetName,
-            svgContent: generatedArtifacts.systemDiagramSvg,
-          },
-          schematicOptions: {
-            width: 1400,
-            height: 900,
-            includeVersion: true,
-          },
+      const rendered = await evaluateGeneratedTsx(generatedArtifacts.tsx, {
+        timeoutMs: 45_000,
+        schematicOptions: {
+          width: 1400,
+          height: 900,
+          includeVersion: true,
         },
-      );
+      });
       if (!coordinator.isCurrent(request)) return;
       setSchematicSheets(
         rendered.sheets.map((sheet) => ({

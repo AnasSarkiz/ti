@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@tscircuit/alphabet": "0.0.26",
-    "@tscircuit/core": "0.0.1784",
-    "@tscircuit/eval": "0.0.1287",
+    "@tscircuit/core": "0.0.1785",
+    "@tscircuit/eval": "0.0.1294",
     "@tscircuit/props": "0.0.640",
     "@xyflow/react": "12.11.5",
     "circuit-json": "0.0.479",

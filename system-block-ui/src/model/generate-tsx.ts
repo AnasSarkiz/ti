@@ -137,10 +137,8 @@ export const SYSTEM_DIAGRAM_DISPLAY_NAME = "System Diagram";
 export const SYSTEM_DIAGRAM_SHEET_NAME_BASE = "system_diagram";
 
 export interface GeneratedSystemDesignArtifacts {
-  /** Canonical source shown to users and written by Export TSX. */
+  /** Canonical source shown, exported, and evaluated by the preview. */
   tsx: string;
-  /** Temporary source for eval workers which predate schematicgraphic. */
-  evaluationTsx: string;
   systemDiagramSvg: string;
   systemDiagramSheetName: string;
 }
@@ -185,7 +183,6 @@ interface RenderGeneratedSourceRequest {
   resolvedConnections: readonly ResolvedConnection[];
   systemDiagramSvg: string;
   systemDiagramSheetName: string;
-  includeSystemDiagramGraphic: boolean;
 }
 
 const renderGeneratedSource = ({
@@ -194,7 +191,6 @@ const renderGeneratedSource = ({
   resolvedConnections,
   systemDiagramSvg,
   systemDiagramSheetName,
-  includeSystemDiagramGraphic,
 }: RenderGeneratedSourceRequest): string => {
   const instanceNameByBlockId = new Map(
     prepared.map((item) => [item.block.id, item.instanceName]),
@@ -228,25 +224,15 @@ const renderGeneratedSource = ({
       : "  <board routingDisabled>",
   );
 
-  if (includeSystemDiagramGraphic) {
-    lines.push(
-      "    <schematicsheet",
-      `      name=${quote(systemDiagramSheetName)}`,
-      `      displayName=${quote(SYSTEM_DIAGRAM_DISPLAY_NAME)}`,
-      "      sheetIndex={0}",
-      "    >",
-      "      <schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
-      "    </schematicsheet>",
-    );
-  } else {
-    lines.push(
-      "    <schematicsheet",
-      `      name=${quote(systemDiagramSheetName)}`,
-      `      displayName=${quote(SYSTEM_DIAGRAM_DISPLAY_NAME)}`,
-      "      sheetIndex={0}",
-      "    />",
-    );
-  }
+  lines.push(
+    "    <schematicsheet",
+    `      name=${quote(systemDiagramSheetName)}`,
+    `      displayName=${quote(SYSTEM_DIAGRAM_DISPLAY_NAME)}`,
+    "      sheetIndex={0}",
+    "    >",
+    "      <schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    "    </schematicsheet>",
+  );
 
   prepared.forEach((item, sheetIndex) => {
     lines.push(
@@ -286,9 +272,7 @@ const renderGeneratedSource = ({
 };
 
 /**
- * Generate canonical TSX plus an eval-compatible source and its system SVG.
- * The compatibility source keeps sheet zero but omits the new intrinsic so a
- * host can attach the same SVG to Circuit JSON when using an older eval worker.
+ * Generate canonical TSX together with the system diagram metadata it embeds.
  */
 export const generateSystemDesignArtifacts = (
   request: GenerateTsxRequest,
@@ -317,14 +301,7 @@ export const generateSystemDesignArtifacts = (
   };
 
   return {
-    tsx: renderGeneratedSource({
-      ...sourceRequest,
-      includeSystemDiagramGraphic: true,
-    }),
-    evaluationTsx: renderGeneratedSource({
-      ...sourceRequest,
-      includeSystemDiagramGraphic: false,
-    }),
+    tsx: renderGeneratedSource(sourceRequest),
     systemDiagramSvg,
     systemDiagramSheetName,
   };

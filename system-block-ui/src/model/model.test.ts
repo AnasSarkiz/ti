@@ -427,7 +427,7 @@ describe("catalog and TSX generation", () => {
     expect(first).toContain('to=".audio_amplifier > .U1 > .IOVDD"');
   });
 
-  test("emits canonical and legacy-eval sources from the same system artifact", () => {
+  test("emits canonical system artifacts deterministically", () => {
     const blocks = [
       {
         ...block("power_1v8", "power-management-tps7a2018"),
@@ -456,10 +456,6 @@ describe("catalog and TSX generation", () => {
     );
     expect(artifacts.tsx).toContain(
       "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
-    );
-    expect(artifacts.evaluationTsx).not.toContain("<schematicgraphic");
-    expect(artifacts.evaluationTsx).toContain(
-      '<schematicsheet\n      name="system_diagram_2"\n      displayName="System Diagram"\n      sheetIndex={0}\n    />',
     );
     expect(artifacts.systemDiagramSvg).toContain("Power · 1 load");
   });

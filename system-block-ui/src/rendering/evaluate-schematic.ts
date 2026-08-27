@@ -1,10 +1,6 @@
 import webWorkerBlobUrl from "@tscircuit/eval/blob-url";
 import { createCircuitWebWorker } from "@tscircuit/eval/worker";
 import type { AnyCircuitElement } from "circuit-json";
-import {
-  type AttachSystemDiagramGraphicOptions,
-  attachSystemDiagramGraphic,
-} from "./attach-system-diagram-graphic";
 import { assertCircuitJsonHasNoErrors } from "./circuit-json-errors";
 import {
   type EvaluatedSchematicSheet,
@@ -12,13 +8,6 @@ import {
   type SchematicSvgOptions,
 } from "./render-schematic-sheets";
 
-export {
-  type AttachSystemDiagramGraphicOptions,
-  attachSystemDiagramGraphic,
-  DEFAULT_SYSTEM_DIAGRAM_GRAPHIC_ID,
-  SystemDiagramGraphicAttachmentError,
-  type SystemDiagramGraphicAttachmentErrorCode,
-} from "./attach-system-diagram-graphic";
 export {
   CircuitJsonEvaluationError,
   getCircuitJsonErrors,
@@ -41,11 +30,6 @@ export interface EvaluateGeneratedTsxOptions {
   fsMap?: Readonly<Record<string, string>>;
   /** Options forwarded to circuit-to-svg's schematic renderer. */
   schematicOptions?: SchematicSvgOptions;
-  /**
-   * System diagram omitted from legacy-compatible evaluator TSX and attached
-   * to the evaluated Circuit JSON before validation and schematic rendering.
-   */
-  systemDiagramGraphic?: AttachSystemDiagramGraphicOptions;
 }
 
 export interface EvaluatedSchematic {
@@ -138,13 +122,7 @@ export async function evaluateGeneratedTsx(
   });
 
   try {
-    const evaluatedCircuitJson = await Promise.race([evaluation, timeout]);
-    const circuitJson = options.systemDiagramGraphic
-      ? attachSystemDiagramGraphic(
-          evaluatedCircuitJson,
-          options.systemDiagramGraphic,
-        )
-      : evaluatedCircuitJson;
+    const circuitJson = await Promise.race([evaluation, timeout]);
     assertCircuitJsonHasNoErrors(circuitJson);
     const sheets = renderSchematicSheets(circuitJson, options.schematicOptions);
 
