@@ -3,10 +3,14 @@
 This repo contains hand-curated tscircuit TSX schematics for Texas Instruments
 devices, reusable TI reference subcircuits, and raw TI chip definitions.
 
+- [View component library](https://ti.tscircuit.app/#file=lib%2Fchips%2FBQ24072.circuit.tsx)
+- [View System Block Editor](https://tiblocks.tscircuit.com/)
+
 The published package is `@tsci/tscircuit.ti`. It provides ready-to-use
 subcircuit components and low-level chip components that can be imported into a
 local tscircuit project, placed on a board, and connected to from the
 surrounding circuit. 
+
 
 ## Installation
 
