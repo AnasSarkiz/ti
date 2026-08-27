@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
   createConsumerWirelessModuleDesign,
+  createSystemBlockExamples,
   createSubcircuitCatalog,
   generateSystemDesignArtifacts,
   generateTsx,
@@ -375,6 +376,38 @@ describe("automatic connection resolution", () => {
 });
 
 describe("catalog and TSX generation", () => {
+  test("loads every registered example as a resolvable semantic graph", async () => {
+    const examples = createSystemBlockExamples(SUBCIRCUIT_CATALOG);
+
+    expect(examples.map(({ sourcePath }) => sourcePath)).toEqual([
+      "examples/ConsumerWirelessModule.circuit.tsx",
+      "examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx",
+    ]);
+    expect(
+      examples
+        .find(({ id }) => id === "bluetooth-speaker")
+        ?.graph.connections.find(({ protocol }) => protocol === "hci-uart"),
+    ).toMatchObject({
+      fromBlockId: "bluetooth_host",
+      toBlockId: "bluetooth_controller",
+    });
+
+    for (const example of examples) {
+      expect(
+        await Bun.file(
+          new URL(`../../../${example.sourcePath}`, import.meta.url),
+        ).exists(),
+      ).toBe(true);
+      expect(
+        resolveDesignConnections(
+          example.graph.blocks,
+          example.graph.connections,
+          SUBCIRCUIT_CATALOG,
+        ),
+      ).toHaveLength(example.graph.connections.length);
+    }
+  });
+
   test("builds the Consumer wireless module from all seven reviewed blocks", () => {
     const design = createConsumerWirelessModuleDesign(SUBCIRCUIT_CATALOG);
     expect(design.blocks.map(({ id }) => id)).toEqual([

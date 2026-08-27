@@ -20,7 +20,8 @@ import {
 } from "./editor";
 import {
   type BlockInstance,
-  createConsumerWirelessModuleDesign,
+  createSystemBlockExamples,
+  DEFAULT_SYSTEM_BLOCK_EXAMPLE_ID,
   generateSystemDesignArtifacts,
   getSubcircuitCatalog,
   resolveDesignConnections,
@@ -69,10 +70,12 @@ const errorMessage = (error: unknown): string =>
 
 export function App() {
   const catalog = useMemo(() => getSubcircuitCatalog(), []);
-  const starterDesign: SystemBlockInitialGraph = useMemo(
-    () => createConsumerWirelessModuleDesign(catalog),
-    [catalog],
+  const examples = useMemo(() => createSystemBlockExamples(catalog), [catalog]);
+  const starterExample = examples.find(
+    (example) => example.id === DEFAULT_SYSTEM_BLOCK_EXAMPLE_ID,
   );
+  if (!starterExample) throw new Error("Missing default system block example.");
+  const starterDesign: SystemBlockInitialGraph = starterExample.graph;
   const canvasRef = useRef<HTMLDivElement>(null);
   const controllerRef = useRef<SystemBlockEditorController | undefined>(
     undefined,
@@ -101,6 +104,8 @@ export function App() {
     ],
   }));
   const [notice, setNotice] = useState<Notice>();
+  const [loadedExampleId, setLoadedExampleId] = useState(starterExample.id);
+  const [isEditorReady, setIsEditorReady] = useState(false);
   const [isRendering, setIsRendering] = useState(false);
   const [schematicSheets, setSchematicSheets] = useState<
     readonly EvaluatedSchematicSheet[]
@@ -175,6 +180,7 @@ export function App() {
         }
         controller = created;
         controllerRef.current = created;
+        setIsEditorReady(true);
         requestAnimationFrame(() => void created.zoomToFit());
       })
       .catch((error: unknown) => {
@@ -190,6 +196,7 @@ export function App() {
       disposed = true;
       if (controllerRef.current === controller)
         controllerRef.current = undefined;
+      setIsEditorReady(false);
       evaluationCoordinatorRef.current?.invalidateGraph();
       evaluatedCircuitJsonRef.current = undefined;
       designRevisionRef.current += 1;
@@ -299,18 +306,38 @@ export function App() {
   }, [catalog, generatedArtifacts, notify, snapshot.blocks]);
 
   const resetDesign = useCallback(async () => {
-    invalidateSchematic();
+    const example =
+      examples.find((candidate) => candidate.id === loadedExampleId) ??
+      starterExample;
     try {
-      await controllerRef.current?.loadInitialGraph(starterDesign);
+      await controllerRef.current?.loadInitialGraph(example.graph);
       await controllerRef.current?.zoomToFit();
-      notify(
-        "Restored the Consumer wireless module starter design.",
-        "success",
-      );
+      notify(`Restored the ${example.title} example.`, "success");
     } catch (error) {
       notify(errorMessage(error), "error");
     }
-  }, [invalidateSchematic, notify, starterDesign]);
+  }, [examples, loadedExampleId, notify, starterExample]);
+
+  const loadExample = useCallback(
+    async (exampleId: string) => {
+      const example = examples.find((candidate) => candidate.id === exampleId);
+      const controller = controllerRef.current;
+      if (!example || !controller) return;
+
+      try {
+        await controller.loadInitialGraph(example.graph);
+        setLoadedExampleId(example.id);
+        await controller.zoomToFit();
+        notify(
+          `Loaded ${example.title} from ${example.sourcePath}.`,
+          "success",
+        );
+      } catch (error) {
+        notify(`Could not load example: ${errorMessage(error)}`, "error");
+      }
+    },
+    [examples, notify],
+  );
 
   const downloadPdf = useCallback(async () => {
     const sheets = schematicSheets;
@@ -446,7 +473,31 @@ export function App() {
             const definition = catalog.find((item) => item.id === definitionId);
             if (definition) void insertDefinition(definition);
           }}
-        />
+        >
+          <label className="example-loader">
+            <span className="visually-hidden">Load example diagram</span>
+            <select
+              aria-label="Load example diagram"
+              className="example-select"
+              defaultValue=""
+              disabled={!isEditorReady}
+              onChange={(event) => {
+                const exampleId = event.currentTarget.value;
+                event.currentTarget.value = "";
+                void loadExample(exampleId);
+              }}
+            >
+              <option disabled value="">
+                Load Example
+              </option>
+              {examples.map((example) => (
+                <option key={example.id} value={example.id}>
+                  {example.title}
+                </option>
+              ))}
+            </select>
+          </label>
+        </BlockPalette>
 
         <section
           className="canvas-panel"
@@ -491,10 +542,10 @@ export function App() {
               <FitIcon />
             </button>
             <button
-              aria-label="Reset starter design"
+              aria-label="Reset loaded example"
               className="icon-button"
               onClick={() => void resetDesign()}
-              title="Reset starter design"
+              title="Reset loaded example"
               type="button"
             >
               <ResetIcon />

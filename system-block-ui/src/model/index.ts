@@ -3,5 +3,6 @@ export * from "./consumer-wireless-module-design";
 export * from "./generate-tsx";
 export * from "./resolve-connection";
 export * from "./subcircuit-adapters";
+export * from "./system-block-examples";
 export * from "./system-diagram-svg";
 export * from "./types";
