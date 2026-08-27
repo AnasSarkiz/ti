@@ -1,7 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Circuit } from "@tscircuit/core";
 import type { AnyCircuitElement } from "circuit-json";
-import { createElement } from "react";
 import { renderSchematicSheets } from "./render-schematic-sheets";
 
 const element = (value: unknown): AnyCircuitElement =>
@@ -89,40 +87,34 @@ describe("renderSchematicSheets", () => {
     expect(sheet?.svg).toContain("<svg");
   });
 
-  test("renders all schematic sheets emitted by the pinned core", async () => {
-    const circuit = new Circuit();
-    circuit.pcbDisabled = true;
-    circuit.pcbRoutingDisabled = true;
-    circuit.add(
-      createElement(
-        "board",
-        { routingDisabled: true },
-        ...["Power", "MCU", "Audio", "Sensor", "Display"].map(
-          (title, sheetIndex) =>
-            createElement("schematicsheet", {
-              key: title,
-              name: title.toLowerCase(),
-              displayName: title,
-              sheetIndex,
-            }),
-        ),
-      ),
-    );
+  test("renders all five schematic sheets from evaluated Circuit JSON", () => {
+    const sheetTitles = ["Power", "MCU", "Audio", "Sensor", "Display"];
+    const circuitJson = sheetTitles
+      .map((title, sheetIndex) =>
+        element({
+          type: "schematic_sheet",
+          schematic_sheet_id: `schematic_sheet_${sheetIndex}`,
+          name: title.toLowerCase(),
+          display_name: title,
+          sheet_index: sheetIndex,
+        }),
+      )
+      .reverse();
 
-    await circuit.renderUntilSettled();
-    const sheets = renderSchematicSheets(circuit.getCircuitJson(), {
+    const sheets = renderSchematicSheets(circuitJson, {
       width: 200,
       height: 100,
     });
 
     expect(sheets).toHaveLength(5);
-    expect(sheets.map((sheet) => sheet.title)).toEqual([
-      "Power",
-      "MCU",
-      "Audio",
-      "Sensor",
-      "Display",
-    ]);
+    expect(sheets.map((sheet) => sheet.title)).toEqual(sheetTitles);
     expect(sheets.map((sheet) => sheet.sheetIndex)).toEqual([0, 1, 2, 3, 4]);
+    expect(sheets.map((sheet) => sheet.id)).toEqual([
+      "schematic_sheet_0",
+      "schematic_sheet_1",
+      "schematic_sheet_2",
+      "schematic_sheet_3",
+      "schematic_sheet_4",
+    ]);
   });
 });
