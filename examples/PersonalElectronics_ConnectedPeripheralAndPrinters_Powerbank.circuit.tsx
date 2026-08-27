@@ -41,24 +41,15 @@ export default () => (
     <BatteryManagement_2to4Cell_BQ40Z60
       name="battery_management"
       schSheetName="battery_management"
-      schX={1.5}
-      schY={-2}
     />
     <BatteryCharging_2to5CellNVDCBuckBoost_BQ25731
       name="battery_charging"
       schSheetName="battery_charging"
     />
-    <BoostConverter_TPS61236
-      name="system_power"
-      schSheetName="system_power"
-      schX={5.5}
-      schY={-3.5}
-    />
+    <BoostConverter_TPS61236 name="system_power" schSheetName="system_power" />
     <Microcontroller_MSP430G2332
       name="microcontroller"
       schSheetName="microcontroller"
-      schX={4.5}
-      schY={2.9}
     />
     <USBC_PowerDeliveryProgrammablePowerSupply_TPS61288
       name="usb_c_output"

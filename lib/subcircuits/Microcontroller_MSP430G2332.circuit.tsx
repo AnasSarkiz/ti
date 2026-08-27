@@ -12,6 +12,8 @@ export const Microcontroller_MSP430G2332 = (props: SubcircuitProps) => (
     schAutoLayoutEnabled={false}
     schTraceAutoLabelEnabled={false}
     schMaxTraceDistance={100}
+    schX={4.5}
+    schY={2.9}
     {...props}
   >
     <net name="GND" isGroundNet />

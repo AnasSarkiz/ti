@@ -5,7 +5,13 @@ import { TPS61236RWLR } from "../chips/TPS61236RWLR.circuit.tsx";
 const threeVoltNetName = "V3_0";
 
 export const BoostConverter_TPS61236 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled schAutoLayoutEnabled={false} {...props}>
+  <subcircuit
+    routingDisabled
+    schAutoLayoutEnabled={false}
+    schX={5.5}
+    schY={-3.5}
+    {...props}
+  >
     <net name="GND" isGroundNet />
     <net name={threeVoltNetName} isPowerNet />
     <net name="VCUR" />
