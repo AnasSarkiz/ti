@@ -109,6 +109,9 @@ as a vector PDF or as editable KiCad and Altium project ZIPs. The project
 exporters run in lazy-loaded browser chunks and sanitize the project name before
 using it in archive entries.
 
+The PDF exporter embeds Liberation Sans, an open, Arial-compatible font, so
+Unicode symbols and schematic text measurements remain intact.
+
 Because this preview intentionally evaluates with PCB generation and routing
 disabled, the CAD ZIPs are schematic-first projects. Each converter includes
 its required empty/default PCB document; it is not a routed system-board layout.

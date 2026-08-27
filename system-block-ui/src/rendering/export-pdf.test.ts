@@ -1,9 +1,24 @@
 import { describe, expect, test } from "bun:test";
 
-import { calculateSchematicPdfPageLayout } from "./export-pdf";
+import {
+  calculateSchematicPdfPageLayout,
+  normalizeSvgTextForPdf,
+} from "./export-pdf";
+import {
+  SCHEMATIC_SVG_HEIGHT,
+  SCHEMATIC_SVG_WIDTH,
+} from "./schematic-page-size";
 
 describe("schematic PDF page layout", () => {
-  test("stretches a schematic over an entire A4 landscape page", () => {
+  test("matches the schematic canvas to A4 landscape", () => {
+    expect(SCHEMATIC_SVG_HEIGHT).toBe(990);
+    expect(SCHEMATIC_SVG_WIDTH / SCHEMATIC_SVG_HEIGHT).toBeCloseTo(
+      297 / 210,
+      3,
+    );
+  });
+
+  test("uses an entire A4 landscape page", () => {
     const layout = calculateSchematicPdfPageLayout({
       pageWidthMm: 297,
       pageHeightMm: 210,
@@ -35,5 +50,90 @@ describe("schematic PDF page layout", () => {
         pageHeightMm: Number.NaN,
       }),
     ).toThrow("pageHeightMm must be a positive finite number");
+  });
+});
+
+describe("schematic PDF text normalization", () => {
+  const createTextElement = (entries: [string, string][]) => {
+    const attributes = new Map(entries);
+    return {
+      attributes,
+      element: {
+        getAttribute: (name: string) => attributes.get(name) ?? null,
+        hasAttribute: (name: string) => attributes.has(name),
+        setAttribute: (name: string, value: string) =>
+          attributes.set(name, value),
+        removeAttribute: (name: string) => attributes.delete(name),
+      },
+    };
+  };
+
+  test("maps baselines and preserves the original text width", () => {
+    const centered = createTextElement([
+      ["class", "net-label-text sch-net-label-text"],
+      ["dominant-baseline", "central"],
+      ["font-size", "12px"],
+      ["style", "font-size:12px"],
+    ]);
+    const svg = {
+      querySelectorAll: () => [centered.element],
+    } as unknown as Element;
+
+    normalizeSvgTextForPdf(svg);
+
+    expect(centered.attributes.get("alignment-baseline")).toBe("central");
+    expect(centered.attributes.get("font-family")).toBe("LiberationSans");
+    expect(centered.attributes.get("font-size")).toBe("12px");
+    expect(centered.attributes.get("dy")).toBe("0.06em");
+    expect(centered.attributes.get("style")).toContain(
+      "font-family:LiberationSans",
+    );
+  });
+
+  test("moves text away from top and bottom anchors", () => {
+    const belowAnchor = createTextElement([["dominant-baseline", "hanging"]]);
+    const aboveAnchor = createTextElement([
+      ["dominant-baseline", "ideographic"],
+    ]);
+    const explicitOffset = createTextElement([
+      ["dominant-baseline", "hanging"],
+      ["dy", "1em"],
+    ]);
+    const centered = createTextElement([["dominant-baseline", "middle"]]);
+    const svg = {
+      querySelectorAll: () => [
+        belowAnchor.element,
+        aboveAnchor.element,
+        explicitOffset.element,
+        centered.element,
+      ],
+    } as unknown as Element;
+
+    normalizeSvgTextForPdf(svg);
+
+    expect(belowAnchor.attributes.get("dy")).toBe("0.12em");
+    expect(aboveAnchor.attributes.get("dy")).toBe("-0.12em");
+    expect(explicitOffset.attributes.get("dy")).toBe("1em");
+    expect(centered.attributes.get("dy")).toBe("0.12em");
+  });
+
+  test("removes the svg2pdf-incompatible reference designator halo", () => {
+    const reference = createTextElement([
+      ["class", "sch-component-name sch-component-text"],
+      ["stroke", "rgb(245, 241, 237)"],
+      ["stroke-width", "0.5px"],
+      ["paint-order", "stroke"],
+      ["fill", "rgb(15, 15, 15)"],
+    ]);
+    const svg = {
+      querySelectorAll: () => [reference.element],
+    } as unknown as Element;
+
+    normalizeSvgTextForPdf(svg);
+
+    expect(reference.attributes.get("stroke")).toBe("none");
+    expect(reference.attributes.has("stroke-width")).toBe(false);
+    expect(reference.attributes.has("paint-order")).toBe(false);
+    expect(reference.attributes.get("fill")).toBe("rgb(15, 15, 15)");
   });
 });
