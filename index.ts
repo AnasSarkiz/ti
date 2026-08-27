@@ -24,6 +24,7 @@ import {
   HDC3020,
   HDC3022,
   INA237,
+  INA350,
   ISOW7841,
   LM74202Q1,
   LM50HVQ1,
@@ -37,6 +38,7 @@ import {
   MSPM0G3507,
   MX25V1635FZNQ,
   OPT3001,
+  PGA300ARHHR,
   SN65HVD1473,
   TAS2505,
   TCAN1042HGV,
@@ -83,6 +85,8 @@ import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSens
 import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit.tsx";
 import { EnvironmentalSensor_HDC3022 } from "./lib/subcircuits/EnvironmentalSensor_HDC3022.circuit.tsx";
 import { PowerMonitor_INA237 } from "./lib/subcircuits/PowerMonitor_INA237.circuit.tsx";
+import { InstrumentationAmplifier_INA350 } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
+import { PressureTransmitter_PGA300 } from "./lib/subcircuits/PressureTransmitter_PGA300.circuit.tsx";
 import { IsolatedRS485_ISOW7841 } from "./lib/subcircuits/IsolatedRS485_ISOW7841.circuit.tsx";
 import { ClockBuffer_LMK1C1104 } from "./lib/subcircuits/ClockBuffer_LMK1C1104.circuit.tsx";
 import { AudioAmplifier_TAS2505 } from "./lib/subcircuits/AudioAmplifier_TAS2505.circuit.tsx";
@@ -132,6 +136,7 @@ import { RadarQspiFlash_MX25V1635FZNQ } from "./lib/subcircuits/RadarQspiFlash_M
 import { RadarSoc_AWR1843ARBGALPQ1 } from "./lib/subcircuits/RadarSoc_AWR1843ARBGALPQ1.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
+export type { InstrumentationAmplifier_INA350Props } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 
 export {
   BatteryManagement_BQ24072,
@@ -152,6 +157,8 @@ export {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  InstrumentationAmplifier_INA350,
+  PressureTransmitter_PGA300,
   IsolatedRS485_ISOW7841,
   ClockBuffer_LMK1C1104,
   AudioAmplifier_TAS2505,
@@ -223,6 +230,7 @@ export const TiChipComponents = {
   HDC3020,
   HDC3022,
   INA237,
+  INA350,
   ISOW7841,
   LM74202Q1,
   LM50HVQ1,
@@ -236,6 +244,7 @@ export const TiChipComponents = {
   MSPM0G3507,
   MX25V1635FZNQ,
   OPT3001,
+  PGA300ARHHR,
   SN65HVD1473,
   TAS2505,
   TCAN1042HGV,
@@ -284,6 +293,8 @@ export const TiSubcircuitComponents = {
   EnvironmentalSensor_HDC3020,
   EnvironmentalSensor_HDC3022,
   PowerMonitor_INA237,
+  InstrumentationAmplifier_INA350,
+  PressureTransmitter_PGA300,
   IsolatedRS485_ISOW7841,
   ClockBuffer_LMK1C1104,
   AudioAmplifier_TAS2505,

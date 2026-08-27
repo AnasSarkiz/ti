@@ -11,7 +11,7 @@ import { LM50HVQDBZRQ1 } from "../chips/LM50HVQDBZRQ1.circuit.tsx";
  * Reference: https://www.ti.com/lit/ds/symlink/lm50-q1.pdf
  */
 export const TemperatureSensor_LM50HV_Q1 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled schMaxTraceDistance="4mm" {...props}>
+  <subcircuit schMaxTraceDistance="4mm" {...props}>
     <net name="VS" isPowerNet />
     <net name="TEMP_SENSE" />
     <net name="GND" isGroundNet />

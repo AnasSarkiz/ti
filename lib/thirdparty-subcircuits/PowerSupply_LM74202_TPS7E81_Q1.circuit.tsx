@@ -85,7 +85,7 @@ const bidirectionalTvsSymbol = (
  * - https://www.ti.com/lit/ds/symlink/tps7e81-q1.pdf
  */
 export const PowerSupply_LM74202_TPS7E81_Q1 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled schMaxTraceDistance="5mm" {...props}>
+  <subcircuit schMaxTraceDistance="5mm" {...props}>
     <net name="VIN" isPowerNet />
     <net name="VOUT" isPowerNet />
     <net name="V3P3" isPowerNet />
@@ -97,7 +97,7 @@ export const PowerSupply_LM74202_TPS7E81_Q1 = (props: SubcircuitProps) => (
     <diode
       name="TVS"
       manufacturerPartNumber="SMBJ28CA"
-      footprint="do214aa"
+      footprint="smb"
       variant="tvs"
       schX={-9.5}
       schY={-1.6}

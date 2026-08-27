@@ -2,7 +2,7 @@ import type { SubcircuitProps } from "@tscircuit/props";
 import { MSPM0G3507SPMR } from "../chips/MSPM0G3507SPMR.circuit.tsx";
 
 export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
-  <subcircuit width={100} height={100} {...props}>
+  <subcircuit width={30} height={30} {...props}>
     <MSPM0G3507SPMR
       name="U1"
       schX={0}
@@ -26,10 +26,12 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
       capacitance="10uF"
       footprint="0805"
       schOrientation="vertical"
-      schX={-2.6}
-      schY={1.3}
-      pcbX={11}
-      pcbY={-1}
+      schX={-6.2}
+      schY={4.4}
+      pcbX={0}
+      pcbY={9.5}
+      pcbRotation={180}
+      maxDecouplingTraceLength="6mm"
       connections={{ pin1: ["U1.VDD", "R1.pin2"], pin2: ["U1.VSS", "net.GND"] }}
     />
     <capacitor
@@ -37,10 +39,12 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
       capacitance="0.1uF"
       footprint="0402"
       schOrientation="vertical"
-      schX={-1.8}
-      schY={1.3}
-      pcbX={11}
-      pcbY={2}
+      schX={-5}
+      schY={4.4}
+      pcbX={0}
+      pcbY={7.5}
+      pcbRotation={180}
+      maxDecouplingTraceLength="4mm"
       connections={{ pin1: "C1.pin1" }}
     />
 
@@ -49,10 +53,10 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
       capacitance="0.47uF"
       footprint="0402"
       schOrientation="vertical"
-      schX={-2.1}
-      schY={-0.6}
-      pcbX={7}
-      pcbY={-9}
+      schX={-4.5}
+      schY={2.5}
+      pcbX={8.5}
+      pcbY={3.75}
       connections={{ pin1: "U1.VCORE", pin2: "net.GND" }}
     />
 
@@ -61,10 +65,10 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
       resistance="47k"
       footprint="0402"
       schRotation={90}
-      schX={-3.3}
-      schY={0.1}
-      pcbX={11}
-      pcbY={5}
+      schX={-6.2}
+      schY={1.1}
+      pcbX={3.5}
+      pcbY={9.5}
       connections={{ pin1: "U1.NRST", pin2: "net.VDD" }}
     />
     <capacitor
@@ -72,10 +76,10 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
       capacitance="10nF"
       footprint="0402"
       schOrientation="vertical"
-      schX={-3.3}
-      schY={-1.7}
-      pcbX={11}
-      pcbY={7}
+      schX={-6.2}
+      schY={-0.8}
+      pcbX={3.5}
+      pcbY={11}
       connections={{ pin1: "R1.pin1", pin2: "net.GND" }}
     />
 
@@ -83,10 +87,10 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
       name="R2"
       resistance="100k"
       footprint="0402"
-      schX={2.3}
-      schY={1.2}
-      pcbX={11}
-      pcbY={-4}
+      schX={4.5}
+      schY={-2.4}
+      pcbX={-3}
+      pcbY={8}
       schRotation={270}
       connections={{ pin1: "U1.ROSC", pin2: "net.GND" }}
     />
@@ -96,10 +100,10 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
       resistance="4.7k"
       footprint="0402"
       schRotation={90}
-      schX={5}
-      schY={0.6}
-      pcbX={-9}
-      pcbY={6}
+      schX={6.4}
+      schY={2.2}
+      pcbX={4}
+      pcbY={8}
       connections={{ pin1: "U1.PA1", pin2: "net.VDD" }}
     />
     <resistor
@@ -107,10 +111,10 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
       resistance="4.7k"
       footprint="0402"
       schRotation={90}
-      schX={3.8}
-      schY={0.6}
-      pcbX={-11}
-      pcbY={6}
+      schX={5.2}
+      schY={1.4}
+      pcbX={6.2}
+      pcbY={8}
       connections={{ pin1: "U1.PA0", pin2: "net.VDD" }}
     />
 
@@ -126,10 +130,10 @@ export const Microcontroller_MSPM0G3507 = (props: SubcircuitProps) => (
         },
       }}
       schFacingDirection="left"
-      schX={3.6}
-      schY={-2.1}
-      pcbX={-18}
-      pcbY={0}
+      schX={6}
+      schY={-3.8}
+      pcbX={-2}
+      pcbY={-9.5}
       showSilkscreenPinLabels
       pinLabels={["SWDIO", "SWCLK"]}
       connections={{
