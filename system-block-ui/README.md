@@ -24,6 +24,21 @@ bun run build
 bun run preview
 ```
 
+## Deploy to Vercel
+
+Production: <https://ti-system-block-ui.vercel.app/>
+
+The repository-level `vercel.json` installs and builds this nested Vite app,
+then publishes `system-block-ui/dist`. From the repository root, run:
+
+```bash
+npx vercel
+```
+
+Use `npx vercel --prod` after checking the preview deployment. The configured
+install command performs a frozen install from `system-block-ui/bun.lock`; no
+dashboard build overrides are required.
+
 The remaining production checks are:
 
 ```bash

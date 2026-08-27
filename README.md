@@ -45,6 +45,8 @@ exact tscircuit selectors. The app generates example-style TSX and can evaluate
 it with PCB and routing work disabled to produce a schematic preview and
 downloadable PDF.
 
+[Open the deployed TI System Block Builder](https://ti-system-block-ui.vercel.app/).
+
 ## Raw Chip Usage
 
 When you need the bare chip package instead of a full reference design, import

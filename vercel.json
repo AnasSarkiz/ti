@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "cd system-block-ui && bun install --frozen-lockfile",
+  "buildCommand": "cd system-block-ui && bun run build",
+  "outputDirectory": "system-block-ui/dist"
+}
