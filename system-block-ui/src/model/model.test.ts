@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
   createSubcircuitCatalog,
+  generateSystemDesignArtifacts,
   generateTsx,
   getSubcircuitDefinition,
   resolveConnection,
@@ -322,8 +323,67 @@ describe("catalog and TSX generation", () => {
     expect(first).toBe(second);
     expect(first).toContain("<board routingDisabled>");
     expect(first).toContain("PowerManagement_TPS7A2018,");
+    expect(first).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
+    expect(first).toContain('displayName="System Diagram"');
+    expect(first).toContain("sheetIndex={0}");
+    expect(first).toContain("sheetIndex={1}");
+    expect(first).toContain("sheetIndex={2}");
     expect(first).toContain('from=".power_1v8 > .U1 > .VOUT"');
     expect(first).toContain('to=".audio_amplifier > .U1 > .IOVDD"');
+  });
+
+  test("emits canonical and legacy-eval sources from the same system artifact", () => {
+    const blocks = [
+      {
+        ...block("power_1v8", "power-management-tps7a2018"),
+        schSheetName: "system_diagram",
+      },
+      block("audio_amplifier", "audio-amplifier-tas2505"),
+    ];
+    const connections = [
+      {
+        id: "power",
+        fromBlockId: "power_1v8",
+        toBlockId: "audio_amplifier",
+        kind: "Power" as const,
+      },
+    ];
+    const artifacts = generateSystemDesignArtifacts({ blocks, connections });
+    const reversed = generateSystemDesignArtifacts({
+      blocks: [...blocks].reverse(),
+      connections: [...connections].reverse(),
+    });
+
+    expect(artifacts).toEqual(reversed);
+    expect(artifacts.systemDiagramSheetName).toBe("system_diagram_2");
+    expect(artifacts.tsx).toContain(
+      '<schematicsheet\n      name="system_diagram_2"\n      displayName="System Diagram"\n      sheetIndex={0}\n    >',
+    );
+    expect(artifacts.tsx).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
+    expect(artifacts.evaluationTsx).not.toContain("<schematicgraphic");
+    expect(artifacts.evaluationTsx).toContain(
+      '<schematicsheet\n      name="system_diagram_2"\n      displayName="System Diagram"\n      sheetIndex={0}\n    />',
+    );
+    expect(artifacts.systemDiagramSvg).toContain("Power · 1 load");
+  });
+
+  test("always emits a first system diagram sheet for an empty design", () => {
+    const artifacts = generateSystemDesignArtifacts({
+      blocks: [],
+      connections: [],
+    });
+
+    expect(artifacts.systemDiagramSheetName).toBe("system_diagram");
+    expect(artifacts.systemDiagramSvg).toContain("No system blocks yet");
+    expect(artifacts.tsx).toContain("sheetIndex={0}");
+    expect(artifacts.tsx).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
+    expect(artifacts.tsx).not.toContain("sheetIndex={1}");
   });
 
   test("curated catalog is sorted and has the Bluetooth speaker building blocks", () => {

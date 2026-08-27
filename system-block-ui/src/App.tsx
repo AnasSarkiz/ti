@@ -23,7 +23,7 @@ import {
 } from "./editor";
 import {
   type BlockInstance,
-  generateTsx,
+  generateSystemDesignArtifacts,
   getSubcircuitCatalog,
   type LogicalConnection,
   resolveDesignConnections,
@@ -226,9 +226,9 @@ export function App() {
     [],
   );
 
-  const generatedTsx = useMemo(
+  const generatedArtifacts = useMemo(
     () =>
-      generateTsx({
+      generateSystemDesignArtifacts({
         blocks: snapshot.blocks,
         connections: snapshot.connections,
         catalog,
@@ -236,6 +236,7 @@ export function App() {
       }),
     [catalog, snapshot.blocks, snapshot.connections],
   );
+  const generatedTsx = generatedArtifacts.tsx;
   tsxRef.current = generatedTsx;
 
   useEffect(() => {
@@ -340,21 +341,28 @@ export function App() {
       return;
     }
 
-    const source = generatedTsx;
+    const source = generatedArtifacts.tsx;
     setIsRendering(true);
     setPreviewError(undefined);
     try {
       const { evaluateGeneratedTsx } = await import(
         "./rendering/evaluate-schematic"
       );
-      const rendered = await evaluateGeneratedTsx(source, {
-        timeoutMs: 45_000,
-        schematicOptions: {
-          width: 1400,
-          height: 900,
-          includeVersion: true,
+      const rendered = await evaluateGeneratedTsx(
+        generatedArtifacts.evaluationTsx,
+        {
+          timeoutMs: 45_000,
+          systemDiagramGraphic: {
+            sheetName: generatedArtifacts.systemDiagramSheetName,
+            svgContent: generatedArtifacts.systemDiagramSvg,
+          },
+          schematicOptions: {
+            width: 1400,
+            height: 900,
+            includeVersion: true,
+          },
         },
-      });
+      );
       if (tsxRef.current !== source) {
         notify(
           "The graph changed during rendering; render the updated design again.",
@@ -380,7 +388,7 @@ export function App() {
     } finally {
       setIsRendering(false);
     }
-  }, [generatedTsx, notify]);
+  }, [generatedArtifacts, notify]);
 
   const resetDesign = useCallback(async () => {
     try {

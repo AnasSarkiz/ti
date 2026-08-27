@@ -1,8 +1,11 @@
 import { SUBCIRCUIT_CATALOG } from "./catalog";
 import { resolveDesignConnections } from "./resolve-connection";
+import { renderSystemDiagramSvg } from "./system-diagram-svg";
 import type {
   BlockInstance,
   GenerateTsxRequest,
+  LogicalConnection,
+  ResolvedConnection,
   ResolvedTrace,
   SubcircuitDefinition,
 } from "./types";
@@ -17,6 +20,9 @@ const sanitizeInstanceName = (value: string): string => {
 };
 
 const quote = (value: string): string => JSON.stringify(value);
+
+const compareStrings = (left: string, right: string): number =>
+  left < right ? -1 : left > right ? 1 : 0;
 
 const prefixSelector = (blockName: string, selector: string): string => {
   const relative = selector.trim().replace(/^>\s*/, "");
@@ -109,10 +115,69 @@ const prepareBlocks = (
   );
 };
 
-/** Generate a complete, deterministic tscircuit design from system blocks. */
-export const generateTsx = (request: GenerateTsxRequest): string => {
-  const catalog = request.catalog ?? SUBCIRCUIT_CATALOG;
-  const prepared = prepareBlocks(request.blocks, catalog);
+export const SYSTEM_DIAGRAM_DISPLAY_NAME = "System Diagram";
+export const SYSTEM_DIAGRAM_SHEET_NAME_BASE = "system_diagram";
+
+export interface GeneratedSystemDesignArtifacts {
+  /** Canonical source shown to users and written by Export TSX. */
+  tsx: string;
+  /** Temporary source for eval workers which predate schematicgraphic. */
+  evaluationTsx: string;
+  systemDiagramSvg: string;
+  systemDiagramSheetName: string;
+}
+
+const getSystemDiagramSheetName = (
+  prepared: readonly PreparedBlock[],
+): string => {
+  const detailSheetNames = new Set(prepared.map(({ sheetName }) => sheetName));
+  let sheetName = SYSTEM_DIAGRAM_SHEET_NAME_BASE;
+  let suffix = 2;
+  while (detailSheetNames.has(sheetName)) {
+    sheetName = `${SYSTEM_DIAGRAM_SHEET_NAME_BASE}_${suffix}`;
+    suffix += 1;
+  }
+  return sheetName;
+};
+
+const orderLogicalConnections = (
+  connections: readonly LogicalConnection[],
+): readonly LogicalConnection[] =>
+  [...connections].sort(
+    (a, b) =>
+      compareStrings(a.id, b.id) ||
+      compareStrings(a.fromBlockId, b.fromBlockId) ||
+      compareStrings(a.toBlockId, b.toBlockId) ||
+      compareStrings(a.kind, b.kind) ||
+      compareStrings(a.protocol ?? "", b.protocol ?? ""),
+  );
+
+const renderMultilineStringConstant = (
+  name: string,
+  value: string,
+): readonly string[] => [
+  `const ${name} = [`,
+  ...value.split("\n").map((line) => `  ${quote(line)},`),
+  '].join("\\n")',
+];
+
+interface RenderGeneratedSourceRequest {
+  request: GenerateTsxRequest;
+  prepared: readonly PreparedBlock[];
+  resolvedConnections: readonly ResolvedConnection[];
+  systemDiagramSvg: string;
+  systemDiagramSheetName: string;
+  includeSystemDiagramGraphic: boolean;
+}
+
+const renderGeneratedSource = ({
+  request,
+  prepared,
+  resolvedConnections,
+  systemDiagramSvg,
+  systemDiagramSheetName,
+  includeSystemDiagramGraphic,
+}: RenderGeneratedSourceRequest): string => {
   const instanceNameByBlockId = new Map(
     prepared.map((item) => [item.block.id, item.instanceName]),
   );
@@ -135,24 +200,50 @@ export const generateTsx = (request: GenerateTsxRequest): string => {
       ),
     );
   }
-  lines.push('import "tscircuit"', "", "export default () => (");
+  lines.push(
+    'import "tscircuit"',
+    "",
+    ...renderMultilineStringConstant("SYSTEM_DIAGRAM_SVG", systemDiagramSvg),
+    "",
+    "export default () => (",
+  );
   lines.push(
     request.boardName
       ? `  <board name=${quote(sanitizeInstanceName(request.boardName))} routingDisabled>`
       : "  <board routingDisabled>",
   );
 
+  if (includeSystemDiagramGraphic) {
+    lines.push(
+      "    <schematicsheet",
+      `      name=${quote(systemDiagramSheetName)}`,
+      `      displayName=${quote(SYSTEM_DIAGRAM_DISPLAY_NAME)}`,
+      "      sheetIndex={0}",
+      "    >",
+      "      <schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+      "    </schematicsheet>",
+    );
+  } else {
+    lines.push(
+      "    <schematicsheet",
+      `      name=${quote(systemDiagramSheetName)}`,
+      `      displayName=${quote(SYSTEM_DIAGRAM_DISPLAY_NAME)}`,
+      "      sheetIndex={0}",
+      "    />",
+    );
+  }
+
   prepared.forEach((item, sheetIndex) => {
     lines.push(
       "    <schematicsheet",
       `      name=${quote(item.sheetName)}`,
       `      displayName=${quote(item.definition.title)}`,
-      `      sheetIndex={${sheetIndex}}`,
+      `      sheetIndex={${sheetIndex + 1}}`,
       "    />",
     );
   });
 
-  if (prepared.length > 0) lines.push("");
+  lines.push("");
   for (const item of prepared) {
     lines.push(
       `    <${item.definition.componentName}`,
@@ -162,13 +253,8 @@ export const generateTsx = (request: GenerateTsxRequest): string => {
     );
   }
 
-  const resolved = resolveDesignConnections(
-    request.blocks,
-    request.connections,
-    catalog,
-  );
-  if (resolved.length > 0) lines.push("");
-  for (const connection of resolved) {
+  if (resolvedConnections.length > 0) lines.push("");
+  for (const connection of resolvedConnections) {
     lines.push(
       `    {/* ${connection.kind === "power" ? "Power" : "Data"}: ${connection.protocol ?? "automatic"} */}`,
     );
@@ -180,5 +266,54 @@ export const generateTsx = (request: GenerateTsxRequest): string => {
   lines.push("  </board>", ")", "");
   return lines.join("\n");
 };
+
+/**
+ * Generate canonical TSX plus an eval-compatible source and its system SVG.
+ * The compatibility source keeps sheet zero but omits the new intrinsic so a
+ * host can attach the same SVG to Circuit JSON when using an older eval worker.
+ */
+export const generateSystemDesignArtifacts = (
+  request: GenerateTsxRequest,
+): GeneratedSystemDesignArtifacts => {
+  const catalog = request.catalog ?? SUBCIRCUIT_CATALOG;
+  const prepared = prepareBlocks(request.blocks, catalog);
+  const orderedConnections = orderLogicalConnections(request.connections);
+  const resolvedConnections = resolveDesignConnections(
+    request.blocks,
+    orderedConnections,
+    catalog,
+  );
+  const systemDiagramSheetName = getSystemDiagramSheetName(prepared);
+  const systemDiagramSvg = renderSystemDiagramSvg({
+    blocks: request.blocks,
+    resolvedConnections,
+    catalog,
+    title: SYSTEM_DIAGRAM_DISPLAY_NAME,
+  });
+  const sourceRequest = {
+    request,
+    prepared,
+    resolvedConnections,
+    systemDiagramSvg,
+    systemDiagramSheetName,
+  };
+
+  return {
+    tsx: renderGeneratedSource({
+      ...sourceRequest,
+      includeSystemDiagramGraphic: true,
+    }),
+    evaluationTsx: renderGeneratedSource({
+      ...sourceRequest,
+      includeSystemDiagramGraphic: false,
+    }),
+    systemDiagramSvg,
+    systemDiagramSheetName,
+  };
+};
+
+/** Generate canonical tscircuit TSX from system blocks. */
+export const generateTsx = (request: GenerateTsxRequest): string =>
+  generateSystemDesignArtifacts(request).tsx;
 
 export const generateSystemTsx = generateTsx;

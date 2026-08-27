@@ -84,12 +84,25 @@ with an explanation instead of guessing.
 
 The generated file mirrors the TSX under `../examples`: it imports selected
 subcircuits from `@tsci/tscircuit.ti`, default-exports a `<board
-routingDisabled>`, places named block instances, and adds resolved traces.
+routingDisabled>`, places named block instances, and adds resolved traces. Its
+first schematic sheet is always a **System Diagram** containing a generated
+overview through `<schematicgraphic svgContent={...} />`; the individual block
+schematics follow it in deterministic order.
+
+The system diagram preserves the block positions from the editor, shows every
+Data connection, and summarizes each resolved power network as a single
+main-source connection. The detailed component sheets and generated traces
+still retain every resolved electrical connection.
 
 Preview rendering runs the generated default export through `@tscircuit/eval`
 in a web worker with PCB generation, parts lookup, and PCB routing disabled.
 The resulting Circuit JSON is converted to schematic SVG and can be downloaded
 as a vector PDF.
+
+The currently published eval worker predates `schematicgraphic`, so preview
+evaluation temporarily omits the intrinsic and attaches the exact same inline
+SVG to the System Diagram sheet in Circuit JSON before rendering. Exported TSX
+uses the native tscircuit element and needs no compatibility wrapper.
 
 The preview needs network access because `@tsci/tscircuit.ti` imports are loaded
 from the tscircuit registry. They represent the published package, whereas the
