@@ -484,7 +484,7 @@ describe("catalog and TSX generation", () => {
     ).toThrow(ConnectionResolutionError);
   });
 
-  test("enriches every discovered raw source and protects prop-less blocks", () => {
+  test("enriches discovered raw sources with curated adapters", () => {
     const catalog = createSubcircuitCatalog({
       "../../../lib/subcircuits/FutureSensor_X1.circuit.tsx":
         "export const FutureSensor_X1 = (props: unknown) => null",
@@ -501,7 +501,7 @@ describe("catalog and TSX generation", () => {
       catalog.find(
         (item) => item.componentName === "Microcontroller_MSP430G2332",
       ),
-    ).toMatchObject({ canInstantiate: false });
+    ).toMatchObject({ canInstantiate: true });
   });
 
   test("generates stable TSX regardless of graph array ordering", () => {
