@@ -6,6 +6,7 @@ import { Circuit } from "@tscircuit/core";
 import {
   AWR1843ARBGALPQ1,
   AWR1843ARBGALPQ1_BALLS,
+  CHS01TA,
   RADAR_FRONT_END_INTERFACE_NETS,
   RadarClock_FW4000044Q,
   RadarFrontEndProcessing_TIDEP01024,
@@ -118,6 +119,20 @@ test("radar exports the exact 180-ball ALP device", async () => {
   assert.equal(getPort(circuit, "U2", "A1").pin_number, 1);
   assert.equal(getPort(circuit, "U2", "J2").pin_number, 86);
   assert.equal(getPort(circuit, "U2", "V18").pin_number, 180);
+});
+
+test("CHS-01TA has a standalone default reference", async () => {
+  const circuit = new Circuit({
+    platform: {
+      pcbDisabled: true,
+      routingDisabled: true,
+      schematicDisabled: true,
+    },
+  });
+  circuit.add(<CHS01TA />);
+  await circuit.renderUntilSettled();
+  assertNoErrors(circuit);
+  assert.ok(circuit.db.source_component.getWhere({ name: "S1" }));
 });
 
 test("40 MHz radar clock matches the TI crystal connectivity", async () => {

@@ -1,9 +1,12 @@
 import type { SwitchProps } from "@tscircuit/props";
 import "tscircuit";
 
+type CHS01TAProps = Omit<SwitchProps, "name"> & { name?: string };
+
 /** Copal CHS-01TA recessed SPST surface-mount DIP switch. */
-export const CHS01TA = (props: SwitchProps) => (
+export const CHS01TA = ({ name = "S1", ...props }: CHS01TAProps) => (
   <switch
+    name={name}
     pinLabels={{ pin1: "pin1", pin2: "pin2" }}
     supplierPartNumbers={{ jlcpcb: ["C2921603"] }}
     manufacturerPartNumber="CHS-01TA"
