@@ -303,6 +303,7 @@ The package currently exports these subcircuit components:
 - `PowerSupply_LM5050_TIDA00992` ([TIDA-00992](https://www.ti.com/tool/TIDA-00992))
 - `ElectrochromicMirrorDriver_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
+- `BuckConverter_TPS62086_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
 - `InputPowerProtection_TPS25910_TIDA00890` ([TIDA-00890](https://www.ti.com/tool/TIDA-00890))
 - `TemperatureSensor_TMP103_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
 - `LVDSDriver_SN65LVDS31_TIDA060017` ([TIDA-060017](https://www.ti.com/tool/TIDA-060017))
