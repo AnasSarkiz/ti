@@ -59,8 +59,17 @@ const connection = ({
   ],
 });
 
+const expectTransparentCanvas = (svg: string): void => {
+  const dimensions = svg.match(/^<svg[^>]* width="(\d+)" height="(\d+)"/);
+  expect(dimensions).not.toBeNull();
+  if (!dimensions) throw new Error("Missing generated SVG dimensions");
+  expect(svg).not.toContain(
+    `<rect width="${dimensions[1]}" height="${dimensions[2]}"`,
+  );
+};
+
 describe("system diagram SVG", () => {
-  test("is deterministic, escapes XML, and summarizes a power network", () => {
+  test("is deterministic, escapes XML, and renders every resolved connection", () => {
     const catalog = [
       makeDefinition("source", 'Main <Power> & "Battery"', ["power"]),
       makeDefinition("controller", "Controller `${unsafe}`", ["power", "data"]),
@@ -126,10 +135,25 @@ describe("system diagram SVG", () => {
     expect(forward).toContain('data-block-id="source&amp;one"');
     expect(forward).toContain("Main &lt;Power&gt; &amp; &quot;Battery&quot;");
     expect(forward).not.toContain("Main <Power>");
-    expect(forward.match(/data-kind="power"/g)).toHaveLength(1);
+    expect(forward.match(/data-kind="power"/g)).toHaveLength(2);
     expect(forward.match(/data-kind="data"/g)).toHaveLength(1);
-    expect(forward).toContain("Power · 2 loads");
+    expect(forward).toContain(
+      'data-connection-id="power-source-controller" data-kind="power"',
+    );
+    expect(forward).toContain(
+      'data-connection-id="power-source-sensor" data-kind="power"',
+    );
+    expect(forward).not.toContain("__power-summary__");
+    expect(forward).toContain("3 resolved semantic connections");
+    expect(forward).toContain("3 blocks · 3 resolved links");
     expect(forward).toContain("Data · I²C");
+    expectTransparentCanvas(forward);
+    expect(forward).not.toContain('width="44" height="44" rx="9"');
+    expect(forward).not.toContain('fill="#fff1f2"');
+    expect(forward).not.toContain(">SOUR</text>");
+    expect(forward).toContain('<text x="64" y="159" fill="#1f2937"');
+    expect(forward).toContain('height="136" rx="12" fill="#ffffff"');
+    expect(forward).toContain('height="28" rx="14" fill="#ffffff"');
   });
 
   test("uses a stable grid whenever a graph has missing positions", () => {
@@ -173,6 +197,8 @@ describe("system diagram SVG", () => {
 
     expect(svg).toContain('viewBox="0 0 900 520"');
     expect(svg).toContain("No system blocks yet");
-    expect(svg).toContain("0 blocks · 0 visible links");
+    expect(svg).toContain("0 blocks · 0 resolved links");
+    expectTransparentCanvas(svg);
+    expect(svg).toContain('rx="14" fill="#ffffff"');
   });
 });

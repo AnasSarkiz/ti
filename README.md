@@ -3,10 +3,14 @@
 This repo contains hand-curated tscircuit TSX schematics for Texas Instruments
 devices, reusable TI reference subcircuits, and raw TI chip definitions.
 
+- [View component library](https://ti.tscircuit.app/#file=lib%2Fchips%2FBQ24072.circuit.tsx)
+- [View System Block Editor](https://tiblocks.tscircuit.com/)
+
 The published package is `@tsci/tscircuit.ti`. It provides ready-to-use
 subcircuit components and low-level chip components that can be imported into a
 local tscircuit project, placed on a board, and connected to from the
 surrounding circuit. 
+
 
 ## Installation
 
@@ -39,6 +43,18 @@ The [`ObstacleDetectionSensor.circuit.tsx`](examples/ObstacleDetectionSensor.cir
 example composes the TIDEP-01024 AWR1843AoP radar SoC, 40 MHz clock, and QSPI
 flash into the radar front-end and processing subsystem.
 
+The [`SeatPositionModule.circuit.tsx`](examples/SeatPositionModule.circuit.tsx)
+example stays intentionally small: it composes and electrically connects the
+reusable reference subcircuits for the power supply, communication interface,
+light driver, MCU, position feedback, and motor driver blocks.
+
+The [`ConsumerWirelessModule.circuit.tsx`](examples/ConsumerWirelessModule.circuit.tsx)
+example assembles the seven reviewed references behind TI's Consumer wireless
+module diagram. Its protected 5 V input feeds a 3.3 V buck rail, which powers
+the LVDS interface, logic buffer, and temperature sensor; the logic signal then
+flows through the LVDS driver and two-channel I/O protection. The antenna feed,
+I2C bus, and protected differential pair remain explicit parent-level ports.
+
 ## System Block Builder
 
 The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
@@ -48,6 +64,10 @@ curated semantic catalog resolves compatible voltage rails and protocols into
 exact tscircuit selectors. The app generates example-style TSX and can evaluate
 it with PCB and routing work disabled to produce a schematic preview and
 downloadable PDF.
+
+The default editor graph is the same seven-block Consumer wireless module, so
+its high-level Power, GPIO, and LVDS edges generate the same reviewed internal
+selectors as the complete example.
 
 [Open the deployed TI System Block Builder](https://ti-system-block-ui.vercel.app/).
 
@@ -261,6 +281,7 @@ The package currently exports these subcircuit components:
 - `MotorDriver_DRV8210`
 - `MotorDriver_DRV8833`
 - `MotorDriver_DRV8876`
+- `MotorDriver_DRV8305_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
 - `EnvironmentalSensor_HDC2080`
 - `EnvironmentalSensor_HDC3020`
 - `EnvironmentalSensor_HDC3022`
@@ -273,6 +294,7 @@ The package currently exports these subcircuit components:
 - `TargetSocket_MSPTS430D8`
 - `BluetoothAudioHost_MSP430F5229`
 - `Microcontroller_MSPM0G3507`
+- `Microcontroller_MSPM0L1306Q1_TIDA020065` ([TIDA-020065](https://www.ti.com/tool/TIDA-020065))
 - `Microcontroller_MSPM33C3x`
 - `LEDDriver_TLC59116`
 - `OutputUserInterface_LEDMatrix_LP5892_Q1`
@@ -295,8 +317,16 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
 - `CommunicationInterface_TCAN1042_TIDA01428` ([TIDA-01428](https://www.ti.com/tool/TIDA-01428))
+- `LightDriver_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
+- `PositionFeedback_DRV5013_TIDA01389` ([TIDA-01389](https://www.ti.com/tool/TIDA-01389))
+- `PowerSupply_LM5050_TIDA00992` ([TIDA-00992](https://www.ti.com/tool/TIDA-00992))
 - `ElectrochromicMirrorDriver_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
 - `LightSensor_OPT3001_TIDA01539` ([TIDA-01539](https://www.ti.com/tool/TIDA-01539))
+- `LogicBuffer_SN74LVC1G34` ([SN74LVC1G34 typical application](https://www.ti.com/lit/gpn/SN74LVC1G34))
+- `WirelessAntenna_W3006_TIDCWL1837MODCOM8I` ([TIDC-WL1837MODCOM8I](https://www.ti.com/tool/TIDC-WL1837MODCOM8I))
+- `InputOutputProtection_TPD2E009_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
+- `BuckConverter_TPS62086_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
+- `InputPowerProtection_TPS25910_TIDA00890` ([TIDA-00890](https://www.ti.com/tool/TIDA-00890))
 - `TemperatureSensor_TMP103_TIDA00399` ([TIDA-00399](https://www.ti.com/tool/TIDA-00399))
 - `LVDSDriver_SN65LVDS31_TIDA060017` ([TIDA-060017](https://www.ti.com/tool/TIDA-060017))
 - `LampDriver_TPS92638_TIDA00356` ([TIDA-00356](https://www.ti.com/tool/TIDA-00356))
@@ -317,10 +347,13 @@ chip is listed individually below, including whether it supports a
 | `CC2564C` | `-` | `CC2564C` |
 | `CC2745R10` | `-` | `CC2745R10E0WRHARQ1` |
 | `CC3235SF` | `vqfn_64_ep` | `CC3235SF12RGKR` |
+| `CSD19532Q5B` | `-` | `CSD19532Q5B` |
 | `DAC101C081Q` | `-` | `DAC101C081QISD_NOPB` |
+| `DRV5013Q1` | `-` | `DRV5013ADQDBZRQ1` |
 | `DRV8210` | `wson_8_ep_2x2` | `DRV8210DSGR` |
 | `DRV8833` | `-` | `DRV8833` |
 | `DRV8876` | `-` | `DRV8876` |
+| `DRV83053Q1` | `-` | `DRV83053QPHPQ1` |
 | `HDC2080` | `wson_6_ep_3x3` | `HDC2080DMBR` |
 | `HDC3020` | `wson_8_ep_2p5x2p5` | `HDC3020DEFR` |
 | `HDC3022` | `wson_8_ep_2p5x2p5` | `HDC3022DEJR` |
@@ -330,20 +363,28 @@ chip is listed individually below, including whether it supports a
 | `LM74202Q1` | `-` | `LM74202QPWPRQ1` |
 | `LM50HVQ1` | `-` | `LM50HVQDBZRQ1` |
 | `LMK1C1104` | `tssop_8` | `LMK1C1104PWR` |
+| `LM5050Q1` | `-` | `LM5050Q1MKX_1_NOPB` |
 | `LP5892Q1` | `vqfn_76_ep_9x9` | `LP5892QRRFRQ1` |
 | `MSP430G2230ID` | `-` | `MSP430G2230ID` |
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
+| `MSPM0L1306Q1` | `-` | `MSPM0L1306QRHBRQ1` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
 | `PGA300ARHHR` | `-` | `PGA300ARHHR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
+| `SN65LVDS31D` | `-` | `SN65LVDS31D` |
+| `SN74LVC1G34DBVR` | `-` | `SN74LVC1G34DBVR` |
 | `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TLV316` | `-` | `TLV316QDBVTQ1` |
 | `TAS2505` | `-` | `TAS2505` |
+| `TMP103AYFF` | `-` | `TMP103AYFF` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
+| `TPD2E009DRTR` | `-` | `TPD2E009DRTR` |
 | `TPS22919` | `-` | `TPS22919` |
+| `TPS25910RSA` | `-` | `TPS25910RSA` |
+| `TPS62086RLTR` | `-` | `TPS62086RLTR` |
 | `TPS6293` | `-` | `TPS6293` |
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
@@ -355,6 +396,7 @@ chip is listed individually below, including whether it supports a
 | `TPSM82823` | `-` | `TPSM82823` |
 | `TXB0104` | `vqfn_14_ep_3p5x3p5` | `TXB0104RGYR` |
 | `TXS0102` | `vssop_8` | `TXS0102DCUR` |
+| `W3006` | `-` | `W3006` |
 
 Rows with `-` are direct chip exports and do not currently expose a
 `footprintVariant` prop. For the wrapper exports, the underlying component

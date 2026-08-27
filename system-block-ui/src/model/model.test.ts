@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import {
+  createConsumerWirelessModuleDesign,
   createSubcircuitCatalog,
   generateSystemDesignArtifacts,
   generateTsx,
@@ -374,6 +375,115 @@ describe("automatic connection resolution", () => {
 });
 
 describe("catalog and TSX generation", () => {
+  test("builds the Consumer wireless module from all seven reviewed blocks", () => {
+    const design = createConsumerWirelessModuleDesign(SUBCIRCUIT_CATALOG);
+    expect(design.blocks.map(({ id }) => id)).toEqual([
+      "input_power_protection",
+      "dc_dc_power_supply",
+      "io_connection",
+      "wireless_connectivity",
+      "io_protection",
+      "logic_control",
+      "sensors",
+    ]);
+
+    const resolved = resolveDesignConnections(
+      design.blocks,
+      design.connections,
+      SUBCIRCUIT_CATALOG,
+    );
+    expect(resolved.map(({ id }) => id)).toEqual([
+      "data_io_connection_to_io_protection",
+      "data_logic_to_io_connection",
+      "power_dc_dc_to_io_connection",
+      "power_dc_dc_to_logic_control",
+      "power_dc_dc_to_sensors",
+      "power_protection_to_dc_dc",
+    ]);
+    expect(
+      resolved.find(({ id }) => id === "power_protection_to_dc_dc")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U7 > .IN1",
+          toSelector: ".U3P3 > .VIN",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U7 > .IN1",
+          toSelector: ".U3P3 > .EN",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U7 > .GND1",
+          toSelector: ".U3P3 > .GND",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "data_io_connection_to_io_protection")
+        ?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .OUT1_P",
+          toSelector: ".UESD > .D1",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U1 > .OUT1_N",
+          toSelector: ".UESD > .D2",
+        }),
+      ]),
+    );
+
+    const artifacts = generateSystemDesignArtifacts({
+      blocks: design.blocks,
+      connections: design.connections,
+      catalog: SUBCIRCUIT_CATALOG,
+      boardName: "consumer_wireless_module",
+    });
+    for (const componentName of [
+      "InputPowerProtection_TPS25910_TIDA00890",
+      "BuckConverter_TPS62086_TIDA00399",
+      "LVDSDriver_SN65LVDS31_TIDA060017",
+      "WirelessAntenna_W3006_TIDCWL1837MODCOM8I",
+      "InputOutputProtection_TPD2E009_TIDA00399",
+      "LogicBuffer_SN74LVC1G34",
+      "TemperatureSensor_TMP103_TIDA00399",
+    ]) {
+      expect(artifacts.tsx).toContain(componentName);
+    }
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="power_protection_to_dc_dc" data-kind="power"',
+    );
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="data_io_connection_to_io_protection" data-kind="data"',
+    );
+    expect(artifacts.tsx).toContain(
+      'from=".logic_control > net.MCU_OR_LOGIC_OUT"',
+    );
+    expect(artifacts.tsx).toContain('to=".logic_control > net.VCC"');
+  });
+
+  test("does not connect the protected 5 V rail directly to the TMP103", () => {
+    const inputProtection = definition(
+      "input-power-protection-tps25910-tida00890",
+    );
+    const sensor = definition("temperature-sensor-tmp103-tida00399");
+
+    expect(() =>
+      resolveConnection({
+        kind: "Power",
+        from: {
+          block: block("input_power_protection", inputProtection.id),
+          definition: inputProtection,
+        },
+        to: {
+          block: block("sensors", sensor.id),
+          definition: sensor,
+        },
+      }),
+    ).toThrow(ConnectionResolutionError);
+  });
+
   test("enriches every discovered raw source and protects prop-less blocks", () => {
     const catalog = createSubcircuitCatalog({
       "../../../lib/subcircuits/FutureSensor_X1.circuit.tsx":
@@ -417,6 +527,11 @@ describe("catalog and TSX generation", () => {
     expect(first).toContain("<board routingDisabled>");
     expect(first).toContain("PowerManagement_TPS7A2018,");
     expect(first).toContain(
+      'import { SYSTEM_DIAGRAM_SVG } from "./GeneratedSystem.system-diagram"',
+    );
+    expect(first).not.toContain("const SYSTEM_DIAGRAM_SVG");
+    expect(first).not.toContain("<svg");
+    expect(first).toContain(
       "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
     );
     expect(first).toContain('displayName="System Diagram"');
@@ -451,13 +566,26 @@ describe("catalog and TSX generation", () => {
 
     expect(artifacts).toEqual(reversed);
     expect(artifacts.systemDiagramSheetName).toBe("system_diagram_2");
+    expect(artifacts.systemDiagramModuleFileName).toBe(
+      "GeneratedSystem.system-diagram.ts",
+    );
     expect(artifacts.tsx).toContain(
       '<schematicsheet\n      name="system_diagram_2"\n      displayName="System Diagram"\n      sheetIndex={0}\n    >',
     );
     expect(artifacts.tsx).toContain(
       "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
     );
-    expect(artifacts.systemDiagramSvg).toContain("Power · 1 load");
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="power" data-kind="power"',
+    );
+    expect(artifacts.systemDiagramSvg).not.toContain("__power-summary__");
+    expect(artifacts.systemDiagramModuleSource).toStartWith(
+      "export const SYSTEM_DIAGRAM_SVG = [",
+    );
+    expect(artifacts.systemDiagramModuleSource).toContain(
+      'data-connection-id=\\"power\\" data-kind=\\"power\\"',
+    );
+    expect(artifacts.tsx).not.toContain(artifacts.systemDiagramSvg);
   });
 
   test("always emits a first system diagram sheet for an empty design", () => {
@@ -468,6 +596,9 @@ describe("catalog and TSX generation", () => {
 
     expect(artifacts.systemDiagramSheetName).toBe("system_diagram");
     expect(artifacts.systemDiagramSvg).toContain("No system blocks yet");
+    expect(artifacts.systemDiagramModuleSource).toContain(
+      "No system blocks yet",
+    );
     expect(artifacts.tsx).toContain("sheetIndex={0}");
     expect(artifacts.tsx).toContain(
       "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
@@ -578,7 +709,7 @@ describe("catalog and TSX generation", () => {
     expect(generated).not.toContain(hostileProtocol);
   });
 
-  test("curated catalog is sorted and has the Bluetooth speaker building blocks", () => {
+  test("curated catalog is sorted and has the reviewed starter-design blocks", () => {
     const titles = SUBCIRCUIT_CATALOG.map((item) => item.title);
     expect(titles).toEqual(
       [...titles].sort((a, b) => a.localeCompare(b, "en")),
@@ -586,5 +717,18 @@ describe("catalog and TSX generation", () => {
     expect(definition("battery-management-bq24074")).toBeDefined();
     expect(definition("bluetooth-controller-cc2564c")).toBeDefined();
     expect(definition("audio-amplifier-tas2505")).toBeDefined();
+    expect(
+      definition("input-power-protection-tps25910-tida00890"),
+    ).toBeDefined();
+    expect(definition("buck-converter-tps62086-tida00399")).toBeDefined();
+    expect(definition("lvds-driver-sn65lvds31-tida060017")).toBeDefined();
+    expect(
+      definition("wireless-antenna-w3006-tidcwl1837modcom8i"),
+    ).toBeDefined();
+    expect(
+      definition("input-output-protection-tpd2e009-tida00399"),
+    ).toBeDefined();
+    expect(definition("logic-buffer-sn74lvc1g34")).toBeDefined();
+    expect(definition("temperature-sensor-tmp103-tida00399")).toBeDefined();
   });
 });

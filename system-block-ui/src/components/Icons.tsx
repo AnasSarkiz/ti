@@ -31,6 +31,20 @@ export const CircuitIcon = (props: IconProps) => (
   </Icon>
 );
 
+export const SchematicIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <circle cx="3" cy="12" fill="currentColor" r="1.5" />
+    <circle cx="21" cy="12" fill="currentColor" r="1.5" />
+    <path
+      d="M4.5 12H7l1.25-3 2.5 6 2.5-6 2.5 6L17 12h2.5"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+  </Icon>
+);
+
 export const SearchIcon = (props: IconProps) => (
   <Icon {...props}>
     <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.8" />
@@ -79,6 +93,42 @@ export const PdfIcon = (props: IconProps) => (
       d="M14 2v5h5M9 12h6M9 16h4"
       stroke="currentColor"
       strokeLinecap="round"
+      strokeWidth="1.8"
+    />
+  </Icon>
+);
+
+export const DownloadIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path
+      d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M5 20h14"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+  </Icon>
+);
+
+export const ArchiveIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path
+      d="M4 7h16v14H4V7Zm-1-4h18v4H3V3Zm6 8h6"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+  </Icon>
+);
+
+export const ChevronDownIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path
+      d="m7 9.5 5 5 5-5"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       strokeWidth="1.8"
     />
   </Icon>

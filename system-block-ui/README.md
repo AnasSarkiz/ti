@@ -6,6 +6,12 @@ blocks. The graph uses broad, readable connections such as **Power** and
 **Data**, then resolves them to the concrete tscircuit selectors needed by the
 generated TSX.
 
+The starter graph reproduces TI's seven-block Consumer wireless module using
+the reviewed input-protection, 3.3 V buck, LVDS, antenna, I/O-protection, logic,
+and temperature-sensor subcircuits. Six semantic connections describe its
+power distribution and logic-to-LVDS signal path; the external RF and I2C
+interfaces remain available at their source subcircuits.
+
 ## Run with schematic preview
 
 ```bash
@@ -82,31 +88,58 @@ with an explanation instead of guessing.
 
 ## Generated output and schematic PDF
 
-The generated file mirrors the TSX under `../examples`: it imports selected
-subcircuits from `@tsci/tscircuit.ti`, default-exports a `<board
-routingDisabled>`, places named block instances, and adds resolved traces. Its
-first schematic sheet is always a **System Diagram** containing a generated
-overview through `<schematicgraphic svgContent={...} />`; the individual block
-schematics follow it in deterministic order.
+The generated main file, `GeneratedSystem.circuit.tsx`, mirrors the TSX under
+`../examples`: it imports selected subcircuits from `@tsci/tscircuit.ti`,
+default-exports a `<board routingDisabled>`, places named block instances, and
+adds resolved traces. Its first schematic sheet is always a **System Diagram**
+containing a generated overview through `<schematicgraphic
+svgContent={SYSTEM_DIAGRAM_SVG} />`; the individual block schematics follow it
+in deterministic order.
 
-The system diagram preserves the block positions from the editor, shows every
-Data connection, and summarizes each resolved power network as a single
-main-source connection. The detailed component sheets and generated traces
-still retain every resolved electrical connection.
+To keep the displayed TSX readable, `SYSTEM_DIAGRAM_SVG` is imported from the
+sibling `GeneratedSystem.system-diagram.ts` module instead of being embedded in
+the main file. **Export files** downloads both required files, while Copy copies
+only the main TSX. The system diagram preserves the block positions from the
+editor and shows every Power and Data connection.
 
 Preview rendering runs the generated default export through `@tscircuit/eval`
 in a web worker with PCB generation, parts lookup, and PCB routing disabled.
 The resulting Circuit JSON is converted to schematic SVG and can be downloaded
-as a vector PDF.
+as a vector PDF or as editable KiCad and Altium project ZIPs. The project
+exporters run in lazy-loaded browser chunks and sanitize the project name before
+using it in archive entries.
 
-Preview evaluation uses the same canonical TSX shown and exported by the UI.
-The nested package pins `@tscircuit/eval` 0.0.1294 and `@tscircuit/core`
-0.0.1785 so the worker evaluates the native `schematicgraphic` element
-directly; no host-side Circuit JSON compatibility step is required.
+The PDF exporter embeds Liberation Sans, an open, Arial-compatible font, so
+Unicode symbols and schematic text measurements remain intact.
 
-The preview needs network access because `@tsci/tscircuit.ti` imports are loaded
-from the tscircuit registry. They represent the published package, whereas the
-palette is discovered from the local checkout.
+Because this preview intentionally evaluates with PCB generation and routing
+disabled, the CAD ZIPs are schematic-first projects. Each converter includes
+its required empty/default PCB document; it is not a routed system-board layout.
+The SVG-only System Diagram overview is omitted from these archives because the
+native KiCad and Altium converters do not support `schematic_graphic`; all
+editable detail sheets are retained.
+
+`circuit-json-to-altium` is temporarily pinned to the official repository's
+exact commit `0dc762f2a8dc811ef4919d6f79a312c910bdcac0` because that converter has
+not published its first npm release yet. The pin should become an exact npm
+version once one is available; it does not use a preview registry or floating
+Git branch. Its nested `altiumts` dependency is overridden to the equivalent
+published `altiumts@0.0.32` release so installs do not need to resolve another
+Git dependency.
+
+Preview evaluation uses the same canonical TSX shown and exported by the UI,
+with the generated system-diagram module supplied to the evaluator's virtual
+filesystem. The nested package pins `@tscircuit/eval` 0.0.1294 and
+`@tscircuit/core` 0.0.1785 so the worker evaluates the native
+`schematicgraphic` element directly; no host-side Circuit JSON compatibility
+step is required.
+
+For preview evaluation, the selected subcircuits and their relative source
+dependencies are loaded from the local checkout into a minimal virtual
+`@tsci/tscircuit.ti` package. This keeps Render working for newly added blocks
+before the repository package is published. Exported TSX intentionally retains
+the public package import, so using an exported design elsewhere still requires
+a package release containing those subcircuits.
 
 ## Adding another semantic adapter
 

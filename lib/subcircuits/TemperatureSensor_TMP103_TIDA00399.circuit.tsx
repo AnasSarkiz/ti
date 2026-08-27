@@ -1,12 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-
-const TMP103_PIN_LABELS = {
-  pin1: ["SDA"],
-  pin2: ["SCL"],
-  pin3: ["GND"],
-  pin4: ["V_PLUS", "VCC"],
-} as const;
+import { TMP103AYFF } from "../chips/TMP103AYFF.circuit.tsx";
 
 /**
  * TMP103 temperature-sensing subcircuit from TI TIDA-00399, sheet 8.
@@ -15,19 +9,10 @@ const TMP103_PIN_LABELS = {
  */
 export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props}>
-    <chip
+    <TMP103AYFF
       name="UTMP"
-      manufacturerPartNumber="TMP103AYFF"
-      pinLabels={TMP103_PIN_LABELS}
-      showPinAliases={false}
       schX={1.2}
       schY={0}
-      schWidth={1.4}
-      schHeight={0.6}
-      schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: ["SCL", "SDA"] },
-        rightSide: { direction: "top-to-bottom", pins: ["V_PLUS", "GND"] },
-      }}
       connections={{
         GND: "net.GND",
       }}

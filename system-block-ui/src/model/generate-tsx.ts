@@ -135,10 +135,17 @@ const prepareBlocks = (
 
 export const SYSTEM_DIAGRAM_DISPLAY_NAME = "System Diagram";
 export const SYSTEM_DIAGRAM_SHEET_NAME_BASE = "system_diagram";
+export const SYSTEM_DIAGRAM_MODULE_BASENAME = "GeneratedSystem.system-diagram";
+export const SYSTEM_DIAGRAM_MODULE_FILENAME = `${SYSTEM_DIAGRAM_MODULE_BASENAME}.ts`;
+export const SYSTEM_DIAGRAM_MODULE_IMPORT_PATH = `./${SYSTEM_DIAGRAM_MODULE_BASENAME}`;
 
 export interface GeneratedSystemDesignArtifacts {
   /** Canonical source shown, exported, and evaluated by the preview. */
   tsx: string;
+  /** Deterministic virtual/download path for the generated SVG module. */
+  systemDiagramModuleFileName: string;
+  /** Companion module imported by `tsx` and supplied during evaluation. */
+  systemDiagramModuleSource: string;
   systemDiagramSvg: string;
   systemDiagramSheetName: string;
 }
@@ -168,20 +175,21 @@ const orderLogicalConnections = (
       compareStrings(a.protocol ?? "", b.protocol ?? ""),
   );
 
-const renderMultilineStringConstant = (
-  name: string,
-  value: string,
-): readonly string[] => [
-  `const ${name} = [`,
-  ...value.split("\n").map((line) => `  ${quote(line)},`),
-  '].join("\\n")',
-];
+const renderSystemDiagramModule = (systemDiagramSvg: string): string =>
+  [
+    "export const SYSTEM_DIAGRAM_SVG = [",
+    ...systemDiagramSvg.split("\n").map((line) => `  ${quote(line)},`),
+    '].join("\\n")',
+    "",
+  ].join("\n");
+
+const renderSystemDiagramImport = (): string =>
+  `import { SYSTEM_DIAGRAM_SVG } from ${quote(SYSTEM_DIAGRAM_MODULE_IMPORT_PATH)}`;
 
 interface RenderGeneratedSourceRequest {
   request: GenerateTsxRequest;
   prepared: readonly PreparedBlock[];
   resolvedConnections: readonly ResolvedConnection[];
-  systemDiagramSvg: string;
   systemDiagramSheetName: string;
 }
 
@@ -189,7 +197,6 @@ const renderGeneratedSource = ({
   request,
   prepared,
   resolvedConnections,
-  systemDiagramSvg,
   systemDiagramSheetName,
 }: RenderGeneratedSourceRequest): string => {
   const instanceNameByBlockId = new Map(
@@ -212,9 +219,8 @@ const renderGeneratedSource = ({
     );
   }
   lines.push(
+    renderSystemDiagramImport(),
     'import "tscircuit"',
-    "",
-    ...renderMultilineStringConstant("SYSTEM_DIAGRAM_SVG", systemDiagramSvg),
     "",
     "export default () => (",
   );
@@ -271,9 +277,7 @@ const renderGeneratedSource = ({
   return lines.join("\n");
 };
 
-/**
- * Generate canonical TSX together with the system diagram metadata it embeds.
- */
+/** Generate canonical TSX and its companion system-diagram module. */
 export const generateSystemDesignArtifacts = (
   request: GenerateTsxRequest,
 ): GeneratedSystemDesignArtifacts => {
@@ -296,12 +300,13 @@ export const generateSystemDesignArtifacts = (
     request,
     prepared,
     resolvedConnections,
-    systemDiagramSvg,
     systemDiagramSheetName,
   };
 
   return {
     tsx: renderGeneratedSource(sourceRequest),
+    systemDiagramModuleFileName: SYSTEM_DIAGRAM_MODULE_FILENAME,
+    systemDiagramModuleSource: renderSystemDiagramModule(systemDiagramSvg),
     systemDiagramSvg,
     systemDiagramSheetName,
   };
