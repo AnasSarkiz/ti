@@ -250,4 +250,7 @@ test("composite includes one SoC, one clock, and one QSPI flash", {
       getPort(circuit, "Y1", "CASE_1").source_port_id,
     ),
   );
+  assertPinsConnected(circuit, ["U2", "V10"], ["R85", "pin1"]);
+  assertPinsConnected(circuit, ["U2", "M3"], ["R84", "pin1"]);
+  assertPinsConnected(circuit, ["U2", "U10"], ["R83", "pin1"]);
 });

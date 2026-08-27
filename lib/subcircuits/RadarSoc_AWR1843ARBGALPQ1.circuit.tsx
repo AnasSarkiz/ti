@@ -613,7 +613,6 @@ const AWR_GPADC_TEST_CONNECTIONS = [
 
 export const RADAR_SOC_INTERFACE_NETS = [
   ...AWR_NET_CONNECTIONS.map(({ net }) => net),
-  ...AWR_GPADC_TEST_CONNECTIONS.map(({ net }) => net),
   "PMIC_CLK",
   "SOP0",
   "SOP1",
@@ -1429,14 +1428,12 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
         to="net.AR_OSC_CLKOUT"
       />
 
-      <trace from=".R103 > .pin1" to=".R85 > .pin1" />
-      <netlabel
-        net="AR_PMIC_CLKOUT_SOP2"
-        schX={toSchX(1220)}
-        schY={toIoSchY(740)}
-        anchorSide="right"
-        connectsTo=".R85 > .pin1"
+      <trace
+        from=".R103 > .pin1"
+        to=".R85 > .pin1"
+        schDisplayLabel="AR_PMIC_CLKOUT_SOP2"
       />
+      <trace from=".R85 > .pin1" to="net.AR_PMIC_CLKOUT_SOP2" />
       <netlabel
         net="PMIC_CLK"
         schX={toSchX(1200)}
@@ -1455,12 +1452,10 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
         connectsTo=".S3 > .pin2"
       />
 
-      <netlabel
-        net="AR_SYNC_OUT_SOP1"
-        schX={toSchX(1220)}
-        schY={toIoSchY(550)}
-        anchorSide="right"
-        connectsTo=".R84 > .pin1"
+      <trace
+        from=".R84 > .pin1"
+        to="net.AR_SYNC_OUT_SOP1"
+        schDisplayLabel="AR_SYNC_OUT_SOP1"
       />
       <trace from=".R84 > .pin2" to=".R171 > .pin1" />
       <trace from=".R171 > .pin1" to=".R170 > .pin2" />
@@ -1472,12 +1467,10 @@ export const RadarSoc_AWR1843ARBGALPQ1 = (props: SubcircuitProps) => (
         connectsTo=".R171 > .pin2"
       />
 
-      <netlabel
-        net="AR_TDO_SOP0"
-        schX={toSchX(1220)}
-        schY={toIoSchY(360)}
-        anchorSide="right"
-        connectsTo=".R83 > .pin1"
+      <trace
+        from=".R83 > .pin1"
+        to="net.AR_TDO_SOP0"
+        schDisplayLabel="AR_TDO_SOP0"
       />
       <trace from=".R83 > .pin2" to=".R174 > .pin2" />
       <trace from=".R174 > .pin2" to=".R159 > .pin1" />
