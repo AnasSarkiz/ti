@@ -98,6 +98,42 @@ export const PdfIcon = (props: IconProps) => (
   </Icon>
 );
 
+export const DownloadIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path
+      d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M5 20h14"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+  </Icon>
+);
+
+export const ArchiveIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path
+      d="M4 7h16v14H4V7Zm-1-4h18v4H3V3Zm6 8h6"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+  </Icon>
+);
+
+export const ChevronDownIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path
+      d="m7 9.5 5 5 5-5"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+  </Icon>
+);
+
 export const CopyIcon = (props: IconProps) => (
   <Icon {...props}>
     <rect

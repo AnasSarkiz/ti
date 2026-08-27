@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { AnyCircuitElement } from "circuit-json";
 import {
   BlockPalette,
   SYSTEM_BLOCK_DRAG_MIME,
@@ -194,6 +195,9 @@ export function App() {
     SchematicEvaluationCoordinator | undefined
   >(undefined);
   evaluationCoordinatorRef.current ??= new SchematicEvaluationCoordinator();
+  const evaluatedCircuitJsonRef = useRef<
+    readonly AnyCircuitElement[] | undefined
+  >(undefined);
 
   const [snapshot, setSnapshot] = useState<SystemBlockGraphSnapshot>(() => ({
     blocks: [...starterDesign.blocks],
@@ -211,6 +215,9 @@ export function App() {
   const [schematicSheets, setSchematicSheets] = useState<
     readonly RenderedSchematicSheet[]
   >([]);
+  const [evaluatedCircuitJson, setEvaluatedCircuitJson] = useState<
+    readonly AnyCircuitElement[] | undefined
+  >();
   const [previewError, setPreviewError] = useState<string>();
   const hasAutomaticPower = snapshot.connections.some(
     (connection) => connection.kind.toLowerCase() === "power",
@@ -249,8 +256,10 @@ export function App() {
 
   const invalidateSchematic = useCallback(() => {
     evaluationCoordinatorRef.current?.invalidateGraph();
+    evaluatedCircuitJsonRef.current = undefined;
     setIsRendering(false);
     setSchematicSheets([]);
+    setEvaluatedCircuitJson(undefined);
     setPreviewError(undefined);
   }, []);
 
@@ -294,6 +303,7 @@ export function App() {
       if (controllerRef.current === controller)
         controllerRef.current = undefined;
       evaluationCoordinatorRef.current?.invalidateGraph();
+      evaluatedCircuitJsonRef.current = undefined;
       controller?.destroy();
     };
   }, [catalog, invalidateSchematic, notify, starterDesign]);
@@ -376,6 +386,8 @@ export function App() {
         },
       });
       if (!coordinator.isCurrent(request)) return;
+      evaluatedCircuitJsonRef.current = rendered.circuitJson;
+      setEvaluatedCircuitJson(rendered.circuitJson);
       setSchematicSheets(
         rendered.sheets.map((sheet) => ({
           ...sheet,
@@ -436,21 +448,62 @@ export function App() {
   }, [generatedArtifacts, notify]);
 
   const downloadPdf = useCallback(async () => {
-    if (schematicSheets.length === 0) return;
+    const sheets = schematicSheets;
+    const circuitJson = evaluatedCircuitJson;
+    if (sheets.length === 0 || !circuitJson) return;
     try {
-      const { downloadSchematicPdf } = await import("./rendering/export-pdf");
-      await downloadSchematicPdf(schematicSheets, {
-        fileName: "GeneratedSystem.schematic.pdf",
+      const { createSchematicPdfBlob } = await import("./rendering/export-pdf");
+      const blob = await createSchematicPdfBlob(sheets, {
         title: "TI System Block Schematic",
       });
-      notify(
-        `${schematicSheets.length}-page schematic PDF downloaded.`,
-        "success",
-      );
+      if (evaluatedCircuitJsonRef.current !== circuitJson) return;
+      downloadBlob(blob, "GeneratedSystem.schematic.pdf");
+      notify(`${sheets.length}-page schematic PDF downloaded.`, "success");
     } catch (error) {
+      if (evaluatedCircuitJsonRef.current !== circuitJson) return;
       notify(errorMessage(error), "error");
     }
-  }, [notify, schematicSheets]);
+  }, [evaluatedCircuitJson, notify, schematicSheets]);
+
+  const downloadKicadProject = useCallback(async () => {
+    const circuitJson = evaluatedCircuitJson;
+    if (!circuitJson) return;
+    try {
+      const { createKicadProjectZipBlob, getKicadProjectZipFileName } =
+        await import("./rendering/export-kicad-project");
+      const options = { projectName: "GeneratedSystem" } as const;
+      const blob = await createKicadProjectZipBlob(circuitJson, options);
+      if (evaluatedCircuitJsonRef.current !== circuitJson) return;
+      downloadBlob(blob, getKicadProjectZipFileName(options));
+      notify("KiCad project ZIP downloaded.", "success");
+    } catch (error) {
+      if (evaluatedCircuitJsonRef.current !== circuitJson) return;
+      notify(
+        `Could not export the KiCad project: ${errorMessage(error)}`,
+        "error",
+      );
+    }
+  }, [evaluatedCircuitJson, notify]);
+
+  const downloadAltiumProject = useCallback(async () => {
+    const circuitJson = evaluatedCircuitJson;
+    if (!circuitJson) return;
+    try {
+      const { createAltiumProjectZipBlob, getAltiumProjectZipFileName } =
+        await import("./rendering/export-altium-project");
+      const options = { projectName: "GeneratedSystem" } as const;
+      const blob = await createAltiumProjectZipBlob(circuitJson, options);
+      if (evaluatedCircuitJsonRef.current !== circuitJson) return;
+      downloadBlob(blob, getAltiumProjectZipFileName(options));
+      notify("Altium project ZIP downloaded.", "success");
+    } catch (error) {
+      if (evaluatedCircuitJsonRef.current !== circuitJson) return;
+      notify(
+        `Could not export the Altium project: ${errorMessage(error)}`,
+        "error",
+      );
+    }
+  }, [evaluatedCircuitJson, notify]);
 
   return (
     <main className="app-shell">
@@ -569,7 +622,9 @@ export function App() {
         <OutputPanel
           isRendering={isRendering}
           onCopyTsx={() => void copyTsx()}
-          onDownloadPdf={() => void downloadPdf()}
+          onDownloadAltiumProject={downloadAltiumProject}
+          onDownloadKicadProject={downloadKicadProject}
+          onDownloadSchematicPdf={downloadPdf}
           onDownloadSourceFiles={downloadSourceFiles}
           onRender={() => void renderSchematic()}
           previewError={previewError}
