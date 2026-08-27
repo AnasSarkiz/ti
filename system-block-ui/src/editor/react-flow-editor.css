@@ -1,0 +1,310 @@
+.system-block-flow {
+  width: 100%;
+  height: 100%;
+  color: #26313d;
+  font-family:
+    Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: transparent;
+}
+
+.system-block-flow .react-flow__pane {
+  cursor: grab;
+}
+
+.system-block-flow .react-flow__pane.dragging {
+  cursor: grabbing;
+}
+
+.system-block-flow .react-flow__node-systemBlock {
+  width: 284px;
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+.system-block-card {
+  position: relative;
+  width: 284px;
+  overflow: visible;
+  background: rgb(255 255 255 / 98%);
+  border: 1px solid #cbd2db;
+  border-radius: 10px;
+  box-shadow:
+    0 10px 24px rgb(34 46 61 / 11%),
+    0 2px 5px rgb(34 46 61 / 7%);
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.system-block-card.is-selected {
+  border-color: #aa252b;
+  box-shadow:
+    0 0 0 3px rgb(199 33 39 / 13%),
+    0 12px 26px rgb(34 46 61 / 14%);
+}
+
+.system-block-card-header {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  min-height: 61px;
+  padding: 11px 11px 9px;
+  background: linear-gradient(180deg, #fff 0%, #f7f8fa 100%);
+  border-bottom: 1px solid #e3e7ec;
+  border-radius: 9px 9px 0 0;
+}
+
+.system-block-card-glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  color: #a51f25;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  background: #fae9ea;
+  border: 1px solid #f1cfd1;
+  border-radius: 8px;
+}
+
+.system-block-card-heading {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.system-block-card-heading strong {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #202a35;
+  font-size: 12px;
+  font-weight: 760;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.system-block-card-heading > span {
+  color: #7d8895;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.system-block-card-heading code {
+  overflow: hidden;
+  color: #596574;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 9px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.system-block-review-badge {
+  padding: 3px 6px;
+  color: #7d5b29;
+  font-size: 8px;
+  font-weight: 760;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: #fff5df;
+  border: 1px solid #f1ddb7;
+  border-radius: 999px;
+}
+
+.system-block-review-badge[data-reviewed="true"] {
+  color: #287252;
+  background: #eaf7f0;
+  border-color: #c8e8d7;
+}
+
+.system-block-description {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  padding: 9px 12px;
+  color: #65717e;
+  font-size: 9.5px;
+  line-height: 1.4;
+  background: #fbfcfd;
+  border-bottom: 1px solid #e8ebef;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.system-block-interface-list {
+  padding: 6px 0;
+}
+
+.system-block-port-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px 66px minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  min-height: 35px;
+  padding: 5px 11px;
+}
+
+.system-block-port-row + .system-block-port-row {
+  border-top: 1px solid #eef0f3;
+}
+
+.system-block-port-row[data-side="output"] {
+  grid-template-columns: 34px 66px minmax(0, 1fr);
+}
+
+.system-block-port-direction {
+  color: #8a95a1;
+  font-size: 8px;
+  font-weight: 820;
+  letter-spacing: 0.08em;
+}
+
+.system-block-port-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 760;
+  white-space: nowrap;
+}
+
+.system-block-port-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 85%);
+}
+
+.system-block-port-meta {
+  overflow: hidden;
+  color: #7d8895;
+  font-size: 8.5px;
+  line-height: 1.25;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.system-block-handle.react-flow__handle {
+  width: 16px;
+  height: 16px;
+  border: 3px solid white;
+  box-shadow:
+    0 0 0 1px rgb(29 40 53 / 24%),
+    0 2px 4px rgb(29 40 53 / 16%);
+  transition:
+    box-shadow 100ms ease,
+    filter 100ms ease;
+}
+
+.system-block-handle.react-flow__handle-left {
+  left: -1px;
+}
+
+.system-block-handle.react-flow__handle-right {
+  right: -1px;
+}
+
+.system-block-handle.react-flow__handle.connectingto,
+.system-block-handle.react-flow__handle.valid {
+  box-shadow:
+    0 0 0 4px rgb(55 123 212 / 17%),
+    0 0 0 1px rgb(29 40 53 / 24%);
+  filter: saturate(1.2);
+}
+
+.system-block-empty-interfaces {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px;
+  color: #687482;
+  background: #fbf8f2;
+  border-radius: 0 0 9px 9px;
+}
+
+.system-block-empty-interfaces span {
+  font-size: 10px;
+  font-weight: 720;
+}
+
+.system-block-empty-interfaces small {
+  color: #8d8070;
+  font-size: 8.5px;
+  line-height: 1.35;
+}
+
+.system-block-edge-label {
+  position: absolute;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  padding: 3px 9px;
+  font-size: 9.5px;
+  font-weight: 780;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  background: rgb(255 255 255 / 96%);
+  border: 1px solid;
+  border-radius: 999px;
+  box-shadow:
+    0 2px 6px rgb(32 43 56 / 14%),
+    0 0 0 2px rgb(255 255 255 / 60%);
+}
+
+.system-block-edge-label-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.system-block-flow .react-flow__edge-path {
+  transition: stroke-width 100ms ease;
+}
+
+.system-block-flow .react-flow__edge.selected .react-flow__edge-path {
+  filter: drop-shadow(0 1px 2px rgb(25 36 49 / 18%));
+}
+
+.system-block-flow .react-flow__controls {
+  overflow: hidden;
+  margin: 13px;
+  background: rgb(255 255 255 / 94%);
+  border: 1px solid #d4dae2;
+  border-radius: 7px;
+  box-shadow: 0 5px 16px rgb(31 43 57 / 12%);
+}
+
+.system-block-flow .react-flow__controls-button {
+  width: 29px;
+  height: 29px;
+  color: #56616e;
+  background: transparent;
+  border-bottom-color: #e3e7ec;
+}
+
+.system-block-flow .react-flow__controls-button:hover {
+  color: #9f2026;
+  background: #f7f8fa;
+}
+
+.system-block-flow .react-flow__attribution {
+  color: #9aa3ad;
+  font-size: 8px;
+  background: rgb(255 255 255 / 55%);
+}
