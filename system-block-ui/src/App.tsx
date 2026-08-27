@@ -31,6 +31,11 @@ import {
 } from "./model";
 import { downloadBlob } from "./rendering/download-blob";
 import type { EvaluatedSchematicSheet } from "./rendering/evaluate-schematic";
+import {
+  GENERATED_SYSTEM_MAIN_FILE_NAME,
+  getGeneratedSystemEvaluationFsMap,
+  getGeneratedSystemSourceFiles,
+} from "./rendering/generated-source-files";
 import { SchematicEvaluationCoordinator } from "./schematic-evaluation-coordinator";
 
 interface Notice {
@@ -361,6 +366,8 @@ export function App() {
         "./rendering/evaluate-schematic"
       );
       const rendered = await evaluateGeneratedTsx(generatedArtifacts.tsx, {
+        mainComponentPath: GENERATED_SYSTEM_MAIN_FILE_NAME,
+        fsMap: getGeneratedSystemEvaluationFsMap(generatedArtifacts),
         timeoutMs: 45_000,
         schematicOptions: {
           width: 1400,
@@ -405,19 +412,28 @@ export function App() {
   const copyTsx = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(generatedTsx);
-      notify("Generated TSX copied.", "success");
+      notify(
+        `Copied ${GENERATED_SYSTEM_MAIN_FILE_NAME}. Use Export files to include its required ${generatedArtifacts.systemDiagramModuleFileName} module.`,
+        "success",
+      );
     } catch (error) {
       notify(`Could not copy TSX: ${errorMessage(error)}`, "error");
     }
-  }, [generatedTsx, notify]);
+  }, [generatedArtifacts.systemDiagramModuleFileName, generatedTsx, notify]);
 
-  const downloadTsx = useCallback(() => {
-    downloadBlob(
-      new Blob([generatedTsx], { type: "text/typescript;charset=utf-8" }),
-      "GeneratedSystem.circuit.tsx",
+  const downloadSourceFiles = useCallback(() => {
+    const files = getGeneratedSystemSourceFiles(generatedArtifacts);
+    for (const file of files) {
+      downloadBlob(
+        new Blob([file.source], { type: "text/typescript;charset=utf-8" }),
+        file.fileName,
+      );
+    }
+    notify(
+      `Downloaded ${files.map(({ fileName }) => fileName).join(" and ")}.`,
+      "success",
     );
-    notify("Generated TSX downloaded.", "success");
-  }, [generatedTsx, notify]);
+  }, [generatedArtifacts, notify]);
 
   const downloadPdf = useCallback(async () => {
     if (schematicSheets.length === 0) return;
@@ -455,12 +471,12 @@ export function App() {
           </span>
           <button
             className="secondary-button"
-            onClick={downloadTsx}
+            onClick={downloadSourceFiles}
             type="button"
           >
             <span className="button-content">
               <CodeIcon />
-              Export TSX
+              Export files
             </span>
           </button>
           <button
@@ -554,7 +570,7 @@ export function App() {
           isRendering={isRendering}
           onCopyTsx={() => void copyTsx()}
           onDownloadPdf={() => void downloadPdf()}
-          onDownloadTsx={downloadTsx}
+          onDownloadSourceFiles={downloadSourceFiles}
           onRender={() => void renderSchematic()}
           previewError={previewError}
           resolvedConnections={snapshot.resolvedConnections}

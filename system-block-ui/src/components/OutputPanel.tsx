@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ResolvedConnection } from "../model/types";
+import { GENERATED_SYSTEM_MAIN_FILE_NAME } from "../rendering/generated-source-files";
 import {
   CodeIcon,
   CopyIcon,
@@ -17,7 +18,7 @@ interface OutputPanelProps {
   previewError?: string;
   isRendering: boolean;
   onCopyTsx: () => void;
-  onDownloadTsx: () => void;
+  onDownloadSourceFiles: () => void;
   onRender: () => void;
   onDownloadPdf: () => void;
 }
@@ -39,7 +40,7 @@ export function OutputPanel({
   previewError,
   isRendering,
   onCopyTsx,
-  onDownloadTsx,
+  onDownloadSourceFiles,
   onRender,
   onDownloadPdf,
 }: OutputPanelProps) {
@@ -93,22 +94,22 @@ export function OutputPanel({
           role="tabpanel"
         >
           <div className="code-toolbar">
-            <span>GeneratedSystem.circuit.tsx</span>
+            <span>{GENERATED_SYSTEM_MAIN_FILE_NAME}</span>
             <span className="code-actions">
               <button
-                aria-label="Copy generated TSX"
+                aria-label="Copy main generated TSX"
                 className="icon-button"
                 onClick={onCopyTsx}
-                title="Copy TSX"
+                title="Copy main TSX"
                 type="button"
               >
                 <CopyIcon />
               </button>
               <button
-                aria-label="Download generated TSX"
+                aria-label="Download both generated source files"
                 className="icon-button"
-                onClick={onDownloadTsx}
-                title="Download TSX"
+                onClick={onDownloadSourceFiles}
+                title="Download TSX and system diagram module"
                 type="button"
               >
                 <CodeIcon />

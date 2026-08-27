@@ -417,6 +417,11 @@ describe("catalog and TSX generation", () => {
     expect(first).toContain("<board routingDisabled>");
     expect(first).toContain("PowerManagement_TPS7A2018,");
     expect(first).toContain(
+      'import { SYSTEM_DIAGRAM_SVG } from "./GeneratedSystem.system-diagram"',
+    );
+    expect(first).not.toContain("const SYSTEM_DIAGRAM_SVG");
+    expect(first).not.toContain("<svg");
+    expect(first).toContain(
       "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
     );
     expect(first).toContain('displayName="System Diagram"');
@@ -451,6 +456,9 @@ describe("catalog and TSX generation", () => {
 
     expect(artifacts).toEqual(reversed);
     expect(artifacts.systemDiagramSheetName).toBe("system_diagram_2");
+    expect(artifacts.systemDiagramModuleFileName).toBe(
+      "GeneratedSystem.system-diagram.ts",
+    );
     expect(artifacts.tsx).toContain(
       '<schematicsheet\n      name="system_diagram_2"\n      displayName="System Diagram"\n      sheetIndex={0}\n    >',
     );
@@ -461,6 +469,13 @@ describe("catalog and TSX generation", () => {
       'data-connection-id="power" data-kind="power"',
     );
     expect(artifacts.systemDiagramSvg).not.toContain("__power-summary__");
+    expect(artifacts.systemDiagramModuleSource).toStartWith(
+      "export const SYSTEM_DIAGRAM_SVG = [",
+    );
+    expect(artifacts.systemDiagramModuleSource).toContain(
+      'data-connection-id=\\"power\\" data-kind=\\"power\\"',
+    );
+    expect(artifacts.tsx).not.toContain(artifacts.systemDiagramSvg);
   });
 
   test("always emits a first system diagram sheet for an empty design", () => {
@@ -471,6 +486,9 @@ describe("catalog and TSX generation", () => {
 
     expect(artifacts.systemDiagramSheetName).toBe("system_diagram");
     expect(artifacts.systemDiagramSvg).toContain("No system blocks yet");
+    expect(artifacts.systemDiagramModuleSource).toContain(
+      "No system blocks yet",
+    );
     expect(artifacts.tsx).toContain("sheetIndex={0}");
     expect(artifacts.tsx).toContain(
       "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
