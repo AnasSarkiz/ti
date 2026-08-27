@@ -94,25 +94,12 @@ export type SystemBlockNodeData = {
 
 export type SystemBlockNode = Node<SystemBlockNodeData, "systemBlock">;
 
-export interface PowerSummaryMetadata {
-  /** Underlying logical power links represented by this canvas-only edge. */
-  connectionIds: readonly string[];
-  rootBlockId: string;
-  targetBlockId: string;
-  blockCount: number;
-  loadCount: number;
-  linkCount: number;
-  traceCount: number;
-}
-
 export type SystemBlockConnectionData = {
   logical: LogicalConnection;
   resolved: ResolvedConnection;
   kind: ConnectionKind;
   label: string;
   color: string;
-  /** Present only on the synthetic, visual-only power-network edge. */
-  powerSummary?: PowerSummaryMetadata;
 };
 
 export type SystemBlockConnection = Edge<

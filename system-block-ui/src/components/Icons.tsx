@@ -31,6 +31,20 @@ export const CircuitIcon = (props: IconProps) => (
   </Icon>
 );
 
+export const SchematicIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <circle cx="3" cy="12" fill="currentColor" r="1.5" />
+    <circle cx="21" cy="12" fill="currentColor" r="1.5" />
+    <path
+      d="M4.5 12H7l1.25-3 2.5 6 2.5-6 2.5 6L17 12h2.5"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+  </Icon>
+);
+
 export const SearchIcon = (props: IconProps) => (
   <Icon {...props}>
     <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.8" />

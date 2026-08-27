@@ -60,7 +60,7 @@ const connection = ({
 });
 
 describe("system diagram SVG", () => {
-  test("is deterministic, escapes XML, and summarizes a power network", () => {
+  test("is deterministic, escapes XML, and renders every resolved connection", () => {
     const catalog = [
       makeDefinition("source", 'Main <Power> & "Battery"', ["power"]),
       makeDefinition("controller", "Controller `${unsafe}`", ["power", "data"]),
@@ -126,9 +126,17 @@ describe("system diagram SVG", () => {
     expect(forward).toContain('data-block-id="source&amp;one"');
     expect(forward).toContain("Main &lt;Power&gt; &amp; &quot;Battery&quot;");
     expect(forward).not.toContain("Main <Power>");
-    expect(forward.match(/data-kind="power"/g)).toHaveLength(1);
+    expect(forward.match(/data-kind="power"/g)).toHaveLength(2);
     expect(forward.match(/data-kind="data"/g)).toHaveLength(1);
-    expect(forward).toContain("Power · 2 loads");
+    expect(forward).toContain(
+      'data-connection-id="power-source-controller" data-kind="power"',
+    );
+    expect(forward).toContain(
+      'data-connection-id="power-source-sensor" data-kind="power"',
+    );
+    expect(forward).not.toContain("__power-summary__");
+    expect(forward).toContain("3 resolved semantic connections");
+    expect(forward).toContain("3 blocks · 3 resolved links");
     expect(forward).toContain("Data · I²C");
   });
 
@@ -173,6 +181,6 @@ describe("system diagram SVG", () => {
 
     expect(svg).toContain('viewBox="0 0 900 520"');
     expect(svg).toContain("No system blocks yet");
-    expect(svg).toContain("0 blocks · 0 visible links");
+    expect(svg).toContain("0 blocks · 0 resolved links");
   });
 });

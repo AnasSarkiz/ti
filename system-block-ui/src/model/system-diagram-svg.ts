@@ -127,149 +127,31 @@ interface DiagramConnection {
   label: string;
 }
 
-interface PowerLink {
-  id: string;
-  fromBlockId: string;
-  toBlockId: string;
-  traceCount: number;
-}
-
-const getPowerComponents = (links: readonly PowerLink[]): PowerLink[][] => {
-  const incident = new Map<string, PowerLink[]>();
-  for (const link of links) {
-    for (const blockId of [link.fromBlockId, link.toBlockId]) {
-      const blockLinks = incident.get(blockId) ?? [];
-      blockLinks.push(link);
-      incident.set(blockId, blockLinks);
-    }
-  }
-
-  const pending = new Set(links);
-  const components: PowerLink[][] = [];
-  for (const seed of [...links].sort((a, b) => compareStrings(a.id, b.id))) {
-    if (!pending.has(seed)) continue;
-    const component: PowerLink[] = [];
-    const queue = [seed.fromBlockId, seed.toBlockId];
-    const visited = new Set<string>();
-
-    while (queue.length > 0) {
-      const blockId = queue.shift();
-      if (!blockId || visited.has(blockId)) continue;
-      visited.add(blockId);
-      for (const link of incident.get(blockId) ?? []) {
-        if (!pending.delete(link)) continue;
-        component.push(link);
-        queue.push(link.fromBlockId, link.toBlockId);
-      }
-    }
-
-    components.push(component.sort((a, b) => compareStrings(a.id, b.id)));
-  }
-  return components;
-};
-
-const countDownstreamBlocks = (
-  startBlockId: string,
-  outgoing: ReadonlyMap<string, readonly PowerLink[]>,
-): number => {
-  const visited = new Set<string>();
-  const queue = [startBlockId];
-  while (queue.length > 0) {
-    const blockId = queue.shift();
-    if (!blockId || visited.has(blockId)) continue;
-    visited.add(blockId);
-    for (const link of outgoing.get(blockId) ?? []) {
-      queue.push(link.toBlockId);
-    }
-  }
-  return visited.size;
-};
-
-const summarizePowerConnections = (
-  resolvedConnections: readonly ResolvedConnection[],
-): DiagramConnection[] => {
-  const powerLinks: PowerLink[] = resolvedConnections
-    .filter((connection) => connection.kind === "power")
-    .map((connection) => ({
-      id: connection.id,
-      fromBlockId: connection.fromBlockId,
-      toBlockId: connection.toBlockId,
-      traceCount: connection.traces.length,
-    }));
-  const occupiedIds = new Set(resolvedConnections.map(({ id }) => id));
-
-  return getPowerComponents(powerLinks).map((component) => {
-    const incomingBlockIds = new Set(component.map((link) => link.toBlockId));
-    const outgoing = new Map<string, PowerLink[]>();
-    for (const link of component) {
-      const links = outgoing.get(link.fromBlockId) ?? [];
-      links.push(link);
-      outgoing.set(link.fromBlockId, links);
-    }
-
-    const sourceBlockIds = [...outgoing.keys()].sort(compareStrings);
-    const rootBlockId =
-      sourceBlockIds.find((blockId) => !incomingBlockIds.has(blockId)) ??
-      sourceBlockIds[0];
-    if (!rootBlockId)
-      throw new Error("Cannot summarize an empty power network.");
-
-    const representative = [...(outgoing.get(rootBlockId) ?? [])].sort(
-      (a, b) =>
-        countDownstreamBlocks(b.toBlockId, outgoing) -
-          countDownstreamBlocks(a.toBlockId, outgoing) ||
-        compareStrings(a.toBlockId, b.toBlockId) ||
-        compareStrings(a.id, b.id),
-    )[0];
-    if (!representative) {
-      throw new Error(`Power root "${rootBlockId}" has no outgoing link.`);
-    }
-
-    const loadCount = new Set(component.map((link) => link.toBlockId)).size;
-    const idBase = `__power-summary__:${encodeURIComponent(rootBlockId)}`;
-    let id = idBase;
-    let suffix = 2;
-    while (occupiedIds.has(id)) {
-      id = `${idBase}:${suffix}`;
-      suffix += 1;
-    }
-    occupiedIds.add(id);
-
-    return {
-      id,
-      fromBlockId: rootBlockId,
-      toBlockId: representative.toBlockId,
-      kind: "power",
-      label: `Power · ${loadCount} ${loadCount === 1 ? "load" : "loads"}`,
-    };
-  });
-};
-
 const getVisibleConnections = (
   resolvedConnections: readonly ResolvedConnection[],
 ): readonly DiagramConnection[] => {
-  const dataConnections: DiagramConnection[] = resolvedConnections
-    .filter((connection) => connection.kind === "data")
-    .map((connection) => ({
-      id: connection.id,
-      fromBlockId: connection.fromBlockId,
-      toBlockId: connection.toBlockId,
-      kind: "data",
-      label: connection.protocol
-        ? `Data · ${formatProtocolLabel(connection.protocol)}`
-        : "Data",
-    }));
-
-  return [
-    ...summarizePowerConnections(resolvedConnections),
-    ...dataConnections,
-  ].sort(
-    (a, b) =>
-      compareStrings(a.kind, b.kind) ||
-      compareStrings(a.fromBlockId, b.fromBlockId) ||
-      compareStrings(a.toBlockId, b.toBlockId) ||
-      compareStrings(a.id, b.id),
-  );
+  return resolvedConnections
+    .map(
+      (connection): DiagramConnection => ({
+        id: connection.id,
+        fromBlockId: connection.fromBlockId,
+        toBlockId: connection.toBlockId,
+        kind: connection.kind,
+        label:
+          connection.kind === "power"
+            ? "Power"
+            : connection.protocol
+              ? `Data · ${formatProtocolLabel(connection.protocol)}`
+              : "Data",
+      }),
+    )
+    .sort(
+      (a, b) =>
+        compareStrings(a.kind, b.kind) ||
+        compareStrings(a.fromBlockId, b.fromBlockId) ||
+        compareStrings(a.toBlockId, b.toBlockId) ||
+        compareStrings(a.id, b.id),
+    );
 };
 
 const prepareDiagramBlocks = (
@@ -446,14 +328,14 @@ export function renderSystemDiagramSvg({
   const lines = [
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-labelledby="system-diagram-title system-diagram-description">`,
     `  <title id="system-diagram-title">${escapeXml(normalizedTitle)}</title>`,
-    `  <desc id="system-diagram-description">${diagramBlocks.length} system block${diagramBlocks.length === 1 ? "" : "s"} with ${connections.length} visible semantic connection${connections.length === 1 ? "" : "s"}.</desc>`,
+    `  <desc id="system-diagram-description">${diagramBlocks.length} system block${diagramBlocks.length === 1 ? "" : "s"} with ${connections.length} resolved semantic connection${connections.length === 1 ? "" : "s"}.</desc>`,
     "  <defs>",
     `    <marker id="system-arrow-power" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="${POWER_COLOR}"/></marker>`,
     `    <marker id="system-arrow-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="${DATA_COLOR}"/></marker>`,
     "  </defs>",
     `  <rect width="${width}" height="${height}" fill="#f8fafc"/>`,
     `  <text x="${CONTENT_PADDING}" y="42" fill="#1f2937" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">${escapeXml(normalizedTitle)}</text>`,
-    `  <text x="${CONTENT_PADDING}" y="62" fill="#64748b" font-family="Arial, Helvetica, sans-serif" font-size="11">${diagramBlocks.length} block${diagramBlocks.length === 1 ? "" : "s"} · ${connections.length} visible link${connections.length === 1 ? "" : "s"}</text>`,
+    `  <text x="${CONTENT_PADDING}" y="62" fill="#64748b" font-family="Arial, Helvetica, sans-serif" font-size="11">${diagramBlocks.length} block${diagramBlocks.length === 1 ? "" : "s"} · ${connections.length} resolved link${connections.length === 1 ? "" : "s"}</text>`,
     `  <circle cx="${width - 210}" cy="42" r="5" fill="${POWER_COLOR}"/><text x="${width - 198}" y="46" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Power</text>`,
     `  <circle cx="${width - 112}" cy="42" r="5" fill="${DATA_COLOR}"/><text x="${width - 100}" y="46" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Data</text>`,
     `  <path d="M ${CONTENT_PADDING} ${HEADER_HEIGHT} H ${width - CONTENT_PADDING}" stroke="#dbe2ea"/>`,

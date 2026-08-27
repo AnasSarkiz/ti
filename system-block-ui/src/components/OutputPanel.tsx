@@ -1,13 +1,15 @@
 import { useState } from "react";
 import type { ResolvedConnection } from "../model/types";
+import { GENERATED_SYSTEM_MAIN_FILE_NAME } from "../rendering/generated-source-files";
 import {
-  CircuitIcon,
   CodeIcon,
   CopyIcon,
   PdfIcon,
+  SchematicIcon,
   SparkIcon,
   WarningIcon,
 } from "./Icons";
+import { TsxCode } from "./TsxCode";
 
 interface OutputPanelProps {
   tsx: string;
@@ -16,7 +18,7 @@ interface OutputPanelProps {
   previewError?: string;
   isRendering: boolean;
   onCopyTsx: () => void;
-  onDownloadTsx: () => void;
+  onDownloadSourceFiles: () => void;
   onRender: () => void;
   onDownloadPdf: () => void;
 }
@@ -38,7 +40,7 @@ export function OutputPanel({
   previewError,
   isRendering,
   onCopyTsx,
-  onDownloadTsx,
+  onDownloadSourceFiles,
   onRender,
   onDownloadPdf,
 }: OutputPanelProps) {
@@ -79,7 +81,7 @@ export function OutputPanel({
           role="tab"
           type="button"
         >
-          <CircuitIcon />
+          <SchematicIcon />
           Schematic
         </button>
       </div>
@@ -92,31 +94,29 @@ export function OutputPanel({
           role="tabpanel"
         >
           <div className="code-toolbar">
-            <span>GeneratedSystem.circuit.tsx</span>
+            <span>{GENERATED_SYSTEM_MAIN_FILE_NAME}</span>
             <span className="code-actions">
               <button
-                aria-label="Copy generated TSX"
+                aria-label="Copy main generated TSX"
                 className="icon-button"
                 onClick={onCopyTsx}
-                title="Copy TSX"
+                title="Copy main TSX"
                 type="button"
               >
                 <CopyIcon />
               </button>
               <button
-                aria-label="Download generated TSX"
+                aria-label="Download both generated source files"
                 className="icon-button"
-                onClick={onDownloadTsx}
-                title="Download TSX"
+                onClick={onDownloadSourceFiles}
+                title="Download TSX and system diagram module"
                 type="button"
               >
                 <CodeIcon />
               </button>
             </span>
           </div>
-          <pre className="code-view">
-            <code>{tsx}</code>
-          </pre>
+          <TsxCode source={tsx} />
           <div className="resolution-list">
             <h3 className="resolution-title">Automatic resolution</h3>
             {resolvedConnections.length === 0 ? (
