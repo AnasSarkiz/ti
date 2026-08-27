@@ -3,7 +3,9 @@ import { describe, expect, test } from "bun:test";
 import {
   calculateSchematicPdfPageLayout,
   normalizeSvgTextForPdf,
+  renderSchematicPdfSheetOverlay,
 } from "./export-pdf";
+import type { jsPDF } from "jspdf";
 import {
   SCHEMATIC_SVG_HEIGHT,
   SCHEMATIC_SVG_WIDTH,
@@ -135,5 +137,86 @@ describe("schematic PDF text normalization", () => {
     expect(reference.attributes.has("stroke-width")).toBe(false);
     expect(reference.attributes.has("paint-order")).toBe(false);
     expect(reference.attributes.get("fill")).toBe("rgb(15, 15, 15)");
+  });
+});
+
+describe("schematic PDF sheet overlay", () => {
+  test("renders the title on the left and compact page count on the right", () => {
+    const calls: Array<{
+      text: string;
+      x: number;
+      y: number;
+      options?: { align?: string };
+    }> = [];
+    const backdrops: Array<[number, number, number, number, string]> = [];
+    const pdf = {
+      getTextWidth: (text: string) => text.length,
+      setFont: () => pdf,
+      setFontSize: () => pdf,
+      setFillColor: () => pdf,
+      setTextColor: () => pdf,
+      rect: (
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        style: string,
+      ) => {
+        backdrops.push([x, y, width, height, style]);
+        return pdf;
+      },
+      text: (
+        text: string,
+        x: number,
+        y: number,
+        options?: { align?: string },
+      ) => {
+        calls.push({ text, x, y, options });
+        return pdf;
+      },
+    } as unknown as jsPDF;
+
+    renderSchematicPdfSheetOverlay({
+      pdf,
+      title: "Power supply",
+      pageNumber: 1,
+      pageCount: 6,
+      pageWidthMm: 297,
+    });
+
+    expect(calls).toEqual([
+      { text: "Power supply", x: 16, y: 16, options: undefined },
+      { text: "1/6", x: 281, y: 16, options: { align: "right" } },
+    ]);
+    expect(backdrops).toEqual([
+      [15, 11.5, 14, 5.5, "F"],
+      [277, 11.5, 5, 5.5, "F"],
+    ]);
+  });
+
+  test("truncates a title before it can collide with the page count", () => {
+    const calls: string[] = [];
+    const pdf = {
+      getTextWidth: (text: string) => text.length,
+      setFont: () => pdf,
+      setFontSize: () => pdf,
+      setFillColor: () => pdf,
+      setTextColor: () => pdf,
+      rect: () => pdf,
+      text: (text: string) => {
+        calls.push(text);
+        return pdf;
+      },
+    } as unknown as jsPDF;
+
+    renderSchematicPdfSheetOverlay({
+      pdf,
+      title: "A very long schematic sheet name",
+      pageNumber: 10,
+      pageCount: 12,
+      pageWidthMm: 49,
+    });
+
+    expect(calls).toEqual(["A ver...", "10/12"]);
   });
 });
