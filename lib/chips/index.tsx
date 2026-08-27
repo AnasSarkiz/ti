@@ -98,6 +98,7 @@ export { MSPM0G3507SPMR } from "./MSPM0G3507SPMR.circuit.tsx";
 export { SN65HVD1473DGSR } from "./SN65HVD1473DGSR.circuit.tsx";
 export { TMP1075DSGR } from "./TMP1075DSGR.circuit.tsx";
 export { W25Q128JVSIQ } from "./W25Q128JVSIQ.circuit.tsx";
+export { PGA300ARHHR } from "./PGA300ARHHR.circuit.tsx";
 export { TPS61299DRLR } from "./TPS61299DRLR.circuit.tsx";
 export { TPS63802DLAR } from "./TPS63802DLAR.circuit.tsx";
 export { TPS7A0230PDBVR } from "./TPS7A0230PDBVR.circuit.tsx";

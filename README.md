@@ -262,6 +262,7 @@ The package currently exports these subcircuit components:
 - `EnvironmentalSensor_HDC3022`
 - `PowerMonitor_INA237`
 - `InstrumentationAmplifier_INA350`
+- `PressureTransmitter_PGA300`
 - `IsolatedRS485_ISOW7841`
 - `ClockBuffer_LMK1C1104`
 - `AudioAmplifier_TAS2505`
@@ -328,6 +329,7 @@ chip is listed individually below, including whether it supports a
 | `MSP430F5229` | `-` | `MSP430F5229IRGCR` |
 | `MSPM0G3507` | `lqfp_64` | `MSPM0G3507SPMR` |
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
+| `PGA300ARHHR` | `-` | `PGA300ARHHR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
 | `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
