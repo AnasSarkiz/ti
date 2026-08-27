@@ -24,9 +24,9 @@ import {
 } from "./editor";
 import {
   type BlockInstance,
+  createConsumerWirelessModuleDesign,
   generateSystemDesignArtifacts,
   getSubcircuitCatalog,
-  type LogicalConnection,
   resolveDesignConnections,
   type SubcircuitDefinition,
 } from "./model";
@@ -45,117 +45,6 @@ interface Notice {
 }
 
 type RenderedSchematicSheet = EvaluatedSchematicSheet & SchematicSheetPreview;
-
-const componentId = (
-  catalog: readonly SubcircuitDefinition[],
-  componentName: string,
-): string => {
-  const definition = catalog.find(
-    (candidate) => candidate.componentName === componentName,
-  );
-  if (!definition)
-    throw new Error(`Missing catalog entry for ${componentName}`);
-  return definition.id;
-};
-
-const createStarterDesign = (
-  catalog: readonly SubcircuitDefinition[],
-): SystemBlockInitialGraph => {
-  const blocks: BlockInstance[] = [
-    {
-      id: "charger",
-      name: "charger",
-      definitionId: componentId(catalog, "BatteryManagement_BQ24074"),
-      position: { x: 40, y: 250 },
-    },
-    {
-      id: "power_1v8",
-      name: "power_1v8",
-      definitionId: componentId(catalog, "PowerManagement_TPS7A2018"),
-      position: { x: 325, y: 100 },
-    },
-    {
-      id: "bluetooth_controller",
-      name: "bluetooth_controller",
-      definitionId: componentId(catalog, "BluetoothController_CC2564C"),
-      position: { x: 630, y: 35 },
-    },
-    {
-      id: "bluetooth_host",
-      name: "bluetooth_host",
-      definitionId: componentId(catalog, "BluetoothAudioHost_MSP430F5229"),
-      position: { x: 625, y: 390 },
-    },
-    {
-      id: "audio_amplifier",
-      name: "audio_amplifier",
-      definitionId: componentId(catalog, "AudioAmplifier_TAS2505"),
-      position: { x: 970, y: 220 },
-    },
-  ];
-
-  const connections: LogicalConnection[] = [
-    {
-      id: "power_charger_to_ldo",
-      fromBlockId: "charger",
-      toBlockId: "power_1v8",
-      kind: "power",
-    },
-    {
-      id: "power_charger_to_radio",
-      fromBlockId: "charger",
-      toBlockId: "bluetooth_controller",
-      kind: "power",
-    },
-    {
-      id: "power_charger_to_amplifier",
-      fromBlockId: "charger",
-      toBlockId: "audio_amplifier",
-      kind: "power",
-    },
-    {
-      id: "power_ldo_to_radio_logic",
-      fromBlockId: "power_1v8",
-      toBlockId: "bluetooth_controller",
-      kind: "power",
-    },
-    {
-      id: "power_ldo_to_host",
-      fromBlockId: "power_1v8",
-      toBlockId: "bluetooth_host",
-      kind: "power",
-    },
-    {
-      id: "power_ldo_to_amplifier_logic",
-      fromBlockId: "power_1v8",
-      toBlockId: "audio_amplifier",
-      kind: "power",
-    },
-    {
-      id: "data_hci",
-      fromBlockId: "bluetooth_host",
-      toBlockId: "bluetooth_controller",
-      kind: "data",
-      protocol: "hci-uart",
-    },
-    {
-      id: "data_audio_control",
-      fromBlockId: "bluetooth_host",
-      toBlockId: "audio_amplifier",
-      kind: "data",
-      protocol: "i2c",
-    },
-    {
-      id: "data_digital_audio",
-      fromBlockId: "bluetooth_controller",
-      toBlockId: "audio_amplifier",
-      kind: "data",
-      protocol: "i2s",
-    },
-  ];
-
-  return { blocks, connections };
-};
 
 const instanceBaseName = (componentName: string): string =>
   componentName
@@ -183,7 +72,10 @@ const errorMessage = (error: unknown): string =>
 
 export function App() {
   const catalog = useMemo(() => getSubcircuitCatalog(), []);
-  const starterDesign = useMemo(() => createStarterDesign(catalog), [catalog]);
+  const starterDesign: SystemBlockInitialGraph = useMemo(
+    () => createConsumerWirelessModuleDesign(catalog),
+    [catalog],
+  );
   const canvasRef = useRef<HTMLDivElement>(null);
   const controllerRef = useRef<SystemBlockEditorController | undefined>(
     undefined,
@@ -372,12 +264,30 @@ export function App() {
     setIsRendering(true);
     setPreviewError(undefined);
     try {
-      const { evaluateGeneratedTsx } = await import(
-        "./rendering/evaluate-schematic"
-      );
+      const [
+        { evaluateGeneratedTsx },
+        { createLocalTiPackageEvaluationFsMap },
+      ] = await Promise.all([
+        import("./rendering/evaluate-schematic"),
+        import("./rendering/local-ti-package-files"),
+      ]);
+      const selectedDefinitions = snapshot.blocks.map((block) => {
+        const definition = catalog.find(
+          (candidate) => candidate.id === block.definitionId,
+        );
+        if (!definition) {
+          throw new Error(
+            `Cannot render unknown subcircuit ${block.definitionId}.`,
+          );
+        }
+        return definition;
+      });
       const rendered = await evaluateGeneratedTsx(generatedArtifacts.tsx, {
         mainComponentPath: GENERATED_SYSTEM_MAIN_FILE_NAME,
-        fsMap: getGeneratedSystemEvaluationFsMap(generatedArtifacts),
+        fsMap: {
+          ...getGeneratedSystemEvaluationFsMap(generatedArtifacts),
+          ...createLocalTiPackageEvaluationFsMap(selectedDefinitions),
+        },
         timeoutMs: 45_000,
         schematicOptions: {
           width: 1400,
@@ -408,14 +318,17 @@ export function App() {
     } finally {
       if (coordinator.isCurrent(request)) setIsRendering(false);
     }
-  }, [generatedArtifacts, notify]);
+  }, [catalog, generatedArtifacts, notify, snapshot.blocks]);
 
   const resetDesign = useCallback(async () => {
     invalidateSchematic();
     try {
       await controllerRef.current?.loadInitialGraph(starterDesign);
       await controllerRef.current?.zoomToFit();
-      notify("Restored the Bluetooth audio starter design.", "success");
+      notify(
+        "Restored the Consumer wireless module starter design.",
+        "success",
+      );
     } catch (error) {
       notify(errorMessage(error), "error");
     }

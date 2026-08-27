@@ -44,6 +44,13 @@ example stays intentionally small: it composes and electrically connects the
 reusable reference subcircuits for the power supply, communication interface,
 light driver, MCU, position feedback, and motor driver blocks.
 
+The [`ConsumerWirelessModule.circuit.tsx`](examples/ConsumerWirelessModule.circuit.tsx)
+example assembles the seven reviewed references behind TI's Consumer wireless
+module diagram. Its protected 5 V input feeds a 3.3 V buck rail, which powers
+the LVDS interface, logic buffer, and temperature sensor; the logic signal then
+flows through the LVDS driver and two-channel I/O protection. The antenna feed,
+I2C bus, and protected differential pair remain explicit parent-level ports.
+
 ## System Block Builder
 
 The standalone [`system-block-ui`](system-block-ui/README.md) app provides a
@@ -53,6 +60,10 @@ curated semantic catalog resolves compatible voltage rails and protocols into
 exact tscircuit selectors. The app generates example-style TSX and can evaluate
 it with PCB and routing work disabled to produce a schematic preview and
 downloadable PDF.
+
+The default editor graph is the same seven-block Consumer wireless module, so
+its high-level Power, GPIO, and LVDS edges generate the same reviewed internal
+selectors as the complete example.
 
 [Open the deployed TI System Block Builder](https://ti-system-block-ui.vercel.app/).
 
