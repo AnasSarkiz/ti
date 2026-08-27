@@ -105,15 +105,6 @@ button {
   white-space: nowrap;
 }
 
-.brand-subtitle {
-  margin-top: 2px;
-  color: #9ca6b2;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
 .topbar-actions {
   gap: 8px;
 }
@@ -253,12 +244,11 @@ button {
 
 .palette-card {
   display: grid;
-  grid-template-columns: 30px minmax(0, 1fr) auto;
-  gap: 9px;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   width: 100%;
   margin-bottom: 5px;
-  padding: 9px;
+  padding: 10px 11px;
   text-align: left;
   background: white;
   border: 1px solid #e1e5ea;
@@ -287,57 +277,19 @@ button {
   transform: none;
 }
 
-.block-glyph {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  color: #b2252b;
-  font-size: 11px;
-  font-weight: 800;
-  background: #fbebec;
-  border-radius: 6px;
-}
-
 .block-copy {
+  display: block;
   min-width: 0;
 }
 
 .block-title {
-  overflow: hidden;
+  display: block;
   color: #2a323c;
   font-size: 11px;
   font-weight: 680;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.block-meta {
-  overflow: hidden;
-  margin-top: 3px;
-  color: #87919d;
-  font-size: 9.5px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.port-count {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  color: #747f8c;
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.port-count::before {
-  width: 5px;
-  height: 5px;
-  content: "";
-  background: #5d9cd8;
-  border-radius: 50%;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .canvas-panel {
@@ -537,13 +489,57 @@ button {
   margin: 0;
   padding: 16px;
   overflow: auto;
-  color: #c8d3df;
+  color: #d8e0e9;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-size: 10.5px;
   line-height: 1.6;
   tab-size: 2;
-  white-space: pre;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
   background: #20252c;
+}
+
+.code-view:focus-visible {
+  outline: 2px solid #6cbde1;
+  outline-offset: -2px;
+}
+
+.code-view code {
+  font: inherit;
+}
+
+.syntax-comment {
+  color: #94a0ad;
+  font-style: italic;
+}
+
+.syntax-keyword,
+.syntax-operator {
+  color: #ff8293;
+}
+
+.syntax-string {
+  color: #acd48f;
+}
+
+.syntax-number {
+  color: #e9bc7b;
+}
+
+.syntax-tag {
+  color: #6fc9e8;
+}
+
+.syntax-attribute {
+  color: #d0b1ff;
+}
+
+.syntax-type {
+  color: #f4d17e;
+}
+
+.syntax-punctuation {
+  color: #aeb9c5;
 }
 
 .resolution-list {
@@ -887,10 +883,6 @@ button {
   }
 
   .output-panel {
-    display: none;
-  }
-
-  .brand-subtitle {
     display: none;
   }
 }

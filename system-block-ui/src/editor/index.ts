@@ -2,14 +2,12 @@ export {
   createSystemBlockEditor,
   SystemBlockEditorController,
 } from "./create-system-block-editor";
-export { getVisibleSystemBlockConnections } from "./power-aggregation";
 export { SemanticEdge } from "./SemanticEdge";
 export { SystemBlockNodeView } from "./SystemBlockNodeView";
 export type {
   ConnectBlocksOptions,
   CreateSystemBlockEditorOptions,
   GraphChangeListener,
-  PowerSummaryMetadata,
   RejectedConnection,
   SemanticInterfaceSummary,
   SystemBlockConnection,

@@ -1,13 +1,14 @@
 import { useState } from "react";
 import type { ResolvedConnection } from "../model/types";
 import {
-  CircuitIcon,
   CodeIcon,
   CopyIcon,
   PdfIcon,
+  SchematicIcon,
   SparkIcon,
   WarningIcon,
 } from "./Icons";
+import { TsxCode } from "./TsxCode";
 
 interface OutputPanelProps {
   tsx: string;
@@ -79,7 +80,7 @@ export function OutputPanel({
           role="tab"
           type="button"
         >
-          <CircuitIcon />
+          <SchematicIcon />
           Schematic
         </button>
       </div>
@@ -114,9 +115,7 @@ export function OutputPanel({
               </button>
             </span>
           </div>
-          <pre className="code-view">
-            <code>{tsx}</code>
-          </pre>
+          <TsxCode source={tsx} />
           <div className="resolution-list">
             <h3 className="resolution-title">Automatic resolution</h3>
             {resolvedConnections.length === 0 ? (

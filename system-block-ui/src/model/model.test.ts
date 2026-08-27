@@ -457,7 +457,10 @@ describe("catalog and TSX generation", () => {
     expect(artifacts.tsx).toContain(
       "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
     );
-    expect(artifacts.systemDiagramSvg).toContain("Power · 1 load");
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="power" data-kind="power"',
+    );
+    expect(artifacts.systemDiagramSvg).not.toContain("__power-summary__");
   });
 
   test("always emits a first system diagram sheet for an empty design", () => {

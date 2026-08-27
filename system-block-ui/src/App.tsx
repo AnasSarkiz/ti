@@ -444,8 +444,7 @@ export function App() {
             <CircuitIcon />
           </span>
           <span className="brand-copy">
-            <h1 className="brand-title">TI System Block Builder</h1>
-            <span className="brand-subtitle">tscircuit semantic composer</span>
+            <h1 className="brand-title">tscircuit TI Block Builder (Demo)</h1>
           </span>
         </div>
 
