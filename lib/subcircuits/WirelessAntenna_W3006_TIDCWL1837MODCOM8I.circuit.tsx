@@ -1,5 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
+import { W3006 } from "../chips/W3006.circuit.tsx";
 
 /**
  * ANT1 branch from TI TIDC-WL1837MODCOM8I sheet 2.
@@ -65,21 +66,7 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       }}
     />
 
-    <chip
-      name="ANT1"
-      manufacturerPartNumber="W3006"
-      pinLabels={{ pin1: "FEED", pin2: "NC" }}
-      showPinAliases={false}
-      noConnect={["NC"]}
-      schX={2.6}
-      schY={-0.2}
-      schWidth={1.2}
-      schHeight={0.4}
-      schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: ["FEED"] },
-        rightSide: { direction: "top-to-bottom", pins: ["NC"] },
-      }}
-    />
+    <W3006 name="ANT1" schX={2.6} schY={-0.2} />
 
     <trace
       from=".C5 > .pin2"

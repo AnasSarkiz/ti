@@ -1,25 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-
-const TPS25910RSA_PIN_LABELS = {
-  pin1: ["IN1"],
-  pin2: ["IN2"],
-  pin3: ["IN3"],
-  pin4: ["GATE"],
-  pin5: ["GND1"],
-  pin6: ["GND2"],
-  pin7: ["ILIM"],
-  pin8: ["GND3"],
-  pin9: ["GND4"],
-  pin10: ["OUT1"],
-  pin11: ["OUT2"],
-  pin12: ["OUT3"],
-  pin13: ["GND5"],
-  pin14: ["GND6"],
-  pin15: ["FLT_NOT"],
-  pin16: ["EN_NOT"],
-  pin17: ["PWPD"],
-} as const;
+import { TPS25910RSA } from "../chips/TPS25910RSA.circuit.tsx";
 
 /**
  * TIDA-00890 sheet-3 VBUS input-protection stage.
@@ -33,36 +14,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
   props: SubcircuitProps,
 ) => (
   <subcircuit routingDisabled schMaxTraceDistance="3.6mm" {...props}>
-    <chip
-      name="U7"
-      manufacturerPartNumber="TPS25910RSA"
-      pinLabels={TPS25910RSA_PIN_LABELS}
-      showPinAliases={false}
-      schX={3.15}
-      schY={0.03}
-      schWidth={2}
-      schHeight={1.8}
-      schPinArrangement={{
-        leftSide: {
-          direction: "top-to-bottom",
-          pins: [
-            "EN_NOT",
-            "FLT_NOT",
-            "OUT1",
-            "OUT2",
-            "OUT3",
-            "GND6",
-            "GND5",
-            "GND4",
-          ],
-        },
-        rightSide: {
-          direction: "top-to-bottom",
-          pins: ["IN1", "IN2", "IN3", "GATE", "GND1", "GND2", "GND3", "ILIM"],
-        },
-        bottomSide: { direction: "left-to-right", pins: ["PWPD"] },
-      }}
-    />
+    <TPS25910RSA name="U7" schX={3.15} schY={0.03} />
 
     <mosfet
       name="Q1"

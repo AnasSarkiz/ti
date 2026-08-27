@@ -357,13 +357,19 @@ chip is listed individually below, including whether it supports a
 | `OPT3001` | `-` | `OPT3001IDNPRQ1` |
 | `PGA300ARHHR` | `-` | `PGA300ARHHR` |
 | `SN65HVD1473` | `vssop_10` | `SN65HVD1473DGSR` |
+| `SN65LVDS31D` | `-` | `SN65LVDS31D` |
+| `SN74LVC1G34DBVR` | `-` | `SN74LVC1G34DBVR` |
 | `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TLV316` | `-` | `TLV316QDBVTQ1` |
 | `TAS2505` | `-` | `TAS2505` |
+| `TMP103AYFF` | `-` | `TMP103AYFF` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
+| `TPD2E009DRTR` | `-` | `TPD2E009DRTR` |
 | `TPS22919` | `-` | `TPS22919` |
+| `TPS25910RSA` | `-` | `TPS25910RSA` |
+| `TPS62086RLTR` | `-` | `TPS62086RLTR` |
 | `TPS6293` | `-` | `TPS6293` |
 | `TPS61299X` | `sot_563_6` | `TPS61299DRLR` |
 | `TPS63802` | `vson_hr_10` | `TPS63802DLAR` |
@@ -375,6 +381,7 @@ chip is listed individually below, including whether it supports a
 | `TPSM82823` | `-` | `TPSM82823` |
 | `TXB0104` | `vqfn_14_ep_3p5x3p5` | `TXB0104RGYR` |
 | `TXS0102` | `vssop_8` | `TXS0102DCUR` |
+| `W3006` | `-` | `W3006` |
 
 Rows with `-` are direct chip exports and do not currently expose a
 `footprintVariant` prop. For the wrapper exports, the underlying component

@@ -1,15 +1,6 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
-
-const TPS62086_PIN_LABELS = {
-  pin1: ["EN"],
-  pin2: ["PG"],
-  pin3: ["FB"],
-  pin4: ["VOS"],
-  pin5: ["GND"],
-  pin6: ["SW"],
-  pin7: ["VIN"],
-} as const;
+import { TPS62086RLTR } from "../chips/TPS62086RLTR.circuit.tsx";
 
 /**
  * TIDA-00399 sheet-5 3.3 V TPS62086 buck stage.
@@ -20,23 +11,7 @@ const TPS62086_PIN_LABELS = {
  */
 export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
   <subcircuit routingDisabled {...props} schTraceAutoLabelEnabled={false}>
-    <chip
-      name="U3P3"
-      manufacturerPartNumber="TPS62086RLTR"
-      pinLabels={TPS62086_PIN_LABELS}
-      showPinAliases={false}
-      schX={0}
-      schY={0}
-      schWidth={1.77}
-      schHeight={1.4}
-      schPinArrangement={{
-        leftSide: { direction: "top-to-bottom", pins: ["VIN", "EN"] },
-        rightSide: {
-          direction: "top-to-bottom",
-          pins: ["SW", "VOS", "FB", "PG", "GND"],
-        },
-      }}
-    />
+    <TPS62086RLTR name="U3P3" schX={0} schY={0} />
 
     <capacitor
       name="C1_3P3"
