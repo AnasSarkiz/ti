@@ -1,5 +1,6 @@
 import {
   AM62L32,
+  ATL431LI,
   BQ24072,
   BQ24073,
   BQ24074,
@@ -30,6 +31,7 @@ import {
   LM74202Q1,
   LM50HVQ1,
   LMK1C1104,
+  LMV324A,
   LP5892Q1,
   MSP430G2230ID,
   MSP430G2332IPW20,
@@ -41,6 +43,7 @@ import {
   OPT3001,
   PGA300ARHHR,
   SN65HVD1473,
+  SMPP2_03,
   SN65LVDS31D,
   SN74LVC1G34DBVR,
   TAS2505,
@@ -66,6 +69,7 @@ import {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS7A24,
   TPS7E81Q1,
   TPS78230DRVR,
   TPS92638,
@@ -153,11 +157,21 @@ import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/Temperatur
 import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
+import { AnalogFrontEnd_LMV324A_TIDA010266 } from "./lib/subcircuits/AnalogFrontEnd_LMV324A_TIDA010266.circuit.tsx";
+import { Microcontroller_MSPM0L1306_TIDA010266 } from "./lib/subcircuits/Microcontroller_MSPM0L1306_TIDA010266.circuit.tsx";
+import { MotorDriver_DRV8210_TIDA010266 } from "./lib/subcircuits/MotorDriver_DRV8210_TIDA010266.circuit.tsx";
+import { PowerManagement_TPS7A2433_TIDA010266 } from "./lib/subcircuits/PowerManagement_TPS7A2433_TIDA010266.circuit.tsx";
+import { VoltageReference_ATL431LI_TIDA010266 } from "./lib/subcircuits/VoltageReference_ATL431LI_TIDA010266.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 export type { InstrumentationAmplifier_INA350Props } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 
 export {
+  AnalogFrontEnd_LMV324A_TIDA010266,
+  Microcontroller_MSPM0L1306_TIDA010266,
+  MotorDriver_DRV8210_TIDA010266,
+  PowerManagement_TPS7A2433_TIDA010266,
+  VoltageReference_ATL431LI_TIDA010266,
   BatteryManagement_BQ24072,
   BatteryManagement_BQ24073,
   BatteryManagement_BQ24074,
@@ -234,6 +248,10 @@ export {
 };
 
 export const TiChipComponents = {
+  ATL431LI,
+  LMV324A,
+  SMPP2_03,
+  TPS7A24,
   AM62L32,
   BQ24072,
   BQ24073,
@@ -313,6 +331,11 @@ export const TiChipComponents = {
 } as const;
 
 export const TiSubcircuitComponents = {
+  AnalogFrontEnd_LMV324A_TIDA010266,
+  Microcontroller_MSPM0L1306_TIDA010266,
+  MotorDriver_DRV8210_TIDA010266,
+  PowerManagement_TPS7A2433_TIDA010266,
+  VoltageReference_ATL431LI_TIDA010266,
   BatteryManagement_BQ24072,
   BatteryManagement_BQ24073,
   BatteryManagement_BQ24074,
