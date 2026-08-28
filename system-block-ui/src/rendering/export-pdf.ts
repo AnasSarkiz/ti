@@ -10,6 +10,16 @@ const DEFAULT_ORIENTATION = "landscape";
 const PDF_FONT_FAMILY = "LiberationSans";
 const PDF_TEXT_ANCHOR_GAP_EM = 0.12;
 const PDF_NET_LABEL_BASELINE_SHIFT_EM = 0.06;
+const SVG_COLOR_ATTRIBUTES = [
+  "color",
+  "fill",
+  "flood-color",
+  "lighting-color",
+  "stop-color",
+  "stroke",
+] as const;
+const THREE_CHANNEL_RGBA_PATTERN =
+  /rgba\(\s*([^,()]+)\s*,\s*([^,()]+)\s*,\s*([^,()]+)\s*\)/gi;
 const SHEET_OVERLAY_MARGIN_MM = 16;
 const SHEET_OVERLAY_BASELINE_MM = 16;
 const SHEET_OVERLAY_GAP_MM = 4;
@@ -168,6 +178,34 @@ const normalizeSvgViewport = (
   svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
 };
 
+const normalizeThreeChannelRgba = (value: string): string =>
+  value.replace(
+    THREE_CHANNEL_RGBA_PATTERN,
+    (_match, red: string, green: string, blue: string) =>
+      `rgb(${red.trim()}, ${green.trim()}, ${blue.trim()})`,
+  );
+
+/** Normalizes browser-valid paint values that svg2pdf does not parse. */
+export const normalizeSvgPaintForPdf = (svg: Element): void => {
+  for (const element of [svg, ...svg.querySelectorAll("*")]) {
+    for (const attribute of SVG_COLOR_ATTRIBUTES) {
+      const value = element.getAttribute(attribute);
+      if (value === null) continue;
+
+      const normalized = normalizeThreeChannelRgba(value);
+      if (normalized !== value) element.setAttribute(attribute, normalized);
+    }
+
+    const style = element.getAttribute("style");
+    if (style === null) continue;
+
+    const normalizedStyle = normalizeThreeChannelRgba(style);
+    if (normalizedStyle !== style) {
+      element.setAttribute("style", normalizedStyle);
+    }
+  }
+};
+
 export const normalizeSvgTextForPdf = (svg: Element): void => {
   for (const textElement of svg.querySelectorAll("text, tspan")) {
     textElement.setAttribute("font-family", PDF_FONT_FAMILY);
@@ -308,6 +346,7 @@ const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
     const element = parseSvg(sheet.svg);
     const dimensions = getSvgDimensions(element);
     normalizeSvgViewport(element, dimensions);
+    normalizeSvgPaintForPdf(element);
     normalizeSvgTextForPdf(element);
     return {
       element,

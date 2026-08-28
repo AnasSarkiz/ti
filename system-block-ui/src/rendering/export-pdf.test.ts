@@ -1,11 +1,12 @@
 import { describe, expect, test } from "bun:test";
 
+import type { jsPDF } from "jspdf";
 import {
   calculateSchematicPdfPageLayout,
+  normalizeSvgPaintForPdf,
   normalizeSvgTextForPdf,
   renderSchematicPdfSheetOverlay,
 } from "./export-pdf";
-import type { jsPDF } from "jspdf";
 import {
   SCHEMATIC_SVG_HEIGHT,
   SCHEMATIC_SVG_WIDTH,
@@ -137,6 +138,41 @@ describe("schematic PDF text normalization", () => {
     expect(reference.attributes.has("stroke-width")).toBe(false);
     expect(reference.attributes.has("paint-order")).toBe(false);
     expect(reference.attributes.get("fill")).toBe("rgb(15, 15, 15)");
+  });
+});
+
+describe("schematic PDF paint normalization", () => {
+  const createElement = (
+    entries: [string, string][],
+    descendants: unknown[] = [],
+  ) => {
+    const attributes = new Map(entries);
+    return {
+      attributes,
+      element: {
+        getAttribute: (name: string) => attributes.get(name) ?? null,
+        setAttribute: (name: string, value: string) =>
+          attributes.set(name, value),
+        querySelectorAll: () => descendants,
+      },
+    };
+  };
+
+  test("keeps custom-symbol stems visible in svg2pdf", () => {
+    const stem = createElement([
+      ["stroke", "rgba(132, 0, 0)"],
+      ["fill", "rgba(245, 241, 237, 0.5)"],
+      ["style", "color:rgba(15, 15, 15);opacity:1"],
+    ]);
+    const svg = createElement([], [stem.element]);
+
+    normalizeSvgPaintForPdf(svg.element as unknown as Element);
+
+    expect(stem.attributes.get("stroke")).toBe("rgb(132, 0, 0)");
+    expect(stem.attributes.get("fill")).toBe("rgba(245, 241, 237, 0.5)");
+    expect(stem.attributes.get("style")).toBe(
+      "color:rgb(15, 15, 15);opacity:1",
+    );
   });
 });
 
