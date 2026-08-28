@@ -14,7 +14,7 @@
         "@xyflow/react": "12.11.5",
         "circuit-json": "0.0.479",
         "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#0dc762f2a8dc811ef4919d6f79a312c910bdcac0",
-        "circuit-json-to-kicad": "0.0.178",
+        "circuit-json-to-kicad": "0.0.181",
         "circuit-to-svg": "0.0.410",
         "comlink": "4.4.2",
         "earcut": "3.2.3",
@@ -244,7 +244,7 @@
 
     "circuit-json-to-connectivity-map": ["circuit-json-to-connectivity-map@0.0.30", "", { "dependencies": { "@tscircuit/math-utils": "^0.0.9" }, "peerDependencies": { "typescript": "^5.9.3" } }, "sha512-NA7ZpCJl1GyoFukdFwrL8D+E0LG37JhvZfHKMM4fYAzyyc7S89KlOPz8kv6q/gUyr+/tRoOBholwIL+L8pPy9Q=="],
 
-    "circuit-json-to-kicad": ["circuit-json-to-kicad@0.0.178", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-HsBljmjeoSXbAWP1cUyTKuac0sEW19yVYRHfYG+Svvqf9fI7XGnTSgjpkywXXeZqRcURp5GNysSTddzThOJAZg=="],
+    "circuit-json-to-kicad": ["circuit-json-to-kicad@0.0.181", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-SpH1Sbs/RwTyG2vZl6LA2YKU3+yurp1ev6cfTNe6q5o5FPTGxNI+FXl6XZOgeIk4PzS7pMKSB7ctkdJZ5DMYlA=="],
 
     "circuit-json-to-spice": ["circuit-json-to-spice@0.0.46", "", { "dependencies": { "circuit-json-to-connectivity-map": "^0.0.22" }, "peerDependencies": { "@tscircuit/circuit-json-util": "*", "circuit-json": "*", "spicets": "*", "typescript": "^5.0.0" } }, "sha512-C5HkbAWq/UJS2es+J1VUmGcmweKLZfIfp0Q3ZYeBm5sPBDb1JD1abJN0BBo+scQSw4u9RFC/7/PEv+UljHjZLg=="],
 

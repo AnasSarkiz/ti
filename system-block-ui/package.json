@@ -23,7 +23,7 @@
     "@xyflow/react": "12.11.5",
     "circuit-json": "0.0.479",
     "circuit-json-to-altium": "github:tscircuit/circuit-json-to-altium#0dc762f2a8dc811ef4919d6f79a312c910bdcac0",
-    "circuit-json-to-kicad": "0.0.178",
+    "circuit-json-to-kicad": "0.0.181",
     "circuit-to-svg": "0.0.410",
     "comlink": "4.4.2",
     "earcut": "3.2.3",
