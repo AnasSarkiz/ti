@@ -71,7 +71,7 @@ const COMPOSITE_CONNECTIONS = [
  * power sheets, including the 40 MHz crystal schematic section. The QSPI
  * flash remains on its original independent TI sheet.
  */
-export const RadarFrontEndProcessing_TIDEP01024 = (props: SubcircuitProps) => (
+export const RadarFrontEndProcessing = (props: SubcircuitProps) => (
   <subcircuit {...props}>
     <schematicsheet
       name={RADAR_QSPI_SHEET_NAME}
@@ -114,4 +114,4 @@ export const RadarFrontEndProcessing_TIDEP01024 = (props: SubcircuitProps) => (
   </subcircuit>
 );
 
-export default RadarFrontEndProcessing_TIDEP01024;
+export default RadarFrontEndProcessing;

@@ -154,8 +154,8 @@ import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/Temper
 import { RadarClock_FW4000044Q } from "./lib/subcircuits/RadarClock_FW4000044Q.circuit.tsx";
 import {
   RADAR_FRONT_END_INTERFACE_NETS,
-  RadarFrontEndProcessing_TIDEP01024,
-} from "./lib/subcircuits/RadarFrontEndProcessing_TIDEP01024.circuit.tsx";
+  RadarFrontEndProcessing,
+} from "./lib/subcircuits/RadarFrontEndProcessing.circuit.tsx";
 import { RadarQspiFlash_MX25V1635FZNQ } from "./lib/subcircuits/RadarQspiFlash_MX25V1635FZNQ.circuit.tsx";
 import { RadarSoc_AWR1843ARBGALPQ1 } from "./lib/subcircuits/RadarSoc_AWR1843ARBGALPQ1.circuit.tsx";
 
@@ -235,7 +235,7 @@ export {
   TemperatureSensor_LM50HV_Q1,
   RadarClock_FW4000044Q,
   RADAR_FRONT_END_INTERFACE_NETS,
-  RadarFrontEndProcessing_TIDEP01024,
+  RadarFrontEndProcessing,
   RadarQspiFlash_MX25V1635FZNQ,
   RadarSoc_AWR1843ARBGALPQ1,
 };
@@ -393,7 +393,7 @@ export const TiSubcircuitComponents = {
   PowerSupply_LM74202_TPS7E81_Q1,
   TemperatureSensor_LM50HV_Q1,
   RadarClock_FW4000044Q,
-  RadarFrontEndProcessing_TIDEP01024,
+  RadarFrontEndProcessing,
   RadarQspiFlash_MX25V1635FZNQ,
   RadarSoc_AWR1843ARBGALPQ1,
 } as const;

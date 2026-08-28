@@ -9,7 +9,7 @@ import {
   CHS01TA,
   RADAR_FRONT_END_INTERFACE_NETS,
   RadarClock_FW4000044Q,
-  RadarFrontEndProcessing_TIDEP01024,
+  RadarFrontEndProcessing,
   RadarQspiFlash_MX25V1635FZNQ,
   TiChipComponents,
   TiSubcircuitComponents,
@@ -89,8 +89,8 @@ function assertNoErrors(circuit: TestCircuit) {
 test("radar exports the exact 180-ball ALP device", async () => {
   assert.equal(TiChipComponents.AWR1843ARBGALPQ1, AWR1843ARBGALPQ1);
   assert.equal(
-    TiSubcircuitComponents.RadarFrontEndProcessing_TIDEP01024,
-    RadarFrontEndProcessing_TIDEP01024,
+    TiSubcircuitComponents.RadarFrontEndProcessing,
+    RadarFrontEndProcessing,
   );
   assert.equal(AWR1843ARBGALPQ1_BALLS.length, 180);
   assert.equal(
@@ -210,7 +210,7 @@ test("composite includes one SoC, one clock, and one QSPI flash", {
       schematicDisabled: true,
     },
   });
-  circuit.add(<RadarFrontEndProcessing_TIDEP01024 />);
+  circuit.add(<RadarFrontEndProcessing />);
   await circuit.renderUntilSettled();
   assertNoErrors(circuit);
 
