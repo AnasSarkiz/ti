@@ -160,6 +160,7 @@ export default () => (
       inputReferenceSchYOffset={-15}
       pressureSchXOffset={14}
       pressureSchYOffset={16.5}
+      filterSchXOffset={-2}
       schX={5}
       schY={0}
     />

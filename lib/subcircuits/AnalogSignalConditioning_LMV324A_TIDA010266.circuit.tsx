@@ -71,6 +71,7 @@ export type AnalogSignalConditioning_LMV324A_TIDA010266Props =
     inputReferenceSchYOffset?: number;
     pressureSchXOffset?: number;
     pressureSchYOffset?: number;
+    filterSchXOffset?: number;
   };
 
 /**
@@ -86,6 +87,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
   inputReferenceSchYOffset = 0,
   pressureSchXOffset = 0,
   pressureSchYOffset = 0,
+  filterSchXOffset = 0,
   ...props
 }: AnalogSignalConditioning_LMV324A_TIDA010266Props) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
@@ -112,6 +114,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
     x + pressureSchXOffset + compactPressureOffset.x;
   const pressureY = (y: number) =>
     y + pressureSchYOffset + compactPressureOffset.y;
+  const filterX = (x: number) => x + filterSchXOffset;
 
   return (
     <subcircuit
@@ -223,7 +226,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         manufacturerPartNumber="LMV324AIPWR U2B"
         doNotPlace
         schSheetName={props.schSheetName}
-        schX={0}
+        schX={filterX(0)}
         schY={0}
         connections={{
           pin4: "net.V3_3",
@@ -246,7 +249,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         manufacturerPartNumber="LMV324AIPWR U2C"
         doNotPlace
         schSheetName={props.schSheetName}
-        schX={10}
+        schX={filterX(10)}
         schY={0}
         connections={{
           pin4: "net.V3_3",
@@ -269,7 +272,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         net="GND"
         connectsTo=".U2B > .pin11"
         anchorSide="top"
-        schX={0}
+        schX={filterX(0)}
         schY={-1.45}
       />
       <netlabel net="V3_3" connectsTo=".U2C > .pin4" inline />
@@ -277,7 +280,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         net="GND"
         connectsTo=".U2C > .pin11"
         anchorSide="top"
-        schX={10}
+        schX={filterX(10)}
         schY={-1.45}
       />
       <schematicsymbol
@@ -350,7 +353,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         capacitance="4.7uF"
         maxVoltageRating="16V"
         footprint="0603"
-        schX={-7}
+        schX={filterX(-7)}
         schY={0.6}
         connections={{ pin1: "net.PRESSURE", pin2: "net.FILTER_1_HP" }}
       />
@@ -359,7 +362,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         schSectionName={props.schSectionName}
         resistance="20k"
         footprint="0603"
-        schX={-5}
+        schX={filterX(-5)}
         schY={0.6}
         connections={{ pin1: "net.FILTER_1_HP", pin2: "net.FILTER_1_INV" }}
       />
@@ -368,7 +371,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         schSectionName={props.schSectionName}
         resistance="270k"
         footprint="0603"
-        schX={0}
+        schX={filterX(0)}
         schY={3.2}
         connections={{
           pin1: "net.FILTER_1_INV",
@@ -381,7 +384,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         capacitance="100nF"
         maxVoltageRating="25V"
         footprint="0603"
-        schX={0}
+        schX={filterX(0)}
         schY={2.3}
         connections={{
           pin1: "net.FILTER_1_INV",
@@ -395,7 +398,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         capacitance="4.7uF"
         maxVoltageRating="16V"
         footprint="0603"
-        schX={4}
+        schX={filterX(4)}
         schY={0.3}
         connections={{
           pin1: "net.FILTER_1_OUT",
@@ -407,7 +410,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         schSectionName={props.schSectionName}
         resistance="20k"
         footprint="0603"
-        schX={6.5}
+        schX={filterX(6.5)}
         schY={0.6}
         connections={{
           pin1: "net.FILTER_2_HP",
@@ -419,7 +422,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         schSectionName={props.schSectionName}
         resistance="270k"
         footprint="0603"
-        schX={10}
+        schX={filterX(10)}
         schY={3.2}
         connections={{ pin1: "net.FILTER_2_INV", pin2: "net.OSCILLATIONS" }}
       />
@@ -429,7 +432,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
         capacitance="100nF"
         maxVoltageRating="25V"
         footprint="0603"
-        schX={10}
+        schX={filterX(10)}
         schY={2.3}
         connections={{ pin1: "net.FILTER_2_INV", pin2: "net.OSCILLATIONS" }}
       />
@@ -521,7 +524,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
           {
             name: "PRESSURE",
             connectsTo: ".C11 > .pin1",
-            schX: -8,
+            schX: filterX(-8),
             schY: 0.6,
             direction: "left",
             schSheetName: props.schSheetName,
@@ -530,7 +533,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
             name: "FILTER_1_HP",
             connectsTo: [".C11 > .pin2", ".R16 > .pin1"],
             inlineLabelConnectsTo: ".C11 > .pin2",
-            schX: -6,
+            schX: filterX(-6),
             schY: 0.6,
             direction: "left",
             schSheetName: props.schSheetName,
@@ -545,7 +548,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
               ".U2B > .pin6",
             ],
             inlineLabelConnectsTo: ".R16 > .pin2",
-            schX: -3,
+            schX: filterX(-3),
             schY: 1,
             direction: "left",
             schSheetName: props.schSheetName,
@@ -560,7 +563,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
               ".U2B > .pin7",
             ],
             inlineLabelConnectsTo: ".U2B > .pin7",
-            schX: 2.4,
+            schX: filterX(2.4),
             schY: 1,
             direction: "right",
             schSheetName: props.schSheetName,
@@ -569,7 +572,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
             name: "FILTER_2_HP",
             connectsTo: [".C12 > .pin2", ".R17 > .pin1"],
             inlineLabelConnectsTo: ".C12 > .pin2",
-            schX: 5,
+            schX: filterX(5),
             schY: 0.3,
             direction: "right",
             schSheetName: props.schSheetName,
@@ -584,7 +587,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
               ".U2C > .pin6",
             ],
             inlineLabelConnectsTo: ".R17 > .pin2",
-            schX: 7.4,
+            schX: filterX(7.4),
             schY: 1,
             direction: "right",
             schSheetName: props.schSheetName,
@@ -597,7 +600,7 @@ export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
               ".C10 > .pin2",
               ".U2C > .pin7",
             ],
-            schX: 11.5,
+            schX: filterX(11.5),
             schY: 1,
             direction: "right",
             schSheetName: props.schSheetName,

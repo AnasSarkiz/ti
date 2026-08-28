@@ -349,6 +349,7 @@ export const InterfacesSection = ({
             direction: "top-to-bottom",
           },
         }}
+        schPinStyle={{ pin2: { marginTop: 0.12 }, pin1: { marginTop: 0.12 } }}
         pinLabels={{ pin1: ["GND"], pin2: ["INA_GS"], pin3: ["V3_3"] }}
         connections={{ pin1: "net.GND", pin3: "net.V3_3" }}
       />
