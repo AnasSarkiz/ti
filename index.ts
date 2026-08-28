@@ -90,6 +90,7 @@ import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.cir
 import { MotorDriver_DRV8210 } from "./lib/subcircuits/MotorDriver_DRV8210.circuit.tsx";
 import { MotorDriver_DRV8833 } from "./lib/subcircuits/MotorDriver_DRV8833.circuit.tsx";
 import { MotorDriver_DRV8876 } from "./lib/subcircuits/MotorDriver_DRV8876.circuit.tsx";
+import { PositionFeedback_DRV5013 } from "./lib/subcircuits/PositionFeedback_DRV5013.circuit.tsx";
 import { MotorDriver_DRV8305_TIDA01330 } from "./lib/subcircuits/MotorDriver_DRV8305_TIDA01330.circuit.tsx";
 import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSensor_HDC2080.circuit.tsx";
 import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit.tsx";
@@ -171,6 +172,7 @@ export {
   MotorDriver_DRV8210,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
+  PositionFeedback_DRV5013,
   MotorDriver_DRV8305_TIDA01330,
   EnvironmentalSensor_HDC2080,
   EnvironmentalSensor_HDC3020,
@@ -325,6 +327,7 @@ export const TiSubcircuitComponents = {
   MotorDriver_DRV8210,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
+  PositionFeedback_DRV5013,
   MotorDriver_DRV8305_TIDA01330,
   EnvironmentalSensor_HDC2080,
   EnvironmentalSensor_HDC3020,

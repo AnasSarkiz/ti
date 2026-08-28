@@ -276,6 +276,7 @@ The package currently exports these subcircuit components:
 - `MotorDriver_DRV8210`
 - `MotorDriver_DRV8833`
 - `MotorDriver_DRV8876`
+- `PositionFeedback_DRV5013`
 - `MotorDriver_DRV8305_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
 - `EnvironmentalSensor_HDC2080`
 - `EnvironmentalSensor_HDC3020`
@@ -448,6 +449,25 @@ These are the components exported from the package entrypoint in `index.ts`.
 For example, `PowerMonitor_INA237` comes from
 `lib/subcircuits/PowerMonitor_INA237.circuit.tsx` and can be imported from
 `@tsci/tscircuit.ti`.
+
+`PositionFeedback_DRV5013` extracts the Window Module "Position Feedback -
+Hall Effect Sensors" function from TI's TIDA-01389. The Window Module
+subsystem's own Reference Design tab currently lists no design, so TIDA-01389
+was selected from the closely related Motor Driver references: TI explicitly
+identifies it for sunroof and window-lift applications and implements motor
+position encoding with two DRV5013-Q1 latching Hall sensors. This extraction is
+independent of the DRV8703/H-bridge work in PR #116 and does not duplicate that
+motor-driver circuitry.
+
+The TIDA-01389 BOM identifies U5/U6 as `DRV5013ADQDBZRQ1`, C13/C14 as
+`GRM155R61H104ME14D`, R14/R15 as `CRCW040210K0JNED`, R9 as
+`CRCW06030000Z0EA`, J1/J2 as `SSQ-110-01-T-S`, and J4 as Wurth Elektronik
+`691214310002`. Following repository convention, passive and connector MPNs
+are documented here instead of being rendered as schematic component values.
+Hall-channel and connector GND pins use ordinary traces to `net.GND` so
+tscircuit generates native ground symbols; V_BAT alone uses `schDisplayLabel`
+as an inline trace label. No passive or net-label component has a custom
+schematic size.
 
 The `lib/subcircuits/__snapshots__` directory contains generated schematic and
 PCB SVG snapshots used to check visual output.
