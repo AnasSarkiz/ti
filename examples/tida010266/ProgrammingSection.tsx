@@ -42,14 +42,6 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
           pin9: ["GND_9"],
           pin10: ["RST"],
         }}
-        connections={{
-          pin1: "net.V3_3",
-          pin3: "net.GND",
-          pin5: "net.GND",
-          pin7: "net.GND",
-          pin9: "net.GND",
-          pin10: "net.RST",
-        }}
         pinAttributes={{
           NC_6: { doNotConnect: true },
           NC_8: { doNotConnect: true },
@@ -62,7 +54,6 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
         footprint="0603"
         schX={6.4}
         schY={1.4}
-        connections={{ pin2: "net.SWDIO" }}
       />
       <resistor
         name="R5"
@@ -71,7 +62,6 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
         footprint="0603"
         schX={6.4}
         schY={0.6}
-        connections={{ pin2: "net.SWCLK" }}
       />
       <trace
         from=".J2 > .SWDIO_HEADER"
@@ -91,7 +81,6 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
         schX={-8}
         schY={1.7}
         schOrientation="vertical"
-        connections={{ pin1: "net.V3_3", pin2: "net.RST" }}
       />
       <capacitor
         name="C4"
@@ -102,10 +91,6 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
         schX={-8}
         schY={-0.2}
         schOrientation="vertical"
-        connections={{
-          pin1: "net.RST",
-          pin2: "net.GND",
-        }}
       />
       <pushbutton
         name="S1"
@@ -117,14 +102,72 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
         // EVQ-21505R has two pins on each switch terminal. The upstream
         // pushbutton prop type currently exposes only the two logical pins,
         // while its runtime component and footprint correctly expose all four.
-        connections={
-          {
-            pin1: "net.RST",
-            pin2: "net.RST",
-            pin3: "net.GND",
-            pin4: "net.GND",
-          } as Record<string, string>
-        }
+        internallyConnectedPins={[
+          ["pin1", "pin2"],
+          ["pin3", "pin4"],
+        ]}
+      />
+      <trace from=".R2 > .pin2" to=".C4 > .pin1" />
+      <trace from=".C4 > .pin1" to=".S1 > .pin1" />
+      <trace from=".C4 > .pin2" to=".S1 > .pin3" />
+      <trace from=".J2 > .GND_3" to=".J2 > .GND_5" />
+      <trace from=".J2 > .GND_5" to=".J2 > .GND_7" />
+      <trace from=".J2 > .GND_7" to=".J2 > .GND_9" />
+      <netlabel
+        net="V3_3"
+        connectsTo=".J2 > .V3_3"
+        schX={2.1}
+        schY={1.6}
+        anchorSide="right"
+      />
+      <netlabel
+        net="V3_3"
+        connectsTo=".R2 > .pin1"
+        schX={-8}
+        schY={2.7}
+        anchorSide="bottom"
+      />
+      <netlabel
+        net="RST"
+        connectsTo=".J2 > .RST"
+        schX={4.8}
+        schY={0}
+        anchorSide="left"
+      />
+      <netlabel
+        net="RST"
+        connectsTo=".S1 > .pin1"
+        schX={-9.5}
+        schY={0.65}
+        anchorSide="right"
+      />
+      <netlabel
+        net="GND"
+        connectsTo=".J2 > .GND_7"
+        schX={2.1}
+        schY={0.4}
+        anchorSide="right"
+      />
+      <netlabel
+        net="GND"
+        connectsTo=".S1 > .pin3"
+        schX={-4}
+        schY={-1.2}
+        anchorSide="top"
+      />
+      <netlabel
+        net="SWDIO"
+        connectsTo=".R1 > .pin2"
+        schX={7.5}
+        schY={1.4}
+        anchorSide="left"
+      />
+      <netlabel
+        net="SWCLK"
+        connectsTo=".R5 > .pin2"
+        schX={7.5}
+        schY={0.6}
+        anchorSide="left"
       />
       <TIDA010266InlineNetPorts
         originX={originX}
@@ -133,18 +176,15 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
           {
             name: "V3_3",
             connectsTo: [".J2 > .V3_3", ".R2 > .pin1"],
+            inlineLabelConnectsTo: false,
             schX: 0,
             schY: 3,
             direction: "up",
           },
           {
             name: "RST",
-            connectsTo: [
-              ".J2 > .RST",
-              ".R2 > .pin2",
-              ".C4 > .pin1",
-              ".S1 > .pin1",
-            ],
+            connectsTo: [".J2 > .RST", ".S1 > .pin1"],
+            inlineLabelConnectsTo: false,
             schX: -9.5,
             schY: 0,
             direction: "left",
@@ -152,6 +192,7 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
           {
             name: "SWDIO",
             connectsTo: ".R1 > .pin2",
+            inlineLabelConnectsTo: false,
             schX: 7.5,
             schY: 1.4,
             direction: "right",
@@ -159,20 +200,15 @@ export const ProgrammingSection = (props: ProgrammingSectionProps) => {
           {
             name: "SWCLK",
             connectsTo: ".R5 > .pin2",
+            inlineLabelConnectsTo: false,
             schX: 7.5,
             schY: 0.2,
             direction: "right",
           },
           {
             name: "GND",
-            connectsTo: [
-              ".J2 > .GND_3",
-              ".J2 > .GND_5",
-              ".J2 > .GND_7",
-              ".J2 > .GND_9",
-              ".C4 > .pin2",
-              ".S1 > .pin3",
-            ],
+            connectsTo: [".J2 > .GND_7", ".S1 > .pin3"],
+            inlineLabelConnectsTo: false,
             schX: 0,
             schY: -2.5,
             direction: "down",
