@@ -90,14 +90,37 @@ export default () => (
     <schematicsheet name="mcu" displayName="MCU" sheetIndex={4} />
     <schematicsheet
       name="pressure_sensor"
-      displayName="Pressure Sensor"
+      displayName="Pressure Sensor + ADC Filter"
       sheetIndex={5}
     />
-    <schematicsheet name="adc_filter" displayName="ADC Filter" sheetIndex={6} />
+    <group schSheetName="pressure_sensor">
+      <schematictext
+        text="Pressure Sensor"
+        schX={-6.5}
+        schY={8.4}
+        fontSize={0.42}
+        color="#000000"
+      />
+      <schematictext
+        text="ADC Filter"
+        schX={9}
+        schY={8.4}
+        fontSize={0.42}
+        color="#000000"
+      />
+      <schematicline
+        x1={3}
+        y1={7.7}
+        x2={3}
+        y2={-8.5}
+        strokeWidth={0.02}
+        color="#000000"
+      />
+    </group>
     <schematicsheet
       name="motor_driver"
       displayName="Motor Driver"
-      sheetIndex={7}
+      sheetIndex={6}
     />
 
     <PowerManagement_TPS7A2433_TIDA010266
@@ -158,7 +181,7 @@ export default () => (
       pressureSheetName="pressure_sensor"
       inputReferenceSchXOffset={-1}
       inputReferenceSchYOffset={-15}
-      pressureSchXOffset={14}
+      pressureSchXOffset={6}
       pressureSchYOffset={16.5}
       filterSchXOffset={-2}
       schX={5}
@@ -172,10 +195,18 @@ export default () => (
     />
     <PressureSensorSection
       name="pressure_sensor"
+      subcircuit
+      schMaxTraceDistance="6mm"
       schSheetName="pressure_sensor"
-      schX={5}
+      schX={-5.5}
     />
-    <ADCFilterSection name="adc_filter" schSheetName="adc_filter" />
+    <ADCFilterSection
+      name="adc_filter"
+      subcircuit
+      schMaxTraceDistance="6mm"
+      schSheetName="pressure_sensor"
+      schX={8}
+    />
     <MotorDriver_DRV8210_TIDA010266
       name="motor_driver"
       schSheetName="motor_driver"
