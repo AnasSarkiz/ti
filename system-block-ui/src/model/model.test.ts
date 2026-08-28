@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import {
   createConsumerWirelessModuleDesign,
-  createSystemBlockExamples,
   createSubcircuitCatalog,
+  createSystemBlockExamples,
   generateSystemDesignArtifacts,
   generateTsx,
   getSubcircuitDefinition,
@@ -383,6 +383,7 @@ describe("catalog and TSX generation", () => {
       "examples/ConsumerWirelessModule.circuit.tsx",
       "examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx",
       "examples/RearviewMirrorModule.circuit.tsx",
+      "examples/SeatPositionModule.circuit.tsx",
     ]);
     expect(
       examples
@@ -407,6 +408,77 @@ describe("catalog and TSX generation", () => {
         ),
       ).toHaveLength(example.graph.connections.length);
     }
+  });
+
+  test("builds the Seat Position Module from all six application blocks", () => {
+    const example = createSystemBlockExamples(SUBCIRCUIT_CATALOG).find(
+      ({ id }) => id === "seat-position-module",
+    );
+    if (!example) throw new Error("Missing Seat Position Module example");
+
+    expect(example.graph.blocks.map(({ id }) => id)).toEqual([
+      "power_supply",
+      "communication_interface",
+      "microcontroller",
+      "motor_driver",
+      "position_feedback",
+      "light_driver",
+    ]);
+
+    const resolved = resolveDesignConnections(
+      example.graph.blocks,
+      example.graph.connections,
+      SUBCIRCUIT_CATALOG,
+    );
+    expect(resolved).toHaveLength(7);
+    expect(
+      resolved.find(({ id }) => id === "data_can_controller")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U6 > .PA8",
+          toSelector: ".U6 > .TXD",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U6 > .RXD",
+          toSelector: ".U6 > .PA9",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "data_motor_control")?.traces,
+    ).toHaveLength(13);
+    expect(
+      resolved.find(({ id }) => id === "power_protected_to_motor_driver")
+        ?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .OUT",
+          toSelector: ".U1 > .PVDD",
+        }),
+      ]),
+    );
+
+    const artifacts = generateSystemDesignArtifacts({
+      blocks: example.graph.blocks,
+      connections: example.graph.connections,
+      catalog: SUBCIRCUIT_CATALOG,
+      boardName: "seat_position_module",
+    });
+    for (const componentName of [
+      "PowerSupply_LM5050_TIDA00992",
+      "CommunicationInterface_TCAN1042_TIDA01428",
+      "Microcontroller_MSPM0L1306Q1_TIDA020065",
+      "MotorDriver_DRV8305_TIDA01330",
+      "PositionFeedback_DRV5013_TIDA01389",
+      "LightDriver_TIDA01330",
+    ]) {
+      expect(artifacts.tsx).toContain(componentName);
+    }
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="data_motor_control" data-kind="data"',
+    );
   });
 
   test("builds the Rearview Mirror Module from all seven application blocks", () => {

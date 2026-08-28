@@ -298,6 +298,106 @@ const createRearviewMirrorDesign = (
   ],
 });
 
+const createSeatPositionModuleDesign = (
+  catalog: readonly SubcircuitDefinition[],
+): SystemBlockExampleGraph => ({
+  blocks: [
+    {
+      id: "power_supply",
+      name: "power_supply",
+      definitionId: componentId(catalog, "PowerSupply_LM5050_TIDA00992"),
+      position: { x: 40, y: 100 },
+    },
+    {
+      id: "communication_interface",
+      name: "communication_interface",
+      definitionId: componentId(
+        catalog,
+        "CommunicationInterface_TCAN1042_TIDA01428",
+      ),
+      position: { x: 40, y: 390 },
+    },
+    {
+      id: "microcontroller",
+      name: "microcontroller",
+      definitionId: componentId(
+        catalog,
+        "Microcontroller_MSPM0L1306Q1_TIDA020065",
+      ),
+      position: { x: 410, y: 245 },
+    },
+    {
+      id: "motor_driver",
+      name: "motor_driver",
+      definitionId: componentId(catalog, "MotorDriver_DRV8305_TIDA01330"),
+      position: { x: 780, y: 25 },
+    },
+    {
+      id: "position_feedback",
+      name: "position_feedback",
+      definitionId: componentId(catalog, "PositionFeedback_DRV5013_TIDA01389"),
+      position: { x: 780, y: 270 },
+    },
+    {
+      id: "light_driver",
+      name: "light_driver",
+      definitionId: componentId(catalog, "LightDriver_TIDA01330"),
+      position: { x: 780, y: 470 },
+    },
+  ],
+  connections: [
+    {
+      id: "power_protected_to_motor_driver",
+      fromBlockId: "power_supply",
+      toBlockId: "motor_driver",
+      kind: "power",
+      protocol: "protected-vehicle-power",
+    },
+    {
+      id: "power_protected_to_light_driver",
+      fromBlockId: "power_supply",
+      toBlockId: "light_driver",
+      kind: "power",
+      protocol: "protected-vehicle-power",
+    },
+    {
+      id: "data_can_controller",
+      fromBlockId: "microcontroller",
+      toBlockId: "communication_interface",
+      kind: "data",
+      protocol: "can-controller",
+    },
+    {
+      id: "data_position_feedback",
+      fromBlockId: "position_feedback",
+      toBlockId: "microcontroller",
+      kind: "data",
+      protocol: "seat-position-feedback",
+    },
+    {
+      id: "data_light_control",
+      fromBlockId: "microcontroller",
+      toBlockId: "light_driver",
+      kind: "data",
+      protocol: "seat-light-control",
+    },
+    {
+      id: "data_power_control",
+      fromBlockId: "microcontroller",
+      toBlockId: "power_supply",
+      kind: "data",
+      protocol: "seat-power-control",
+    },
+    {
+      id: "data_motor_control",
+      fromBlockId: "microcontroller",
+      toBlockId: "motor_driver",
+      kind: "data",
+      protocol: "seat-motor-control",
+    },
+  ],
+});
+
 /** Editable system diagrams backed by complete circuits in the root examples directory. */
 export const createSystemBlockExamples = (
   catalog: readonly SubcircuitDefinition[],
@@ -319,5 +419,11 @@ export const createSystemBlockExamples = (
     title: "Rearview Mirror Module",
     sourcePath: "examples/RearviewMirrorModule.circuit.tsx",
     graph: createRearviewMirrorDesign(catalog),
+  },
+  {
+    id: "seat-position-module",
+    title: "Seat Position Module",
+    sourcePath: "examples/SeatPositionModule.circuit.tsx",
+    graph: createSeatPositionModuleDesign(catalog),
   },
 ];
