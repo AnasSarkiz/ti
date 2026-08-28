@@ -1,6 +1,7 @@
 import {
   AM62L32,
   AWR1843ARBGALPQ1,
+  ATL431LI,
   BQ24072,
   BQ24073,
   BQ24074,
@@ -33,6 +34,7 @@ import {
   LM74202Q1,
   LM50HVQ1,
   LMK1C1104,
+  LMV324A,
   LP5892Q1,
   MSP430G2230ID,
   MSP430G2332IPW20,
@@ -45,17 +47,20 @@ import {
   OPT3001,
   PGA300ARHHR,
   SN65HVD1473,
+  SMPP2_03,
   SN65LVDS31D,
   SN74LVC1G34DBVR,
   TAS2505,
   TCAN1042HGV,
   TLC59116,
+  TLIN1028,
   TLV316,
   TLV755P,
   TLV9152IDR,
   TMP103AYFF,
   TMP1827,
   TMP1075,
+  TMP390Q1,
   TPD2E009DRTR,
   TPS22919,
   TPS25910RSA,
@@ -69,6 +74,7 @@ import {
   TPS63802,
   TPS7A02,
   TPS7A20,
+  TPS7A24,
   TPS7E81Q1,
   TPS78230DRVR,
   TPS92638,
@@ -93,6 +99,7 @@ import { WirelessMCU_CC3235SF } from "./lib/subcircuits/WirelessMCU_CC3235SF.cir
 import { MotorDriver_DRV8210 } from "./lib/subcircuits/MotorDriver_DRV8210.circuit.tsx";
 import { MotorDriver_DRV8833 } from "./lib/subcircuits/MotorDriver_DRV8833.circuit.tsx";
 import { MotorDriver_DRV8876 } from "./lib/subcircuits/MotorDriver_DRV8876.circuit.tsx";
+import { PositionFeedback_DRV5013 } from "./lib/subcircuits/PositionFeedback_DRV5013.circuit.tsx";
 import { MotorDriver_DRV8305_TIDA01330 } from "./lib/subcircuits/MotorDriver_DRV8305_TIDA01330.circuit.tsx";
 import { EnvironmentalSensor_HDC2080 } from "./lib/subcircuits/EnvironmentalSensor_HDC2080.circuit.tsx";
 import { EnvironmentalSensor_HDC3020 } from "./lib/subcircuits/EnvironmentalSensor_HDC3020.circuit.tsx";
@@ -113,6 +120,10 @@ import { LEDDriver_TLC59116 } from "./lib/subcircuits/LEDDriver_TLC59116.circuit
 import { OutputUserInterface_LEDMatrix_LP5892_Q1 } from "./lib/subcircuits/OutputUserInterface_LEDMatrix_LP5892_Q1.circuit.tsx";
 import { TemperatureSensor_TMP1075 } from "./lib/subcircuits/TemperatureSensor_TMP1075.circuit.tsx";
 import { TemperatureSensor_TMP1827 } from "./lib/subcircuits/TemperatureSensor_TMP1827.circuit.tsx";
+import {
+  MotorThermalProtection_TMP390,
+  TMP390_FIGURE_8_3_DEFAULTS,
+} from "./lib/subcircuits/MotorThermalProtection_TMP390.circuit.tsx";
 import { LoadSwitch_TPS22919 } from "./lib/subcircuits/LoadSwitch_TPS22919.circuit.tsx";
 import { BuckConverter_TPS62933 } from "./lib/subcircuits/BuckConverter_TPS62933.circuit.tsx";
 import {
@@ -135,6 +146,7 @@ import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits
 import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
 import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
 import { USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 } from "./lib/subcircuits/USBC_PowerDeliveryProgrammablePowerSupply_TPS61288.circuit.tsx";
+import { CommunicationInterface_LIN_TLIN1028 } from "./lib/subcircuits/CommunicationInterface_LIN_TLIN1028.circuit.tsx";
 import { CommunicationInterface_TCAN1042_TIDA01428 } from "./lib/subcircuits/CommunicationInterface_TCAN1042_TIDA01428.circuit.tsx";
 import { LightDriver_TIDA01330 } from "./lib/subcircuits/LightDriver_TIDA01330.circuit.tsx";
 import { PositionFeedback_DRV5013_TIDA01389 } from "./lib/subcircuits/PositionFeedback_DRV5013_TIDA01389.circuit.tsx";
@@ -158,11 +170,21 @@ import {
 } from "./lib/subcircuits/RadarFrontEndProcessing.circuit.tsx";
 import { RadarQspiFlash_MX25V1635FZNQ } from "./lib/subcircuits/RadarQspiFlash_MX25V1635FZNQ.circuit.tsx";
 import { RadarSoc_AWR1843ARBGALPQ1 } from "./lib/subcircuits/RadarSoc_AWR1843ARBGALPQ1.circuit.tsx";
+import { AnalogSignalConditioning_LMV324A_TIDA010266 } from "./lib/subcircuits/AnalogSignalConditioning_LMV324A_TIDA010266.circuit.tsx";
+import { Microcontroller_MSPM0L1306_TIDA010266 } from "./lib/subcircuits/Microcontroller_MSPM0L1306_TIDA010266.circuit.tsx";
+import { MotorDriver_DRV8210_TIDA010266 } from "./lib/subcircuits/MotorDriver_DRV8210_TIDA010266.circuit.tsx";
+import { PowerManagement_TPS7A2433_TIDA010266 } from "./lib/subcircuits/PowerManagement_TPS7A2433_TIDA010266.circuit.tsx";
+import { VoltageReference_ATL431LI_TIDA010266 } from "./lib/subcircuits/VoltageReference_ATL431LI_TIDA010266.circuit.tsx";
 
 export * from "./lib/chips/index.tsx";
 export type { InstrumentationAmplifier_INA350Props } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 
 export {
+  AnalogSignalConditioning_LMV324A_TIDA010266,
+  Microcontroller_MSPM0L1306_TIDA010266,
+  MotorDriver_DRV8210_TIDA010266,
+  PowerManagement_TPS7A2433_TIDA010266,
+  VoltageReference_ATL431LI_TIDA010266,
   BatteryManagement_BQ24072,
   BatteryManagement_BQ24073,
   BatteryManagement_BQ24074,
@@ -177,6 +199,7 @@ export {
   MotorDriver_DRV8210,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
+  PositionFeedback_DRV5013,
   MotorDriver_DRV8305_TIDA01330,
   EnvironmentalSensor_HDC2080,
   EnvironmentalSensor_HDC3020,
@@ -197,6 +220,8 @@ export {
   OutputUserInterface_LEDMatrix_LP5892_Q1,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
+  MotorThermalProtection_TMP390,
+  TMP390_FIGURE_8_3_DEFAULTS,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
   BoostConverter_TPS61299X,
@@ -217,6 +242,7 @@ export {
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  CommunicationInterface_LIN_TLIN1028,
   CommunicationInterface_TCAN1042_TIDA01428,
   LightDriver_TIDA01330,
   PositionFeedback_DRV5013_TIDA01389,
@@ -241,6 +267,10 @@ export {
 };
 
 export const TiChipComponents = {
+  ATL431LI,
+  LMV324A,
+  SMPP2_03,
+  TPS7A24,
   AM62L32,
   AWR1843ARBGALPQ1,
   BQ24072,
@@ -292,12 +322,14 @@ export const TiChipComponents = {
   TAS2505,
   TCAN1042HGV,
   TLC59116,
+  TLIN1028,
   TLV316,
   TLV755P,
   TLV9152IDR,
   TMP103AYFF,
   TMP1827,
   TMP1075,
+  TMP390Q1,
   TPD2E009DRTR,
   TPS22919,
   TPS25910RSA,
@@ -323,6 +355,11 @@ export const TiChipComponents = {
 } as const;
 
 export const TiSubcircuitComponents = {
+  AnalogSignalConditioning_LMV324A_TIDA010266,
+  Microcontroller_MSPM0L1306_TIDA010266,
+  MotorDriver_DRV8210_TIDA010266,
+  PowerManagement_TPS7A2433_TIDA010266,
+  VoltageReference_ATL431LI_TIDA010266,
   BatteryManagement_BQ24072,
   BatteryManagement_BQ24073,
   BatteryManagement_BQ24074,
@@ -337,6 +374,7 @@ export const TiSubcircuitComponents = {
   MotorDriver_DRV8210,
   MotorDriver_DRV8833,
   MotorDriver_DRV8876,
+  PositionFeedback_DRV5013,
   MotorDriver_DRV8305_TIDA01330,
   EnvironmentalSensor_HDC2080,
   EnvironmentalSensor_HDC3020,
@@ -357,6 +395,7 @@ export const TiSubcircuitComponents = {
   OutputUserInterface_LEDMatrix_LP5892_Q1,
   TemperatureSensor_TMP1075,
   TemperatureSensor_TMP1827,
+  MotorThermalProtection_TMP390,
   LoadSwitch_TPS22919,
   BuckConverter_TPS62933,
   BoostConverter_TPS61299X,
@@ -376,6 +415,7 @@ export const TiSubcircuitComponents = {
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  CommunicationInterface_LIN_TLIN1028,
   CommunicationInterface_TCAN1042_TIDA01428,
   LightDriver_TIDA01330,
   PositionFeedback_DRV5013_TIDA01389,

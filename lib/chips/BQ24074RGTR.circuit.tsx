@@ -1,5 +1,7 @@
 import type { ChipProps } from "@tscircuit/props";
-import bq24074SpiceModel from "./spice-models/BQ24074-spice-model.encrypted.json";
+
+// The encrypted BQ24074 model import is disabled because schematic-only
+// consumers cannot resolve its static JSON dependency before rendering.
 
 const pinLabels = {
   pin1: ["TS"],
@@ -29,6 +31,7 @@ export const BQ24074RGTR = (props: ChipProps<typeof pinLabels>) => {
         jlcpcb: ["C54313"],
       }}
       manufacturerPartNumber="BQ24074RGTR"
+      /* Disabled until schematic-only evaluators can omit SPICE model assets.
       spiceModel={
         <spicemodel
           source={bq24074SpiceModel.source}
@@ -51,6 +54,7 @@ export const BQ24074RGTR = (props: ChipProps<typeof pinLabels>) => {
           }}
         />
       }
+      */
       footprint="qfn16_thermalpad1.7mmx1.7mm_pillpads_h4.05mm_pw0.28mm_pl0.85mm"
       cadModel={{
         objUrl:

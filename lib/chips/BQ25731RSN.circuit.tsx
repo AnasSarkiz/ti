@@ -6,7 +6,7 @@ const pinLabels = {
   pin2: "ACN",
   pin3: "ACP",
   pin4: "CHRG_OK",
-  pin5: "OTG/VAP",
+  pin5: "OTG_VAP",
   pin6: "ILIM_HIZ",
   pin7: "VDDA",
   pin8: "IADPT",

@@ -127,7 +127,7 @@ function SystemBlockFlow({
       elevateEdgesOnSelect
       fitViewOptions={{ maxZoom: 1.2, padding: 0.18 }}
       isValidConnection={controller.isValidConnection}
-      minZoom={0.4}
+      minZoom={0.3}
       nodeTypes={NODE_TYPES}
       nodes={state.nodes}
       nodesConnectable

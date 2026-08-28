@@ -20,6 +20,15 @@ export {
 
 export const DEFAULT_EVALUATION_TIMEOUT_MS = 30_000;
 export const DEFAULT_MAIN_COMPONENT_PATH = "generated-system.tsx";
+export const PREVIEW_EVALUATION_PLATFORM = {
+  pcbDisabled: false,
+  routingDisabled: true,
+  partsEngineDisabled: true,
+  drcChecksDisabled: true,
+  spiceDisabled: true,
+} as const;
+
+const NON_FATAL_PREVIEW_ERROR_TYPES = ["pcb_missing_footprint_error"] as const;
 
 export interface EvaluateGeneratedTsxOptions {
   /** Maximum time allowed for worker creation, evaluation, and rendering. */
@@ -61,7 +70,7 @@ const validateMainComponentPath = (path: string): void => {
 
 /**
  * Evaluates generated, default-exported tscircuit TSX in an isolated worker and
- * converts its Circuit JSON into one schematic-only SVG per sheet.
+ * returns footprint-bearing Circuit JSON plus one schematic SVG per sheet.
  */
 export async function evaluateGeneratedTsx(
   tsx: string,
@@ -87,11 +96,10 @@ export async function evaluateGeneratedTsx(
   const evaluation = (async (): Promise<AnyCircuitElement[]> => {
     worker = await createCircuitWebWorker({
       webWorkerBlobUrl,
-      platform: {
-        pcbDisabled: true,
-        routingDisabled: true,
-        partsEngineDisabled: true,
-      },
+      // PCB component and pad generation is required by the ECAD exporters.
+      // Routing, external parts lookup, simulation, and DRC are unnecessary for
+      // the system preview and are skipped to keep evaluation responsive.
+      platform: PREVIEW_EVALUATION_PLATFORM,
     });
 
     // A worker can finish initializing just after the timeout fires. Kill that
@@ -123,7 +131,12 @@ export async function evaluateGeneratedTsx(
 
   try {
     const circuitJson = await Promise.race([evaluation, timeout]);
-    assertCircuitJsonHasNoErrors(circuitJson);
+    // Schematic-only blocks may not have selected physical packages yet. Keep
+    // their PCB component records available to exporters without preventing a
+    // schematic preview; every other evaluation error remains fatal.
+    assertCircuitJsonHasNoErrors(circuitJson, {
+      ignoredErrorTypes: NON_FATAL_PREVIEW_ERROR_TYPES,
+    });
     const sheets = renderSchematicSheets(circuitJson, options.schematicOptions);
 
     return { circuitJson, sheets };

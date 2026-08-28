@@ -17,15 +17,23 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
     <resistor
       name="C5"
       resistance="0ohm"
+      footprint="0402"
       schX={-3.25}
       schY={-0.2}
       connections={{ pin1: "net.RF_ANT1" }}
     />
-    <capacitor name="C13" capacitance="1pF" schX={0} schY={-0.2} />
+    <capacitor
+      name="C13"
+      capacitance="1pF"
+      footprint="0402"
+      schX={0}
+      schY={-0.2}
+    />
 
     <inductor
       name="L2"
       inductance="1nH"
+      footprint="0402"
       doNotPlace
       schX={-0.6}
       schY={-0.95}
@@ -36,6 +44,7 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
       name="L1"
       manufacturerPartNumber="LQP15MN1N3B02"
       inductance="1.3nH"
+      footprint="0402"
       schX={1}
       schY={-0.95}
       schRotation={90}
@@ -44,6 +53,7 @@ export const WirelessAntenna_W3006_TIDCWL1837MODCOM8I = (
     <resistor
       name="C7"
       resistance="0ohm"
+      footprint="0402"
       doNotPlace
       schX={-3.75}
       schY={-0.75}

@@ -38,7 +38,13 @@ export const getCircuitJsonErrors = (
 
 export const assertCircuitJsonHasNoErrors = (
   elements: readonly AnyCircuitElement[],
+  options: {
+    ignoredErrorTypes?: readonly string[];
+  } = {},
 ): void => {
-  const errors = getCircuitJsonErrors(elements);
+  const ignoredErrorTypes = new Set(options.ignoredErrorTypes);
+  const errors = getCircuitJsonErrors(elements).filter(
+    (error) => !ignoredErrorTypes.has(error.error_type),
+  );
   if (errors.length > 0) throw new CircuitJsonEvaluationError(errors);
 };

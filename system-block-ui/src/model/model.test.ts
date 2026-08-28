@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   createConsumerWirelessModuleDesign,
   createSubcircuitCatalog,
+  createSystemBlockExamples,
   generateSystemDesignArtifacts,
   generateTsx,
   getSubcircuitDefinition,
@@ -375,6 +376,260 @@ describe("automatic connection resolution", () => {
 });
 
 describe("catalog and TSX generation", () => {
+  test("loads every registered example as a resolvable semantic graph", async () => {
+    const examples = createSystemBlockExamples(SUBCIRCUIT_CATALOG);
+
+    expect(examples.map(({ sourcePath }) => sourcePath)).toEqual([
+      "examples/ConsumerWirelessModule.circuit.tsx",
+      "examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx",
+      "examples/PersonalElectronics_ConnectedPeripheralAndPrinters_Powerbank.circuit.tsx",
+      "examples/RearviewMirrorModule.circuit.tsx",
+      "examples/SeatPositionModule.circuit.tsx",
+    ]);
+    expect(
+      examples
+        .find(({ id }) => id === "bluetooth-speaker")
+        ?.graph.connections.find(({ protocol }) => protocol === "hci-uart"),
+    ).toMatchObject({
+      fromBlockId: "bluetooth_host",
+      toBlockId: "bluetooth_controller",
+    });
+
+    for (const example of examples) {
+      expect(
+        await Bun.file(
+          new URL(`../../../${example.sourcePath}`, import.meta.url),
+        ).exists(),
+      ).toBe(true);
+      expect(
+        resolveDesignConnections(
+          example.graph.blocks,
+          example.graph.connections,
+          SUBCIRCUIT_CATALOG,
+        ),
+      ).toHaveLength(example.graph.connections.length);
+    }
+  });
+
+  test("builds the Power Bank from all five application blocks", () => {
+    const example = createSystemBlockExamples(SUBCIRCUIT_CATALOG).find(
+      ({ id }) => id === "power-bank",
+    );
+    if (!example) throw new Error("Missing Power Bank example");
+
+    expect(example.graph.blocks.map(({ id }) => id)).toEqual([
+      "battery_management",
+      "battery_charging",
+      "system_power",
+      "microcontroller",
+      "usb_c_output",
+    ]);
+
+    const resolved = resolveDesignConnections(
+      example.graph.blocks,
+      example.graph.connections,
+      SUBCIRCUIT_CATALOG,
+    );
+    expect(resolved).toHaveLength(7);
+    expect(
+      resolved.find(({ id }) => id === "data_i2c_charger")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin14",
+          toSelector: ".U1 > .pin13",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin15",
+          toSelector: ".U1 > .pin12",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "data_boost_control")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin12",
+          toSelector: ".Q2 > .gate",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin13",
+          toSelector: ".Q1 > .gate",
+        }),
+      ]),
+    );
+  });
+
+  test("builds the Seat Position Module from all six application blocks", () => {
+    const example = createSystemBlockExamples(SUBCIRCUIT_CATALOG).find(
+      ({ id }) => id === "seat-position-module",
+    );
+    if (!example) throw new Error("Missing Seat Position Module example");
+
+    expect(example.graph.blocks.map(({ id }) => id)).toEqual([
+      "power_supply",
+      "communication_interface",
+      "microcontroller",
+      "motor_driver",
+      "position_feedback",
+      "light_driver",
+    ]);
+
+    const resolved = resolveDesignConnections(
+      example.graph.blocks,
+      example.graph.connections,
+      SUBCIRCUIT_CATALOG,
+    );
+    expect(resolved).toHaveLength(7);
+    expect(
+      resolved.find(({ id }) => id === "data_can_controller")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U6 > .PA8",
+          toSelector: ".U6 > .TXD",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U6 > .RXD",
+          toSelector: ".U6 > .PA9",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "data_motor_control")?.traces,
+    ).toHaveLength(13);
+    expect(
+      resolved.find(({ id }) => id === "power_protected_to_motor_driver")
+        ?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .OUT",
+          toSelector: ".U1 > .PVDD",
+        }),
+      ]),
+    );
+
+    const artifacts = generateSystemDesignArtifacts({
+      blocks: example.graph.blocks,
+      connections: example.graph.connections,
+      catalog: SUBCIRCUIT_CATALOG,
+      boardName: "seat_position_module",
+    });
+    for (const componentName of [
+      "PowerSupply_LM5050_TIDA00992",
+      "CommunicationInterface_TCAN1042_TIDA01428",
+      "Microcontroller_MSPM0L1306Q1_TIDA020065",
+      "MotorDriver_DRV8305_TIDA01330",
+      "PositionFeedback_DRV5013_TIDA01389",
+      "LightDriver_TIDA01330",
+    ]) {
+      expect(artifacts.tsx).toContain(componentName);
+    }
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="data_motor_control" data-kind="data"',
+    );
+  });
+
+  test("builds the Rearview Mirror Module from all seven application blocks", () => {
+    const example = createSystemBlockExamples(SUBCIRCUIT_CATALOG).find(
+      ({ id }) => id === "rearview-mirror-module",
+    );
+    if (!example) throw new Error("Missing Rearview Mirror Module example");
+
+    expect(example.graph.blocks.map(({ id }) => id)).toEqual([
+      "power_supply",
+      "communication_interface",
+      "microcontroller",
+      "mirror_driver",
+      "light_sensor",
+      "lamp_driver",
+      "temperature_sensor",
+    ]);
+
+    const resolved = resolveDesignConnections(
+      example.graph.blocks,
+      example.graph.connections,
+      SUBCIRCUIT_CATALOG,
+    );
+    expect(resolved).toHaveLength(16);
+    expect(
+      resolved.find(({ id }) => id === "data_can_controller")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .CAN_TX",
+          toSelector: ".U6 > .TXD",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "data_i2c_light_sensor")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .I2C0_SCL",
+          toSelector: ".U4Sensor .U4 > .SCL",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U1 > .I2C0_SCL",
+          toSelector: ".U5Sensor .U5 > .SCL",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "power_3v3_to_lamp_driver")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U2 > .OUT",
+          toSelector: ".J3 > .pin3",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U2 > .OUT",
+          toSelector: ".R9 > .pin1",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "power_protected_to_mirror_driver")
+        ?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U1 > .OUT",
+          toSelector: ".Q2 > .collector",
+        }),
+      ]),
+    );
+
+    const artifacts = generateSystemDesignArtifacts({
+      blocks: example.graph.blocks,
+      connections: example.graph.connections,
+      catalog: SUBCIRCUIT_CATALOG,
+      boardName: "rearview_mirror_module",
+    });
+    for (const componentName of [
+      "PowerSupply_LM74202_TPS7E81_Q1",
+      "CommunicationInterface_TCAN1042_TIDA01428",
+      "Microcontroller_MSPM0G3507",
+      "ElectrochromicMirrorDriver_TIDA01539",
+      "LightSensor_OPT3001_TIDA01539",
+      "LampDriver_TPS92638_TIDA00356",
+      "TemperatureSensor_LM50HV_Q1",
+    ]) {
+      expect(artifacts.tsx).toContain(componentName);
+    }
+    expect(artifacts.tsx).toContain(
+      '<PowerSupply_LM74202_TPS7E81_Q1\n      name="power_supply"\n      schSheetName="power_supply"\n      schX={-3.6}',
+    );
+    expect(artifacts.tsx).toContain('to=".light_sensor .U5Sensor .U5 > .SDA"');
+    expect(artifacts.systemDiagramSvg).toContain(
+      'data-connection-id="data_power_monitor" data-kind="data"',
+    );
+  });
+
   test("builds the Consumer wireless module from all seven reviewed blocks", () => {
     const design = createConsumerWirelessModuleDesign(SUBCIRCUIT_CATALOG);
     expect(design.blocks.map(({ id }) => id)).toEqual([
@@ -484,7 +739,7 @@ describe("catalog and TSX generation", () => {
     ).toThrow(ConnectionResolutionError);
   });
 
-  test("enriches every discovered raw source and protects prop-less blocks", () => {
+  test("enriches discovered raw sources with curated adapters", () => {
     const catalog = createSubcircuitCatalog({
       "../../../lib/subcircuits/FutureSensor_X1.circuit.tsx":
         "export const FutureSensor_X1 = (props: unknown) => null",
@@ -501,7 +756,7 @@ describe("catalog and TSX generation", () => {
       catalog.find(
         (item) => item.componentName === "Microcontroller_MSP430G2332",
       ),
-    ).toMatchObject({ canInstantiate: false });
+    ).toMatchObject({ canInstantiate: true });
   });
 
   test("generates stable TSX regardless of graph array ordering", () => {
@@ -730,5 +985,16 @@ describe("catalog and TSX generation", () => {
     ).toBeDefined();
     expect(definition("logic-buffer-sn74lvc1g34")).toBeDefined();
     expect(definition("temperature-sensor-tmp103-tida00399")).toBeDefined();
+    expect(definition("power-supply-lm74202-tps7e81-q1")).toMatchObject({
+      sourcePath:
+        "lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx",
+    });
+    expect(definition("temperature-sensor-lm50hv-q1")).toMatchObject({
+      sourcePath:
+        "lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx",
+    });
+    expect(definition("electrochromic-mirror-driver-tida01539")).toBeDefined();
+    expect(definition("light-sensor-opt3001-tida01539")).toBeDefined();
+    expect(definition("lamp-driver-tps92638-tida00356")).toBeDefined();
   });
 });

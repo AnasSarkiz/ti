@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import type { SubcircuitDefinition } from "../model/types";
 import { SearchIcon } from "./Icons";
 
@@ -6,11 +6,16 @@ export const SYSTEM_BLOCK_DRAG_MIME =
   "application/x-tscircuit-system-block-definition";
 
 interface BlockPaletteProps {
+  children?: ReactNode;
   definitions: readonly SubcircuitDefinition[];
   onInsert: (definitionId: string) => void;
 }
 
-export function BlockPalette({ definitions, onInsert }: BlockPaletteProps) {
+export function BlockPalette({
+  children,
+  definitions,
+  onInsert,
+}: BlockPaletteProps) {
   const [query, setQuery] = useState("");
 
   const groups = useMemo(() => {
@@ -45,6 +50,7 @@ export function BlockPalette({ definitions, onInsert }: BlockPaletteProps) {
 
   return (
     <aside className="palette-panel" aria-label="Subcircuit palette">
+      {children}
       <div className="panel-heading">
         <h2 className="panel-title">Subcircuits</h2>
         <span className="count-badge">{definitions.length}</span>

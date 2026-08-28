@@ -10,6 +10,25 @@ const DEFAULT_ORIENTATION = "landscape";
 const PDF_FONT_FAMILY = "LiberationSans";
 const PDF_TEXT_ANCHOR_GAP_EM = 0.12;
 const PDF_NET_LABEL_BASELINE_SHIFT_EM = 0.06;
+const SVG_COLOR_ATTRIBUTES = [
+  "color",
+  "fill",
+  "flood-color",
+  "lighting-color",
+  "stop-color",
+  "stroke",
+] as const;
+const THREE_CHANNEL_RGBA_PATTERN =
+  /rgba\(\s*([^,()]+)\s*,\s*([^,()]+)\s*,\s*([^,()]+)\s*\)/gi;
+const SHEET_OVERLAY_MARGIN_MM = 16;
+const SHEET_OVERLAY_BASELINE_MM = 16;
+const SHEET_OVERLAY_GAP_MM = 4;
+const SHEET_OVERLAY_BACKDROP_Y_MM = 11.5;
+const SHEET_OVERLAY_BACKDROP_HEIGHT_MM = 5.5;
+const SHEET_OVERLAY_BACKDROP_PADDING_X_MM = 1;
+const SHEET_OVERLAY_TITLE_FONT_SIZE_PT = 10;
+const SHEET_OVERLAY_PAGE_FONT_SIZE_PT = 9;
+const SCHEMATIC_BACKGROUND_RGB = [245, 241, 237] as const;
 const EMBEDDED_PDF_FONTS = [
   {
     fileName: "LiberationSans-Regular.ttf",
@@ -68,6 +87,7 @@ export interface SchematicPdfPageLayout {
 
 interface PreparedSheet {
   element: Element;
+  title: string;
 }
 
 const parseSvg = (svg: string): Element => {
@@ -156,6 +176,34 @@ const normalizeSvgViewport = (
     svg.setAttribute("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
   }
   svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+};
+
+const normalizeThreeChannelRgba = (value: string): string =>
+  value.replace(
+    THREE_CHANNEL_RGBA_PATTERN,
+    (_match, red: string, green: string, blue: string) =>
+      `rgb(${red.trim()}, ${green.trim()}, ${blue.trim()})`,
+  );
+
+/** Normalizes browser-valid paint values that svg2pdf does not parse. */
+export const normalizeSvgPaintForPdf = (svg: Element): void => {
+  for (const element of [svg, ...svg.querySelectorAll("*")]) {
+    for (const attribute of SVG_COLOR_ATTRIBUTES) {
+      const value = element.getAttribute(attribute);
+      if (value === null) continue;
+
+      const normalized = normalizeThreeChannelRgba(value);
+      if (normalized !== value) element.setAttribute(attribute, normalized);
+    }
+
+    const style = element.getAttribute("style");
+    if (style === null) continue;
+
+    const normalizedStyle = normalizeThreeChannelRgba(style);
+    if (normalizedStyle !== style) {
+      element.setAttribute("style", normalizedStyle);
+    }
+  }
 };
 
 export const normalizeSvgTextForPdf = (svg: Element): void => {
@@ -272,6 +320,16 @@ const registerPdfFonts = async (pdf: jsPDF): Promise<void> => {
   pdf.setFont(PDF_FONT_FAMILY, "normal");
 };
 
+const normalizeSheetTitle = (
+  title: string | undefined,
+  pageNumber: number,
+  pageCount: number,
+): string => {
+  const normalized = title?.replace(/\s+/g, " ").trim();
+  if (normalized) return normalized;
+  return pageCount === 1 ? "Schematic" : `Sheet ${pageNumber}`;
+};
+
 const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
   const sheets: readonly SchematicPdfSheet[] =
     typeof input === "string" ? [{ svg: input }] : input;
@@ -288,9 +346,91 @@ const prepareSheets = (input: SchematicPdfInput): PreparedSheet[] => {
     const element = parseSvg(sheet.svg);
     const dimensions = getSvgDimensions(element);
     normalizeSvgViewport(element, dimensions);
+    normalizeSvgPaintForPdf(element);
     normalizeSvgTextForPdf(element);
-    return { element };
+    return {
+      element,
+      title: normalizeSheetTitle(sheet.title, index + 1, sheets.length),
+    };
   });
+};
+
+const fitTitle = (pdf: jsPDF, title: string, maxWidth: number): string => {
+  if (pdf.getTextWidth(title) <= maxWidth) return title;
+
+  const suffix = "...";
+  let end = title.length;
+  while (
+    end > 0 &&
+    pdf.getTextWidth(`${title.slice(0, end)}${suffix}`) > maxWidth
+  ) {
+    end -= 1;
+  }
+  return `${title.slice(0, end).trimEnd()}${suffix}`;
+};
+
+/** Draws the sheet name and page count after the SVG so they remain on top. */
+export const renderSchematicPdfSheetOverlay = ({
+  pdf,
+  title,
+  pageNumber,
+  pageCount,
+  pageWidthMm,
+}: {
+  pdf: jsPDF;
+  title: string;
+  pageNumber: number;
+  pageCount: number;
+  pageWidthMm: number;
+}): void => {
+  const pageLabel = `${pageNumber}/${pageCount}`;
+
+  pdf.setFont(PDF_FONT_FAMILY, "normal");
+  pdf.setFontSize(SHEET_OVERLAY_PAGE_FONT_SIZE_PT);
+  const pageLabelWidth = pdf.getTextWidth(pageLabel);
+
+  pdf.setFont(PDF_FONT_FAMILY, "bold");
+  pdf.setFontSize(SHEET_OVERLAY_TITLE_FONT_SIZE_PT);
+  const maxTitleWidth = Math.max(
+    1,
+    pageWidthMm -
+      SHEET_OVERLAY_MARGIN_MM * 2 -
+      pageLabelWidth -
+      SHEET_OVERLAY_GAP_MM,
+  );
+  const fittedTitle = fitTitle(pdf, title, maxTitleWidth);
+  const fittedTitleWidth = pdf.getTextWidth(fittedTitle);
+
+  pdf.setFillColor(...SCHEMATIC_BACKGROUND_RGB);
+  pdf.rect(
+    SHEET_OVERLAY_MARGIN_MM - SHEET_OVERLAY_BACKDROP_PADDING_X_MM,
+    SHEET_OVERLAY_BACKDROP_Y_MM,
+    fittedTitleWidth + SHEET_OVERLAY_BACKDROP_PADDING_X_MM * 2,
+    SHEET_OVERLAY_BACKDROP_HEIGHT_MM,
+    "F",
+  );
+  pdf.rect(
+    pageWidthMm -
+      SHEET_OVERLAY_MARGIN_MM -
+      pageLabelWidth -
+      SHEET_OVERLAY_BACKDROP_PADDING_X_MM,
+    SHEET_OVERLAY_BACKDROP_Y_MM,
+    pageLabelWidth + SHEET_OVERLAY_BACKDROP_PADDING_X_MM * 2,
+    SHEET_OVERLAY_BACKDROP_HEIGHT_MM,
+    "F",
+  );
+
+  pdf.setTextColor(45, 55, 72);
+  pdf.text(fittedTitle, SHEET_OVERLAY_MARGIN_MM, SHEET_OVERLAY_BASELINE_MM);
+
+  pdf.setFont(PDF_FONT_FAMILY, "normal");
+  pdf.setFontSize(SHEET_OVERLAY_PAGE_FONT_SIZE_PT);
+  pdf.text(
+    pageLabel,
+    pageWidthMm - SHEET_OVERLAY_MARGIN_MM,
+    SHEET_OVERLAY_BASELINE_MM,
+    { align: "right" },
+  );
 };
 
 /** Converts one or more schematic SVGs into a vector, one-sheet-per-page PDF. */
@@ -335,6 +475,13 @@ export async function createSchematicPdfBlob(
       width: layout.width,
       height: layout.height,
       loadExternalStyleSheets: false,
+    });
+    renderSchematicPdfSheetOverlay({
+      pdf,
+      title: sheet.title,
+      pageNumber: index + 1,
+      pageCount: sheets.length,
+      pageWidthMm: pageWidth,
     });
   }
 

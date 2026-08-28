@@ -414,7 +414,7 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
       name="D4"
       {...pcbPlacement.D4}
       footprint="sot363"
-      schX={-15}
+      schX={-10.5}
       schY={-4.85}
       schWidth={1.85}
       schHeight={2.3}
@@ -572,15 +572,15 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
       capacitance="1uF"
       manufacturerPartNumber="UMK107AB7105KA-T"
       footprint="0603"
-      schX={12.9}
-      schY={14.7}
+      schX={9.6}
+      schY={8.9}
       schOrientation="vertical"
     />
     <SQJ858AEP_T1_GE3
       name="Q2"
       {...pcbPlacement.Q2}
-      schX={14.25}
-      schY={14.25}
+      schX={11.3}
+      schY={8.55}
       symbolDrainSide="top"
       symbolSourceSide="bottom"
       symbolGateSide="left"
@@ -588,8 +588,8 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
     <SQJ858AEP_T1_GE3
       name="Q4"
       {...pcbPlacement.Q4}
-      schX={14.25}
-      schY={12.42}
+      schX={11.3}
+      schY={6.95}
       symbolDrainSide="top"
       symbolSourceSide="bottom"
       symbolGateSide="left"
@@ -600,12 +600,12 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
       resistance="0.015ohm"
       manufacturerPartNumber="CRA2512-FZ-R015ELF"
       footprint="2512"
-      schX={14.7}
-      schY={9.65}
+      schX={11.75}
+      schY={5.0}
       schOrientation="vertical"
     />
-    <NetTie name="NT1" schX={13.0} schY={10.1} {...pcbPlacement.NT1} />
-    <NetTie name="NT2" schX={13.0} schY={9.2} {...pcbPlacement.NT2} />
+    <NetTie name="NT1" schX={9.6} schY={5.4} {...pcbPlacement.NT1} />
+    <NetTie name="NT2" schX={9.6} schY={4.6} {...pcbPlacement.NT2} />
     <trace from=".C1 > .pin1" to="net.PVDD" schDisplayLabel="PVDD" />
     <trace from=".C1 > .pin2" to="net.GND" schDisplayLabel="GND" />
     <trace from=".Q2 > .drain" to="net.PVDD" schDisplayLabel="PVDD" />
@@ -643,15 +643,15 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
       capacitance="1uF"
       manufacturerPartNumber="UMK107AB7105KA-T"
       footprint="0603"
-      schX={10.5}
-      schY={7.25}
+      schX={8.3}
+      schY={3.3}
       schOrientation="vertical"
     />
     <SQJ858AEP_T1_GE3
       name="Q6"
       {...pcbPlacement.Q6}
-      schX={11.96}
-      schY={6.9}
+      schX={10.1}
+      schY={2.95}
       symbolDrainSide="top"
       symbolSourceSide="bottom"
       symbolGateSide="left"
@@ -659,8 +659,8 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
     <SQJ858AEP_T1_GE3
       name="Q7"
       {...pcbPlacement.Q7}
-      schX={11.96}
-      schY={5.06}
+      schX={10.1}
+      schY={1.35}
       symbolDrainSide="top"
       symbolSourceSide="bottom"
       symbolGateSide="left"
@@ -671,12 +671,12 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
       resistance="0.015ohm"
       manufacturerPartNumber="CRA2512-FZ-R015ELF"
       footprint="2512"
-      schX={12.42}
-      schY={2.3}
+      schX={10.55}
+      schY={-0.6}
       schOrientation="vertical"
     />
-    <NetTie name="NT3" schX={10.75} schY={2.75} {...pcbPlacement.NT3} />
-    <NetTie name="NT4" schX={10.75} schY={1.85} {...pcbPlacement.NT4} />
+    <NetTie name="NT3" schX={8.4} schY={-0.2} {...pcbPlacement.NT3} />
+    <NetTie name="NT4" schX={8.4} schY={-1.0} {...pcbPlacement.NT4} />
     <trace from=".C12 > .pin1" to="net.PVDD" schDisplayLabel="PVDD" />
     <trace from=".C12 > .pin2" to="net.GND" schDisplayLabel="GND" />
     <trace from=".Q6 > .drain" to="net.PVDD" schDisplayLabel="PVDD" />
@@ -704,15 +704,15 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
       capacitance="1uF"
       manufacturerPartNumber="UMK107AB7105KA-T"
       footprint="0603"
-      schX={8.5}
-      schY={-0.25}
+      schX={7.2}
+      schY={-2.2}
       schOrientation="vertical"
     />
     <SQJ858AEP_T1_GE3
       name="Q8"
       {...pcbPlacement.Q8}
-      schX={9.9}
-      schY={-0.7}
+      schX={9.0}
+      schY={-2.55}
       symbolDrainSide="top"
       symbolSourceSide="bottom"
       symbolGateSide="left"
@@ -720,8 +720,8 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
     <SQJ858AEP_T1_GE3
       name="Q9"
       {...pcbPlacement.Q9}
-      schX={9.9}
-      schY={-2.55}
+      schX={9.0}
+      schY={-4.15}
       symbolDrainSide="top"
       symbolSourceSide="bottom"
       symbolGateSide="left"
@@ -732,12 +732,12 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
       resistance="0.015ohm"
       manufacturerPartNumber="CRA2512-FZ-R015ELF"
       footprint="2512"
-      schX={10.35}
-      schY={-5.3}
+      schX={9.45}
+      schY={-6.1}
       schOrientation="vertical"
     />
-    <NetTie name="NT5" schX={8.7} schY={-4.85} {...pcbPlacement.NT5} />
-    <NetTie name="NT6" schX={8.7} schY={-5.75} {...pcbPlacement.NT6} />
+    <NetTie name="NT5" schX={7.3} schY={-5.7} {...pcbPlacement.NT5} />
+    <NetTie name="NT6" schX={7.3} schY={-6.5} {...pcbPlacement.NT6} />
     <trace from=".C19 > .pin1" to="net.PVDD" schDisplayLabel="PVDD" />
     <trace from=".C19 > .pin2" to="net.GND" schDisplayLabel="GND" />
     <trace from=".Q8 > .drain" to="net.PVDD" schDisplayLabel="PVDD" />
@@ -764,8 +764,8 @@ export const MotorDriver_DRV8305_TIDA01330 = (props: SubcircuitProps) => (
       {...pcbPlacement.J5}
       pinCount={6}
       manufacturerPartNumber="1729160"
-      schX={15.5}
-      schY={-1.85}
+      schX={14.2}
+      schY={-2.9}
       schWidth={0.5}
       schHeight={1.4}
       schPinArrangement={{

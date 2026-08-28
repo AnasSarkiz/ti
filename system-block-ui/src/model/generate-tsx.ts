@@ -37,7 +37,11 @@ const sanitizeJsxCommentText = (value: string): string => {
 
 const prefixSelector = (blockName: string, selector: string): string => {
   const relative = selector.trim().replace(/^>\s*/, "");
-  return `.${blockName} > ${relative}`;
+  // Nested subcircuits use a descendant selector between component levels,
+  // for example `.U4Sensor .U4 > .SCL`. Adding a child combinator before
+  // that path makes tscircuit search for a non-existent combined component.
+  const separator = /^\.[^>\s]+\s+\./.test(relative) ? " " : " > ";
+  return `.${blockName}${separator}${relative}`;
 };
 
 const renderImport = (
@@ -101,6 +105,16 @@ const prepareBlocks = (
       throw new Error(
         `${definition.title} cannot be safely instantiated by generated TSX. ${definition.warning ?? ""}`.trim(),
       );
+    }
+    for (const [coordinate, value] of [
+      ["schX", block.schX],
+      ["schY", block.schY],
+    ] as const) {
+      if (value !== undefined && !Number.isFinite(value)) {
+        throw new Error(
+          `Block ${block.id} has an invalid ${coordinate} coordinate.`,
+        );
+      }
     }
     const instanceName = sanitizeInstanceName(block.name ?? block.id);
     return {
@@ -256,6 +270,12 @@ const renderGeneratedSource = ({
       `    <${item.definition.componentName}`,
       `      name=${quote(item.instanceName)}`,
       `      schSheetName=${quote(item.sheetName)}`,
+      ...(item.block.schX === undefined
+        ? []
+        : [`      schX={${item.block.schX}}`]),
+      ...(item.block.schY === undefined
+        ? []
+        : [`      schY={${item.block.schY}}`]),
       "    />",
     );
   }

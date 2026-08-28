@@ -257,27 +257,32 @@ interface TsxCodeProps {
 
 export function TsxCode({ source }: TsxCodeProps) {
   const tokens = tokenizeTsx(source);
+  let tokenOffset = 0;
+  const renderedTokens = tokens.map((token) => {
+    const key = `${tokenOffset}-${token.kind ?? "plain"}`;
+    tokenOffset += token.content.length;
+    return token.kind ? (
+      <span className={`syntax-token syntax-${token.kind}`} key={key}>
+        {token.content}
+      </span>
+    ) : (
+      token.content
+    );
+  });
 
   return (
-    <pre
+    // biome-ignore lint/a11y/useSemanticElements: A textarea cannot preserve token-level syntax markup.
+    <div
       aria-label="Generated TSX source code"
+      aria-multiline="true"
+      aria-readonly="true"
       className="code-view"
+      role="textbox"
       tabIndex={0}
     >
-      <code>
-        {tokens.map((token, index) =>
-          token.kind ? (
-            <span
-              className={`syntax-token syntax-${token.kind}`}
-              key={`${index}-${token.kind}`}
-            >
-              {token.content}
-            </span>
-          ) : (
-            token.content
-          ),
-        )}
-      </code>
-    </pre>
+      <pre>
+        <code>{renderedTokens}</code>
+      </pre>
+    </div>
   );
 }

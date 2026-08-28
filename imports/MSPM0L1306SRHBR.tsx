@@ -1,4 +1,4 @@
-import type { ChipProps } from "@tscircuit/props";
+import type { ChipProps, PinAttributeMap } from "@tscircuit/props";
 
 const pinLabels = {
   pin1: ["PA0", "GPIO_PA0"],
@@ -36,14 +36,98 @@ const pinLabels = {
   pin33: ["EP", "QFN_PAD", "VSS_PAD", "thermalpad"],
 } as const;
 
+const gpioAttributes = { isGpio: true } as const;
+
+const pinAttributes = {
+  pin1: {
+    ...gpioAttributes,
+    capabilities: ["i2c_sda"],
+    activeCapability: "i2c_sda",
+    needsExternalPullup: true,
+  },
+  pin2: {
+    ...gpioAttributes,
+    capabilities: ["i2c_scl"],
+    activeCapability: "i2c_scl",
+    needsExternalPullup: true,
+  },
+  pin3: { mustBeConnected: true, canUseInternalPullup: true },
+  pin4: {
+    requiresPower: true,
+    mustBeConnected: true,
+    shouldHaveDecouplingCapacitor: true,
+    recommendedDecouplingCapacitorCapacitance: "0.1uF",
+  },
+  pin5: { requiresGround: true, mustBeConnected: true },
+  pin6: {
+    ...gpioAttributes,
+    capabilities: ["spi_cs"],
+    activeCapability: "spi_cs",
+  },
+  pin7: gpioAttributes,
+  pin8: {
+    ...gpioAttributes,
+    capabilities: ["spi_miso"],
+    activeCapability: "spi_miso",
+  },
+  pin9: {
+    ...gpioAttributes,
+    capabilities: ["spi_mosi"],
+    activeCapability: "spi_mosi",
+  },
+  pin10: {
+    ...gpioAttributes,
+    capabilities: ["spi_sck"],
+    activeCapability: "spi_sck",
+  },
+  pin11: gpioAttributes,
+  pin12: {
+    ...gpioAttributes,
+    capabilities: ["uart_rx"],
+    activeCapability: "uart_rx",
+  },
+  pin13: {
+    ...gpioAttributes,
+    capabilities: ["uart_tx"],
+    activeCapability: "uart_tx",
+  },
+  pin14: gpioAttributes,
+  pin15: gpioAttributes,
+  pin16: gpioAttributes,
+  pin17: gpioAttributes,
+  pin18: gpioAttributes,
+  pin19: gpioAttributes,
+  pin20: gpioAttributes,
+  pin21: gpioAttributes,
+  pin22: gpioAttributes,
+  pin23: { ...gpioAttributes, includeInBoardPinout: true },
+  pin24: { ...gpioAttributes, includeInBoardPinout: true },
+  pin25: gpioAttributes,
+  pin26: gpioAttributes,
+  pin27: gpioAttributes,
+  pin28: gpioAttributes,
+  pin29: gpioAttributes,
+  pin30: gpioAttributes,
+  pin31: gpioAttributes,
+  pin32: {
+    providesPower: true,
+    mustBeConnected: true,
+    shouldHaveDecouplingCapacitor: true,
+    recommendedDecouplingCapacitorCapacitance: "0.47uF",
+  },
+  pin33: { requiresGround: true, mustBeConnected: true },
+} satisfies Record<string, PinAttributeMap>;
+
 export const MSPM0L1306SRHBR = (props: ChipProps<typeof pinLabels>) => {
   return (
     <chip
       pinLabels={pinLabels}
+      pinAttributes={pinAttributes}
       supplierPartNumbers={{
         jlcpcb: ["C19189324"],
       }}
       manufacturerPartNumber="MSPM0L1306SRHBR"
+      datasheetUrl="https://www.ti.com/lit/ds/symlink/mspm0l1306.pdf"
       schWidth="5mm"
       schHeight="5.3mm"
       schPinArrangement={{

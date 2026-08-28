@@ -21,6 +21,7 @@ export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
     <resistor
       name="RPU1"
       resistance="10kohm"
+      footprint="0402"
       doNotPlace
       schX={-1.4}
       schY={2}
@@ -30,6 +31,7 @@ export const TemperatureSensor_TMP103_TIDA00399 = (props: SubcircuitProps) => (
     <resistor
       name="RPU2"
       resistance="10kohm"
+      footprint="0402"
       doNotPlace
       schX={-0.2}
       schY={2}

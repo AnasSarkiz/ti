@@ -4,7 +4,7 @@ import { BQ294700DSG } from "../chips/BQ294700DSG.circuit.tsx";
 import { BQ40Z60RHB } from "../chips/BQ40Z60RHB.circuit.tsx";
 
 export const BatteryManagement_2to4Cell_BQ40Z60 = (props: SubcircuitProps) => (
-  <subcircuit routingDisabled {...props}>
+  <subcircuit routingDisabled schX={1.5} schY={-2} {...props}>
     <net name="GND" isGroundNet />
     <net name="PGND" isGroundNet />
     <net name={"\u200B4P"} isPowerNet />

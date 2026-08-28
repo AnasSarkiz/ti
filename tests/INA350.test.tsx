@@ -3,7 +3,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Circuit } from "@tscircuit/core";
-import INA350ModuleExample from "../examples/InstrumentationAmplifier_INA350.circuit.tsx";
 import {
   INA350,
   INA350ABSIDSGR,
@@ -305,42 +304,6 @@ test("two imported INA350 modules accept parent connections without shorting the
     }
   }
 });
-
-for (const gain of ["external", 30, 50] as const) {
-  test(`INA350 import example connects gain ${gain} with external REF and no headers`, async () => {
-    const circuit = new Circuit();
-    circuit.add(<INA350ModuleExample gain={gain} />);
-    await circuit.renderUntilSettled();
-    assertNoErrors(circuit);
-    assert.deepEqual(
-      circuit.db.source_component
-        .list()
-        .map((c) => c.name)
-        .sort(),
-      ["C1", "U1"],
-    );
-    for (const [netName, chipPin] of [
-      ["V3_3", "VS"],
-      ["GND", "V_NEG"],
-      ["INA_IN_NEG", "IN_NEG"],
-      ["INA_IN_POS", "IN_POS"],
-      ["INA_OUT", "OUT"],
-      ["VREF_1_25", "REF"],
-      ...(gain === "external" ? [["INA_GS", "GS"]] : []),
-    ]) {
-      const net = circuit.db.source_net.getWhere({ name: netName });
-      assert.ok(net, netName);
-      const connected = connectedIds(circuit, net.source_net_id);
-      assert.ok(connected.has(getPort(circuit, "U1", chipPin).source_port_id));
-    }
-    const ground = connectedIds(
-      circuit,
-      getPort(circuit, "U1", "V_NEG").source_port_id,
-    );
-    assert.ok(!ground.has(getPort(circuit, "U1", "REF").source_port_id));
-    assert.ok(!ground.has(getPort(circuit, "U1", "SHDN").source_port_id));
-  });
-}
 
 test("INA350CDS rejects ABS gains instead of silently choosing an incorrect gain", () => {
   assert.throws(

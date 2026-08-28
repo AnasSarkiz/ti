@@ -1,5 +1,6 @@
 import type { ChipProps } from "@tscircuit/props";
 import "tscircuit";
+import { W3006_FOOTPRINT } from "./jlcpcb-footprints";
 
 export const W3006_PIN_LABELS = {
   pin1: "FEED",
@@ -9,6 +10,8 @@ export const W3006_PIN_LABELS = {
 export const W3006 = (props: ChipProps<typeof W3006_PIN_LABELS>) => (
   <chip
     manufacturerPartNumber="W3006"
+    supplierPartNumbers={{ jlcpcb: ["C5123155"] }}
+    footprint={W3006_FOOTPRINT}
     pinLabels={W3006_PIN_LABELS}
     showPinAliases={false}
     noConnect={["NC"]}
