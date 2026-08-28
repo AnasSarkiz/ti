@@ -22,7 +22,7 @@ export const LogicBuffer_SN74LVC1G34 = (props: SubcircuitProps) => (
     <schematictext
       text="Buffer Function"
       schX={-0.55}
-      schY={1.3}
+      schY={2}
       fontSize={0.2}
     />
   </subcircuit>

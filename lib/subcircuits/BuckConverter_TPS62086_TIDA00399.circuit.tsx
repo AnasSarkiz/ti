@@ -18,8 +18,8 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
       name="C1_3P3"
       capacitance="10uF"
       footprint="0805"
-      schX={-2.05}
-      schY={-0.2}
+      schX={-2}
+      schY={1}
       schOrientation="vertical"
     />
     <inductor
