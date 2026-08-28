@@ -1,5 +1,5 @@
 import {
-  AnalogFrontEnd_LMV324A_TIDA010266,
+  AnalogSignalConditioning_LMV324A_TIDA010266,
   InstrumentationAmplifier_INA350,
   Microcontroller_MSPM0L1306_TIDA010266,
   MotorDriver_DRV8210_TIDA010266,
@@ -202,7 +202,7 @@ export default () => (
       schX={-20}
       schY={3}
     />
-    <AnalogFrontEnd_LMV324A_TIDA010266
+    <AnalogSignalConditioning_LMV324A_TIDA010266
       name="analog_front_end"
       schSectionName="ina_filter"
       inputReferenceSectionName="input_reference"

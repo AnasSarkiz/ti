@@ -50,7 +50,7 @@ reusable modules:
 - `PowerManagement_TPS7A2433_TIDA010266`
 - `VoltageReference_ATL431LI_TIDA010266`
 - `InstrumentationAmplifier_INA350`
-- `AnalogFrontEnd_LMV324A_TIDA010266`
+- `AnalogSignalConditioning_LMV324A_TIDA010266`
 - `Microcontroller_MSPM0L1306_TIDA010266`
 - `MotorDriver_DRV8210_TIDA010266`
 

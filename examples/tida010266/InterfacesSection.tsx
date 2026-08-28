@@ -487,7 +487,7 @@ export const InterfacesSection = ({
           {
             name: "V_EXT",
             connectsTo: [".J1 > .V_EXT", ".J4 > .V_EXT"],
-            inlineLabelConnectsTo: false,
+            inlineLabelConnectsTo: false as const,
             schX: inputX(-31),
             schY: inputY(3.4),
             direction: "left",
@@ -717,7 +717,7 @@ export const InterfacesSection = ({
                     ".TP6 > .pin1",
                     ".TP7 > .pin1",
                   ],
-                  inlineLabelConnectsTo: false,
+                  inlineLabelConnectsTo: false as const,
                   schX: testPointPositions.TP7.x,
                   schY: testPointPositions.TP7.y - 1.5,
                   direction: "down" as const,

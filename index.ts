@@ -157,7 +157,7 @@ import { TemperatureSensor_TMP103_TIDA00399 } from "./lib/subcircuits/Temperatur
 import { LVDSDriver_SN65LVDS31_TIDA060017 } from "./lib/subcircuits/LVDSDriver_SN65LVDS31_TIDA060017.circuit.tsx";
 import { PowerSupply_LM74202_TPS7E81_Q1 } from "./lib/thirdparty-subcircuits/PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx";
 import { TemperatureSensor_LM50HV_Q1 } from "./lib/thirdparty-subcircuits/TemperatureSensor_LM50HV_Q1.circuit.tsx";
-import { AnalogFrontEnd_LMV324A_TIDA010266 } from "./lib/subcircuits/AnalogFrontEnd_LMV324A_TIDA010266.circuit.tsx";
+import { AnalogSignalConditioning_LMV324A_TIDA010266 } from "./lib/subcircuits/AnalogSignalConditioning_LMV324A_TIDA010266.circuit.tsx";
 import { Microcontroller_MSPM0L1306_TIDA010266 } from "./lib/subcircuits/Microcontroller_MSPM0L1306_TIDA010266.circuit.tsx";
 import { MotorDriver_DRV8210_TIDA010266 } from "./lib/subcircuits/MotorDriver_DRV8210_TIDA010266.circuit.tsx";
 import { PowerManagement_TPS7A2433_TIDA010266 } from "./lib/subcircuits/PowerManagement_TPS7A2433_TIDA010266.circuit.tsx";
@@ -167,7 +167,7 @@ export * from "./lib/chips/index.tsx";
 export type { InstrumentationAmplifier_INA350Props } from "./lib/subcircuits/InstrumentationAmplifier_INA350.circuit.tsx";
 
 export {
-  AnalogFrontEnd_LMV324A_TIDA010266,
+  AnalogSignalConditioning_LMV324A_TIDA010266,
   Microcontroller_MSPM0L1306_TIDA010266,
   MotorDriver_DRV8210_TIDA010266,
   PowerManagement_TPS7A2433_TIDA010266,
@@ -331,7 +331,7 @@ export const TiChipComponents = {
 } as const;
 
 export const TiSubcircuitComponents = {
-  AnalogFrontEnd_LMV324A_TIDA010266,
+  AnalogSignalConditioning_LMV324A_TIDA010266,
   Microcontroller_MSPM0L1306_TIDA010266,
   MotorDriver_DRV8210_TIDA010266,
   PowerManagement_TPS7A2433_TIDA010266,

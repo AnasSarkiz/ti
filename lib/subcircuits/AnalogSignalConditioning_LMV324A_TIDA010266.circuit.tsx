@@ -16,8 +16,8 @@ const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
     />
     <schematictext text="-" schX={-0.82} schY={0.48} fontSize={0.3} />
     <schematictext text="+" schX={-0.82} schY={-0.48} fontSize={0.3} />
-    <schematictext text={unitName} schX={1.3} schY={0.6} fontSize={0.22} />
-    <schematictext text="LMV324AIPWR" schX={1.3} schY={0.3} fontSize={0.18} />
+    <schematictext text={unitName} schX={0.5} schY={-0.55} fontSize={0.22} />
+    <schematictext text="LMV324AIPWR" schX={0.5} schY={-0.8} fontSize={0.18} />
     <port
       name="pin6"
       pinNumber={6}
@@ -61,7 +61,7 @@ const filterOpAmpSymbol = (unitName: "U2B" | "U2C") => (
   </symbol>
 );
 
-export type AnalogFrontEnd_LMV324A_TIDA010266Props =
+export type AnalogSignalConditioning_LMV324A_TIDA010266Props =
   TIDA010266SectionedSubcircuitProps & {
     inputReferenceSectionName?: string;
     pressureSectionName?: string;
@@ -77,7 +77,7 @@ export type AnalogFrontEnd_LMV324A_TIDA010266Props =
  * TIDA-010266 U2 quad-amplifier functions: 1.25 V reference buffer,
  * two-stage oscillometric band-pass filter, and sensor current-bias loop.
  */
-export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
+export const AnalogSignalConditioning_LMV324A_TIDA010266 = ({
   inputReferenceSectionName,
   pressureSectionName,
   inputReferenceSheetName,
@@ -87,7 +87,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
   pressureSchXOffset = 0,
   pressureSchYOffset = 0,
   ...props
-}: AnalogFrontEnd_LMV324A_TIDA010266Props) => {
+}: AnalogSignalConditioning_LMV324A_TIDA010266Props) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
   const originY = typeof props.schY === "number" ? props.schY : 0;
   const inputSheetName = inputReferenceSheetName ?? props.schSheetName;
@@ -117,7 +117,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
     <subcircuit
       {...props}
       schTraceAutoLabelEnabled={false}
-      schMaxTraceDistance="1000mm"
+      schMaxTraceDistance="8mm"
     >
       <LMV324AIPWR
         name="U2"
@@ -225,6 +225,13 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schSheetName={props.schSheetName}
         schX={0}
         schY={0}
+        connections={{
+          pin4: "net.V3_3",
+          pin5: "net.VREF_1_25",
+          pin6: "net.FILTER_1_INV",
+          pin7: "net.FILTER_1_OUT",
+          pin11: "net.GND",
+        }}
         pinLabels={{
           pin4: "V+",
           pin5: "+",
@@ -239,8 +246,15 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         manufacturerPartNumber="LMV324AIPWR U2C"
         doNotPlace
         schSheetName={props.schSheetName}
-        schX={7}
+        schX={10}
         schY={0}
+        connections={{
+          pin4: "net.V3_3",
+          pin5: "net.VREF_1_25",
+          pin6: "net.FILTER_2_INV",
+          pin7: "net.OSCILLATIONS",
+          pin11: "net.GND",
+        }}
         pinLabels={{
           pin4: "V+",
           pin5: "+",
@@ -251,9 +265,21 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         symbol={filterOpAmpSymbol("U2C")}
       />
       <netlabel net="V3_3" connectsTo=".U2B > .pin4" inline />
-      <netlabel net="GND" connectsTo=".U2B > .pin11" anchorSide="top" />
+      <netlabel
+        net="GND"
+        connectsTo=".U2B > .pin11"
+        anchorSide="top"
+        schX={0}
+        schY={-1.45}
+      />
       <netlabel net="V3_3" connectsTo=".U2C > .pin4" inline />
-      <netlabel net="GND" connectsTo=".U2C > .pin11" anchorSide="top" />
+      <netlabel
+        net="GND"
+        connectsTo=".U2C > .pin11"
+        anchorSide="top"
+        schX={10}
+        schY={-1.45}
+      />
       <schematicsymbol
         name="U2D"
         displayName="U2D"
@@ -310,7 +336,13 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schOrientation="vertical"
         connections={{ pin1: "net.VREF_DIV", pin2: "net.GND" }}
       />
-      <netlabel net="GND" connectsTo=".R6 > .pin2" anchorSide="top" />
+      <netlabel
+        net="GND"
+        connectsTo=".R6 > .pin2"
+        anchorSide="top"
+        schX={inputX(1.5)}
+        schY={inputY(13.9)}
+      />
 
       <capacitor
         name="C11"
@@ -338,7 +370,10 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         footprint="0603"
         schX={0}
         schY={3.2}
-        connections={{ pin1: "net.FILTER_1_INV" }}
+        connections={{
+          pin1: "net.FILTER_1_INV",
+          pin2: "net.FILTER_1_OUT",
+        }}
       />
       <capacitor
         name="C9"
@@ -348,7 +383,10 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         footprint="0603"
         schX={0}
         schY={2.3}
-        connections={{ pin1: "net.FILTER_1_INV" }}
+        connections={{
+          pin1: "net.FILTER_1_INV",
+          pin2: "net.FILTER_1_OUT",
+        }}
       />
 
       <capacitor
@@ -357,25 +395,31 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         capacitance="4.7uF"
         maxVoltageRating="16V"
         footprint="0603"
-        schX={3.5}
+        schX={4}
         schY={0.3}
-        connections={{}}
+        connections={{
+          pin1: "net.FILTER_1_OUT",
+          pin2: "net.FILTER_2_HP",
+        }}
       />
       <resistor
         name="R17"
         schSectionName={props.schSectionName}
         resistance="20k"
         footprint="0603"
-        schX={4.8}
+        schX={6.5}
         schY={0.6}
-        connections={{ pin2: "net.FILTER_2_INV" }}
+        connections={{
+          pin1: "net.FILTER_2_HP",
+          pin2: "net.FILTER_2_INV",
+        }}
       />
       <resistor
         name="R10"
         schSectionName={props.schSectionName}
         resistance="270k"
         footprint="0603"
-        schX={7}
+        schX={10}
         schY={3.2}
         connections={{ pin1: "net.FILTER_2_INV", pin2: "net.OSCILLATIONS" }}
       />
@@ -385,7 +429,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         capacitance="100nF"
         maxVoltageRating="25V"
         footprint="0603"
-        schX={7}
+        schX={10}
         schY={2.3}
         connections={{ pin1: "net.FILTER_2_INV", pin2: "net.OSCILLATIONS" }}
       />
@@ -412,6 +456,13 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
         schOrientation="vertical"
         connections={{ pin1: "net.IBIAS_SET", pin2: "net.GND" }}
       />
+      <netlabel
+        net="GND"
+        connectsTo=".R21 > .pin2"
+        anchorSide="top"
+        schX={pressureX(-23)}
+        schY={pressureY(-18.5)}
+      />
       <port
         {...({ schSheetName: sensorSheetName } as Record<string, unknown>)}
         name="SENSOR_DRIVE"
@@ -436,6 +487,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
           {
             name: "GND",
             connectsTo: [".U2 > .V_NEG", ".R21 > .pin2"],
+            inlineLabelConnectsTo: false,
             schX: 0,
             schY: -5.5,
             direction: "down",
@@ -517,7 +569,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
             name: "FILTER_2_HP",
             connectsTo: [".C12 > .pin2", ".R17 > .pin1"],
             inlineLabelConnectsTo: ".C12 > .pin2",
-            schX: 4.2,
+            schX: 5,
             schY: 0.3,
             direction: "right",
             schSheetName: props.schSheetName,
@@ -532,7 +584,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
               ".U2C > .pin6",
             ],
             inlineLabelConnectsTo: ".R17 > .pin2",
-            schX: 5.5,
+            schX: 7.4,
             schY: 1,
             direction: "right",
             schSheetName: props.schSheetName,
@@ -545,7 +597,7 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
               ".C10 > .pin2",
               ".U2C > .pin7",
             ],
-            schX: 8.5,
+            schX: 11.5,
             schY: 1,
             direction: "right",
             schSheetName: props.schSheetName,
@@ -572,4 +624,4 @@ export const AnalogFrontEnd_LMV324A_TIDA010266 = ({
   );
 };
 
-export default AnalogFrontEnd_LMV324A_TIDA010266;
+export default AnalogSignalConditioning_LMV324A_TIDA010266;
