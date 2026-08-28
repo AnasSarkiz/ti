@@ -382,6 +382,7 @@ describe("catalog and TSX generation", () => {
     expect(examples.map(({ sourcePath }) => sourcePath)).toEqual([
       "examples/ConsumerWirelessModule.circuit.tsx",
       "examples/BluetoothSpeaker_CC2564C_TAS2505.circuit.tsx",
+      "examples/PersonalElectronics_ConnectedPeripheralAndPrinters_Powerbank.circuit.tsx",
       "examples/RearviewMirrorModule.circuit.tsx",
       "examples/SeatPositionModule.circuit.tsx",
     ]);
@@ -408,6 +409,56 @@ describe("catalog and TSX generation", () => {
         ),
       ).toHaveLength(example.graph.connections.length);
     }
+  });
+
+  test("builds the Power Bank from all five application blocks", () => {
+    const example = createSystemBlockExamples(SUBCIRCUIT_CATALOG).find(
+      ({ id }) => id === "power-bank",
+    );
+    if (!example) throw new Error("Missing Power Bank example");
+
+    expect(example.graph.blocks.map(({ id }) => id)).toEqual([
+      "battery_management",
+      "battery_charging",
+      "system_power",
+      "microcontroller",
+      "usb_c_output",
+    ]);
+
+    const resolved = resolveDesignConnections(
+      example.graph.blocks,
+      example.graph.connections,
+      SUBCIRCUIT_CATALOG,
+    );
+    expect(resolved).toHaveLength(7);
+    expect(
+      resolved.find(({ id }) => id === "data_i2c_charger")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin14",
+          toSelector: ".U1 > .pin13",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin15",
+          toSelector: ".U1 > .pin12",
+        }),
+      ]),
+    );
+    expect(
+      resolved.find(({ id }) => id === "data_boost_control")?.traces,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin12",
+          toSelector: ".Q2 > .gate",
+        }),
+        expect.objectContaining({
+          fromSelector: ".U4 > .pin13",
+          toSelector: ".Q1 > .gate",
+        }),
+      ]),
+    );
   });
 
   test("builds the Seat Position Module from all six application blocks", () => {
