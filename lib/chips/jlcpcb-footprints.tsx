@@ -133,6 +133,14 @@ export const SN74LVC1G34DBVR_FOOTPRINT = createRectPadFootprint([
   [5, -1.100074, -0.950087, 0.999998, 0.5999988, "rect"],
 ]);
 
+/** Exact EasyEDA copper imported from JLCPCB C2650941. */
+export const LFB212G45SG8C341_FOOTPRINT = createRectPadFootprint([
+  [1, 0, 0.5750306, 1.5999968, 0.350012, "rect"],
+  [2, 0.899922, -0.000127, 0.350012, 0.2999994, "rect"],
+  [3, 0, -0.5750306, 1.5999968, 0.350012, "rect"],
+  [4, -0.899922, -0.000127, 0.350012, 0.2999994, "rect"],
+]);
+
 /** Exact EasyEDA copper imported from JLCPCB C165141. */
 export const TMP103AYFF_FOOTPRINT = createCirclePadFootprint([
   [1, 0.1998853, -0.199898, 0.0900049],

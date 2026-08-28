@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Circuit } from "@tscircuit/core";
 import ConsumerWirelessModule from "../examples/ConsumerWirelessModule.circuit.tsx";
+import { LFB212G45SG8C341_FOOTPRINT } from "../lib/chips/jlcpcb-footprints.tsx";
 import {
   SN65LVDS31D,
   SN74LVC1G34DBVR,
@@ -61,6 +62,41 @@ for (const [name, Chip, expectedPadCount, lcscPartNumber] of starterChips) {
     );
   });
 }
+
+test("LFB212G45SG8C341 renders its imported JLCPCB footprint", async () => {
+  const circuit = new Circuit({
+    platform: {
+      routingDisabled: true,
+      partsEngineDisabled: true,
+      drcChecksDisabled: true,
+    },
+  });
+  circuit.add(
+    <board width={20} height={20} routingDisabled>
+      <chip
+        name="FL1"
+        manufacturerPartNumber="LFB212G45SG8C341"
+        supplierPartNumbers={{ jlcpcb: ["C2650941"] }}
+        footprint={LFB212G45SG8C341_FOOTPRINT}
+        pinLabels={{ pin1: "GND", pin2: "OUT", pin3: "GND", pin4: "IN" }}
+      />
+    </board>,
+  );
+  await circuit.renderUntilSettled();
+
+  assert.deepEqual(
+    circuit
+      .getCircuitJson()
+      .filter((element) => element.type.endsWith("_error")),
+    [],
+  );
+  assert.equal(circuit.db.pcb_smtpad.list().length, 4);
+  assert.deepEqual(
+    circuit.db.source_component.getWhere({ name: "FL1" })
+      ?.supplier_part_numbers,
+    { jlcpcb: ["C2650941"] },
+  );
+});
 
 test("TMP103 ball numbers match the TI YFF pin assignment", async () => {
   const circuit = new Circuit({ platform: { pcbDisabled: true } });

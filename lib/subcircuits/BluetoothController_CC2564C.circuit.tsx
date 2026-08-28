@@ -1,6 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { CC2564C } from "../chips/CC2564C.circuit.tsx";
+import { LFB212G45SG8C341_FOOTPRINT } from "../chips/jlcpcb-footprints.tsx";
 
 const cc2564cNoConnectPins = [
   "pin1",
@@ -216,8 +217,9 @@ export const BluetoothController_CC2564C = (props: SubcircuitProps) => (
     />
     <chip
       name="FL1"
-      footprint="jlcpcb:C2650941"
+      footprint={LFB212G45SG8C341_FOOTPRINT}
       manufacturerPartNumber="LFB212G45SG8C341"
+      supplierPartNumbers={{ jlcpcb: ["C2650941"] }}
       schX={8}
       schY={8.6}
       schWidth="1.5mm"
