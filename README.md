@@ -341,6 +341,7 @@ The package currently exports these subcircuit components:
 - `LevelShifter_TXB0104`
 - `LevelShifter_TXS0102`
 - `RFIDReader_TRF7960`
+- `CommunicationInterface_LIN_TLIN1028`
 - `CommunicationInterface_TCAN1042_TIDA01428` ([TIDA-01428](https://www.ti.com/tool/TIDA-01428))
 - `LightDriver_TIDA01330` ([TIDA-01330](https://www.ti.com/tool/TIDA-01330))
 - `PositionFeedback_DRV5013_TIDA01389` ([TIDA-01389](https://www.ti.com/tool/TIDA-01389))
@@ -400,6 +401,7 @@ chip is listed individually below, including whether it supports a
 | `SN65LVDS31D` | `-` | `SN65LVDS31D` |
 | `SN74LVC1G34DBVR` | `-` | `SN74LVC1G34DBVR` |
 | `TCAN1042HGV` | `-` | `TCAN1042HGVDRBQ1` |
+| `TLIN1028` | `soic_8_powerpad` | `TLIN10283DDARQ1` |
 | `TLV755P` | `sot_23_5` | `TLV75533PDBVR` | 
 | `TLV316` | `-` | `TLV316QDBVTQ1` |
 | `TAS2505` | `-` | `TAS2505` |

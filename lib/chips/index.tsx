@@ -71,6 +71,7 @@ export {
   TCAN1042HGVDRBQ1,
 } from "./TCAN1042HGVDRBQ1.circuit.tsx";
 export { TLC59116 } from "./TLC59116.circuit.tsx";
+export { TLIN1028 } from "./TLIN1028.circuit.tsx";
 export { TLV316, TLV316QDBVTQ1 } from "./TLV316QDBVTQ1.circuit.tsx";
 export { TLV755P } from "./TLV755P.circuit.tsx";
 export {
@@ -147,6 +148,7 @@ export { MSP430G2332IPW20 } from "./MSP430G2332IPW20.circuit.tsx";
 export { MSPM0G3507SPMR } from "./MSPM0G3507SPMR.circuit.tsx";
 export { SN65HVD1473DGSR } from "./SN65HVD1473DGSR.circuit.tsx";
 export { SMPP2_03 } from "./SMPP2_03.circuit.tsx";
+export { TLIN10283DDARQ1 } from "./TLIN10283DDARQ1.circuit.tsx";
 export { TMP1075DSGR } from "./TMP1075DSGR.circuit.tsx";
 export {
   TMP390AQDRLRQ1,

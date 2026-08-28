@@ -49,6 +49,7 @@ import {
   TAS2505,
   TCAN1042HGV,
   TLC59116,
+  TLIN1028,
   TLV316,
   TLV755P,
   TLV9152IDR,
@@ -141,6 +142,7 @@ import { BatteryCharging_2to5CellNVDCBuckBoost_BQ25731 } from "./lib/subcircuits
 import { BoostConverter_TPS61236 } from "./lib/subcircuits/BoostConverter_TPS61236.circuit.tsx";
 import { Microcontroller_MSP430G2332 } from "./lib/subcircuits/Microcontroller_MSP430G2332.circuit.tsx";
 import { USBC_PowerDeliveryProgrammablePowerSupply_TPS61288 } from "./lib/subcircuits/USBC_PowerDeliveryProgrammablePowerSupply_TPS61288.circuit.tsx";
+import { CommunicationInterface_LIN_TLIN1028 } from "./lib/subcircuits/CommunicationInterface_LIN_TLIN1028.circuit.tsx";
 import { CommunicationInterface_TCAN1042_TIDA01428 } from "./lib/subcircuits/CommunicationInterface_TCAN1042_TIDA01428.circuit.tsx";
 import { LightDriver_TIDA01330 } from "./lib/subcircuits/LightDriver_TIDA01330.circuit.tsx";
 import { PositionFeedback_DRV5013_TIDA01389 } from "./lib/subcircuits/PositionFeedback_DRV5013_TIDA01389.circuit.tsx";
@@ -229,6 +231,7 @@ export {
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  CommunicationInterface_LIN_TLIN1028,
   CommunicationInterface_TCAN1042_TIDA01428,
   LightDriver_TIDA01330,
   PositionFeedback_DRV5013_TIDA01389,
@@ -299,6 +302,7 @@ export const TiChipComponents = {
   TAS2505,
   TCAN1042HGV,
   TLC59116,
+  TLIN1028,
   TLV316,
   TLV755P,
   TLV9152IDR,
@@ -391,6 +395,7 @@ export const TiSubcircuitComponents = {
   BoostConverter_TPS61236,
   Microcontroller_MSP430G2332,
   USBC_PowerDeliveryProgrammablePowerSupply_TPS61288,
+  CommunicationInterface_LIN_TLIN1028,
   CommunicationInterface_TCAN1042_TIDA01428,
   LightDriver_TIDA01330,
   PositionFeedback_DRV5013_TIDA01389,
