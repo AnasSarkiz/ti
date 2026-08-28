@@ -8,6 +8,7 @@ import type {
 
 const TI_PACKAGE = "@tsci/tscircuit.ti";
 const SOURCE_ROOT = "lib/subcircuits";
+const THIRD_PARTY_SOURCE_ROOT = "lib/thirdparty-subcircuits";
 
 const signal = (
   name: string,
@@ -24,6 +25,7 @@ const powerPort = ({
   positive,
   ground,
   allowMultiple,
+  protocol = "power",
 }: {
   id: string;
   label: string;
@@ -32,12 +34,13 @@ const powerPort = ({
   positive: readonly string[];
   ground: readonly string[];
   allowMultiple?: boolean;
+  protocol?: PortDefinition["protocol"];
 }): PortDefinition => ({
   id,
   label,
   kind: "power",
   role,
-  protocol: "power",
+  protocol,
   voltage,
   allowMultiple,
   requiredSignals: ["positive", "ground"],
@@ -50,13 +53,14 @@ const powerPort = ({
 const adapter = (
   definition: Omit<SubcircuitDefinition, "importPath" | "sourcePath"> & {
     sourceFile: string;
+    sourceRoot?: string;
   },
 ): SubcircuitDefinition => {
-  const { sourceFile, ...rest } = definition;
+  const { sourceFile, sourceRoot = SOURCE_ROOT, ...rest } = definition;
   return {
     ...rest,
     importPath: TI_PACKAGE,
-    sourcePath: `${SOURCE_ROOT}/${sourceFile}`,
+    sourcePath: `${sourceRoot}/${sourceFile}`,
     canInstantiate: definition.canInstantiate ?? true,
   };
 };
@@ -559,6 +563,69 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
     ],
   }),
   adapter({
+    id: "power-supply-lm74202-tps7e81-q1",
+    title: "LM74202 and TPS7E81-Q1 Power Supply",
+    description:
+      "Automotive reverse-battery protection with protected 12 V and regulated 3.3 V rails.",
+    category: "Power",
+    componentName: "PowerSupply_LM74202_TPS7E81_Q1",
+    sourceFile: "PowerSupply_LM74202_TPS7E81_Q1.circuit.tsx",
+    sourceRoot: THIRD_PARTY_SOURCE_ROOT,
+    tags: ["automotive", "power-supply", "reverse-battery", "3.3v"],
+    ports: [
+      powerPort({
+        id: "battery-power-in",
+        label: "Vehicle Battery",
+        role: "consumer",
+        voltage: { min: 6, max: 42, nominal: 12 },
+        positive: [".U1 > .IN"],
+        ground: [".U1 > .GND"],
+        protocol: "vehicle-battery",
+      }),
+      powerPort({
+        id: "protected-power-out",
+        label: "Protected Vehicle Power",
+        role: "provider",
+        voltage: { min: 6, max: 18, nominal: 12 },
+        positive: [".U1 > .OUT"],
+        ground: [".U1 > .GND"],
+        allowMultiple: true,
+        protocol: "protected-vehicle-power",
+      }),
+      powerPort({
+        id: "logic-3v3-out",
+        label: "3.3 V Logic Power",
+        role: "provider",
+        voltage: 3.3,
+        positive: [".U2 > .OUT"],
+        ground: [".U2 > .GND"],
+        allowMultiple: true,
+        protocol: "logic-3v3",
+      }),
+      {
+        id: "power-monitor",
+        label: "Power Monitoring",
+        kind: "data",
+        role: "source",
+        protocol: "power-monitor",
+        requiredSignals: ["health", "load"],
+        signals: [
+          signal("health", "output", [".U1 > .FLT"]),
+          signal("load", "output", [".U1 > .IMON"]),
+        ],
+      },
+      {
+        id: "power-control",
+        label: "Power On/Off Control",
+        kind: "data",
+        role: "peripheral",
+        protocol: "power-control",
+        requiredSignals: ["enable"],
+        signals: [signal("enable", "input", [".U1 > .SHDN"])],
+      },
+    ],
+  }),
+  adapter({
     id: "communication-interface-tcan1042-tida01428",
     title: "TCAN1042 CAN Interface",
     category: "Interfaces",
@@ -566,22 +633,30 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
     sourceFile: "CommunicationInterface_TCAN1042_TIDA01428.circuit.tsx",
     tags: ["can", "automotive"],
     ports: [
-      powerPort({
+      {
         id: "transceiver-power",
         label: "5 V Transceiver Power",
+        kind: "power",
         role: "consumer",
         voltage: { min: 4.5, max: 5.5, nominal: 5 },
-        positive: [".U6 > .VCC"],
-        ground: [".U6 > .GND"],
-      }),
-      powerPort({
+        requiredSignals: ["positive", "ground"],
+        signals: [
+          signal("positive", "input", [".R21 > .pin1"]),
+          signal("ground", "passive", [".U6 > .GND"]),
+        ],
+      },
+      {
         id: "logic-power",
         label: "3.3 V Logic Power",
+        kind: "power",
         role: "consumer",
         voltage: { min: 1.7, max: 5.5, nominal: 3.3 },
-        positive: [".U6 > .VIO"],
-        ground: [".U6 > .GND"],
-      }),
+        requiredSignals: ["positive", "ground"],
+        signals: [
+          signal("positive", "input", [".R22 > .pin1"]),
+          signal("ground", "passive", [".U6 > .GND"]),
+        ],
+      },
       {
         id: "controller",
         label: "CAN Controller",
@@ -604,8 +679,8 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
         requiredSignals: ["can_h", "can_l"],
         allowMultiple: true,
         signals: [
-          signal("can_h", "bidirectional", [".L7 > .pin3"]),
-          signal("can_l", "bidirectional", [".L7 > .pin2"]),
+          signal("can_h", "bidirectional", [".R23 > .pin1"]),
+          signal("can_l", "bidirectional", [".R24 > .pin2"]),
         ],
       },
     ],
@@ -657,7 +732,257 @@ export const CURATED_SUBCIRCUIT_ADAPTERS: readonly SubcircuitDefinition[] = [
         voltage: { min: 1.62, max: 3.6, nominal: 3.3 },
         positive: [".U1 > .VDD"],
         ground: [".U1 > .VSS"],
+        protocol: "logic-3v3",
       }),
+      {
+        id: "can-controller",
+        label: "CAN Controller",
+        kind: "data",
+        role: "controller",
+        protocol: "can-controller",
+        requiredSignals: ["tx", "rx", "standby"],
+        signals: [
+          signal("tx", "output", [".U1 > .CAN_TX"]),
+          signal("rx", "input", [".U1 > .CAN_RX"]),
+          signal("standby", "output", [".U1 > .PA7"]),
+        ],
+      },
+      {
+        id: "i2c",
+        label: "I2C",
+        kind: "data",
+        role: "host",
+        protocol: "i2c",
+        requiredSignals: ["scl", "sda"],
+        allowMultiple: true,
+        signals: [
+          signal("scl", "output", [".U1 > .I2C0_SCL"]),
+          signal("sda", "bidirectional", [".U1 > .I2C0_SDA"]),
+        ],
+      },
+      {
+        id: "power-monitor",
+        label: "Power Monitoring",
+        kind: "data",
+        role: "sink",
+        protocol: "power-monitor",
+        requiredSignals: ["health", "load"],
+        signals: [
+          signal("health", "input", [".U1 > .PA15"]),
+          signal("load", "input", [".U1 > .PA14"]),
+        ],
+      },
+      {
+        id: "temperature-sense",
+        label: "Temperature Sense",
+        kind: "data",
+        role: "sink",
+        protocol: "analog-temperature",
+        requiredSignals: ["sense"],
+        signals: [signal("sense", "input", [".U1 > .PA27"])],
+      },
+      {
+        id: "ambient-light-alerts",
+        label: "Ambient Light Alerts",
+        kind: "data",
+        role: "sink",
+        protocol: "ambient-light-alerts",
+        requiredSignals: ["back", "front"],
+        signals: [
+          signal("back", "input", [".U1 > .PA8"]),
+          signal("front", "input", [".U1 > .PA9"]),
+        ],
+      },
+      {
+        id: "mirror-control",
+        label: "Mirror Control",
+        kind: "data",
+        role: "controller",
+        protocol: "mirror-control",
+        requiredSignals: ["discharge"],
+        signals: [signal("discharge", "output", [".U1 > .PA10"])],
+      },
+      {
+        id: "lamp-control",
+        label: "Lamp Control",
+        kind: "data",
+        role: "controller",
+        protocol: "lamp-control",
+        requiredSignals: ["enable", "switch"],
+        signals: [
+          signal("enable", "output", [".U1 > .PA11"]),
+          signal("switch", "output", [".U1 > .PA16"]),
+        ],
+      },
+    ],
+  }),
+  adapter({
+    id: "electrochromic-mirror-driver-tida01539",
+    title: "TIDA-01539 Electrochromic Mirror Driver",
+    category: "Drivers",
+    componentName: "ElectrochromicMirrorDriver_TIDA01539",
+    sourceFile: "ElectrochromicMirrorDriver_TIDA01539.circuit.tsx",
+    tags: ["automotive", "electrochromic", "mirror", "i2c"],
+    ports: [
+      powerPort({
+        id: "logic-power",
+        label: "3.3 V Logic Power",
+        role: "consumer",
+        voltage: { min: 2.7, max: 5.5, nominal: 3.3 },
+        positive: [".U1 > .VA"],
+        ground: [".U1 > .GND"],
+        protocol: "logic-3v3",
+      }),
+      powerPort({
+        id: "protected-power",
+        label: "Protected Vehicle Power",
+        role: "consumer",
+        voltage: { min: 6, max: 18, nominal: 12 },
+        positive: [".Q2 > .collector"],
+        ground: [".U1 > .GND"],
+        protocol: "protected-vehicle-power",
+      }),
+      {
+        id: "i2c",
+        label: "I2C",
+        kind: "data",
+        role: "device",
+        protocol: "i2c",
+        requiredSignals: ["scl", "sda"],
+        signals: [
+          signal("scl", "input", [".U1 > .SCL"]),
+          signal("sda", "bidirectional", [".U1 > .SDA"]),
+        ],
+      },
+      {
+        id: "mirror-control",
+        label: "Mirror Control",
+        kind: "data",
+        role: "peripheral",
+        protocol: "mirror-control",
+        requiredSignals: ["discharge"],
+        signals: [signal("discharge", "input", [".Q1 > .base"])],
+      },
+    ],
+  }),
+  adapter({
+    id: "light-sensor-opt3001-tida01539",
+    title: "TIDA-01539 Ambient Light Sensors",
+    category: "Sensors",
+    componentName: "LightSensor_OPT3001_TIDA01539",
+    sourceFile: "LightSensor_OPT3001_TIDA01539.circuit.tsx",
+    tags: ["automotive", "ambient-light", "i2c", "opt3001"],
+    ports: [
+      powerPort({
+        id: "power-in",
+        label: "3.3 V Sensor Power",
+        role: "consumer",
+        voltage: { min: 1.6, max: 3.6, nominal: 3.3 },
+        positive: [".U4Sensor .U4 > .VDD", ".U5Sensor .U5 > .VDD"],
+        ground: [".U4Sensor .U4 > .GND", ".U5Sensor .U5 > .GND"],
+        protocol: "logic-3v3",
+      }),
+      {
+        id: "i2c",
+        label: "I2C",
+        kind: "data",
+        role: "device",
+        protocol: "i2c",
+        requiredSignals: ["scl", "sda"],
+        signals: [
+          signal("scl", "input", [
+            ".U4Sensor .U4 > .SCL",
+            ".U5Sensor .U5 > .SCL",
+          ]),
+          signal("sda", "bidirectional", [
+            ".U4Sensor .U4 > .SDA",
+            ".U5Sensor .U5 > .SDA",
+          ]),
+        ],
+      },
+      {
+        id: "ambient-light-alerts",
+        label: "Ambient Light Alerts",
+        kind: "data",
+        role: "source",
+        protocol: "ambient-light-alerts",
+        requiredSignals: ["back", "front"],
+        signals: [
+          signal("back", "output", [".U4Sensor .U4 > .INT"]),
+          signal("front", "output", [".U5Sensor .U5 > .INT"]),
+        ],
+      },
+    ],
+  }),
+  adapter({
+    id: "lamp-driver-tps92638-tida00356",
+    title: "TIDA-00356 Lamp Driver",
+    category: "Drivers",
+    componentName: "LampDriver_TPS92638_TIDA00356",
+    sourceFile: "LampDriver_TPS92638_TIDA00356.circuit.tsx",
+    tags: ["automotive", "lamp", "led", "tps92638"],
+    ports: [
+      powerPort({
+        id: "protected-power",
+        label: "Protected Vehicle Power",
+        role: "consumer",
+        voltage: { min: 6, max: 18, nominal: 12 },
+        positive: [".D3 > .anode"],
+        ground: [".U9 > .GND"],
+        protocol: "protected-vehicle-power",
+      }),
+      powerPort({
+        id: "logic-power",
+        label: "3.3 V Logic Power",
+        role: "consumer",
+        voltage: { min: 3, max: 3.6, nominal: 3.3 },
+        positive: [".J3 > .pin3", ".R9 > .pin1"],
+        ground: [".U9 > .GND"],
+        protocol: "logic-3v3",
+      }),
+      {
+        id: "lamp-control",
+        label: "Lamp Control",
+        kind: "data",
+        role: "peripheral",
+        protocol: "lamp-control",
+        requiredSignals: ["enable", "switch"],
+        signals: [
+          signal("enable", "input", [".U9 > .EN"]),
+          signal("switch", "input", [".U9 > .PWM1"]),
+        ],
+      },
+    ],
+  }),
+  adapter({
+    id: "temperature-sensor-lm50hv-q1",
+    title: "LM50HV-Q1 Temperature Sensor",
+    description:
+      "Datasheet-derived remote temperature-sensor circuit for the Rearview Mirror Module.",
+    category: "Sensors",
+    componentName: "TemperatureSensor_LM50HV_Q1",
+    sourceFile: "TemperatureSensor_LM50HV_Q1.circuit.tsx",
+    sourceRoot: THIRD_PARTY_SOURCE_ROOT,
+    tags: ["automotive", "temperature", "analog", "third-party"],
+    ports: [
+      powerPort({
+        id: "power-in",
+        label: "Sensor Power",
+        role: "consumer",
+        voltage: { min: 2.7, max: 10, nominal: 3.3 },
+        positive: [".U1 > .VS"],
+        ground: [".U1 > .GND"],
+        protocol: "logic-3v3",
+      }),
+      {
+        id: "temperature-sense",
+        label: "Temperature Sense",
+        kind: "data",
+        role: "source",
+        protocol: "analog-temperature",
+        requiredSignals: ["sense"],
+        signals: [signal("sense", "output", [".U1 > .VO"])],
+      },
     ],
   }),
   adapter({

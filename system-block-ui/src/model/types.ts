@@ -105,6 +105,9 @@ export interface BlockInstance {
   name?: string;
   /** Generated schematic sheet name. Defaults to the component name. */
   schSheetName?: string;
+  /** Optional placement offset inside the generated detail sheet. */
+  schX?: number;
+  schY?: number;
   position?: BlockPosition;
 }
 
