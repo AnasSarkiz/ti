@@ -730,13 +730,18 @@ describe("catalog and TSX generation", () => {
     expect(first).toBe(second);
     expect(first).toContain("<board routingDisabled>");
     expect(first).toContain("PowerManagement_TPS7A2018,");
-    expect(first).not.toContain("SYSTEM_DIAGRAM_SVG");
+    expect(first).toContain(
+      'import { SYSTEM_DIAGRAM_SVG } from "./GeneratedSystem.system-diagram"',
+    );
+    expect(first).not.toContain("const SYSTEM_DIAGRAM_SVG");
     expect(first).not.toContain("<svg");
-    expect(first).not.toContain("<schematicgraphic");
-    expect(first).not.toContain('displayName="System Diagram"');
+    expect(first).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
+    expect(first).toContain('displayName="System Diagram"');
     expect(first).toContain("sheetIndex={0}");
     expect(first).toContain("sheetIndex={1}");
-    expect(first).not.toContain("sheetIndex={2}");
+    expect(first).toContain("sheetIndex={2}");
     expect(first).toContain('from=".power_1v8 > .U1 > .VOUT"');
     expect(first).toContain('to=".audio_amplifier > .U1 > .IOVDD"');
   });
@@ -764,31 +769,45 @@ describe("catalog and TSX generation", () => {
     });
 
     expect(artifacts).toEqual(reversed);
-    expect(artifacts.systemDiagramFileName).toBe(
-      "GeneratedSystem.system-diagram.svg",
+    expect(artifacts.systemDiagramSheetName).toBe("system_diagram_2");
+    expect(artifacts.systemDiagramModuleFileName).toBe(
+      "GeneratedSystem.system-diagram.ts",
     );
-    expect(artifacts.tsx).toContain('name="system_diagram"');
-    expect(artifacts.tsx).not.toContain('displayName="System Diagram"');
-    expect(artifacts.tsx).not.toContain("<schematicgraphic");
+    expect(artifacts.tsx).toContain(
+      '<schematicsheet\n      name="system_diagram_2"\n      displayName="System Diagram"\n      sheetIndex={0}\n    >',
+    );
+    expect(artifacts.tsx).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
     expect(artifacts.systemDiagramSvg).toContain(
       'data-connection-id="power" data-kind="power"',
     );
     expect(artifacts.systemDiagramSvg).not.toContain("__power-summary__");
+    expect(artifacts.systemDiagramModuleSource).toStartWith(
+      "export const SYSTEM_DIAGRAM_SVG = [",
+    );
+    expect(artifacts.systemDiagramModuleSource).toContain(
+      'data-connection-id=\\"power\\" data-kind=\\"power\\"',
+    );
     expect(artifacts.tsx).not.toContain(artifacts.systemDiagramSvg);
   });
 
-  test("keeps an empty system overview outside the electrical TSX", () => {
+  test("always emits a first system diagram sheet for an empty design", () => {
     const artifacts = generateSystemDesignArtifacts({
       blocks: [],
       connections: [],
     });
 
-    expect(artifacts.systemDiagramFileName).toBe(
-      "GeneratedSystem.system-diagram.svg",
-    );
+    expect(artifacts.systemDiagramSheetName).toBe("system_diagram");
     expect(artifacts.systemDiagramSvg).toContain("No system blocks yet");
-    expect(artifacts.tsx).not.toContain("<schematicsheet");
-    expect(artifacts.tsx).not.toContain("<schematicgraphic");
+    expect(artifacts.systemDiagramModuleSource).toContain(
+      "No system blocks yet",
+    );
+    expect(artifacts.tsx).toContain("sheetIndex={0}");
+    expect(artifacts.tsx).toContain(
+      "<schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    );
+    expect(artifacts.tsx).not.toContain("sheetIndex={1}");
   });
 
   test("rejects explicit sheet names which collide with generated names", () => {

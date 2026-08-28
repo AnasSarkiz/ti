@@ -148,15 +148,34 @@ const prepareBlocks = (
 };
 
 export const SYSTEM_DIAGRAM_DISPLAY_NAME = "System Diagram";
-export const SYSTEM_DIAGRAM_FILE_NAME = "GeneratedSystem.system-diagram.svg";
+export const SYSTEM_DIAGRAM_SHEET_NAME_BASE = "system_diagram";
+export const SYSTEM_DIAGRAM_MODULE_BASENAME = "GeneratedSystem.system-diagram";
+export const SYSTEM_DIAGRAM_MODULE_FILENAME = `${SYSTEM_DIAGRAM_MODULE_BASENAME}.ts`;
+export const SYSTEM_DIAGRAM_MODULE_IMPORT_PATH = `./${SYSTEM_DIAGRAM_MODULE_BASENAME}`;
 
 export interface GeneratedSystemDesignArtifacts {
   /** Canonical source shown, exported, and evaluated by the preview. */
   tsx: string;
-  /** Documentation-only overview kept outside the electrical schematic. */
-  systemDiagramFileName: string;
+  /** Deterministic virtual/download path for the generated SVG module. */
+  systemDiagramModuleFileName: string;
+  /** Companion module imported by `tsx` and supplied during evaluation. */
+  systemDiagramModuleSource: string;
   systemDiagramSvg: string;
+  systemDiagramSheetName: string;
 }
+
+const getSystemDiagramSheetName = (
+  prepared: readonly PreparedBlock[],
+): string => {
+  const detailSheetNames = new Set(prepared.map(({ sheetName }) => sheetName));
+  let sheetName = SYSTEM_DIAGRAM_SHEET_NAME_BASE;
+  let suffix = 2;
+  while (detailSheetNames.has(sheetName)) {
+    sheetName = `${SYSTEM_DIAGRAM_SHEET_NAME_BASE}_${suffix}`;
+    suffix += 1;
+  }
+  return sheetName;
+};
 
 const orderLogicalConnections = (
   connections: readonly LogicalConnection[],
@@ -170,16 +189,29 @@ const orderLogicalConnections = (
       compareStrings(a.protocol ?? "", b.protocol ?? ""),
   );
 
+const renderSystemDiagramModule = (systemDiagramSvg: string): string =>
+  [
+    "export const SYSTEM_DIAGRAM_SVG = [",
+    ...systemDiagramSvg.split("\n").map((line) => `  ${quote(line)},`),
+    '].join("\\n")',
+    "",
+  ].join("\n");
+
+const renderSystemDiagramImport = (): string =>
+  `import { SYSTEM_DIAGRAM_SVG } from ${quote(SYSTEM_DIAGRAM_MODULE_IMPORT_PATH)}`;
+
 interface RenderGeneratedSourceRequest {
   request: GenerateTsxRequest;
   prepared: readonly PreparedBlock[];
   resolvedConnections: readonly ResolvedConnection[];
+  systemDiagramSheetName: string;
 }
 
 const renderGeneratedSource = ({
   request,
   prepared,
   resolvedConnections,
+  systemDiagramSheetName,
 }: RenderGeneratedSourceRequest): string => {
   const instanceNameByBlockId = new Map(
     prepared.map((item) => [item.block.id, item.instanceName]),
@@ -200,11 +232,26 @@ const renderGeneratedSource = ({
       ...renderImport(packageName, [...components].sort(compareStrings)),
     );
   }
-  lines.push('import "tscircuit"', "", "export default () => (");
+  lines.push(
+    renderSystemDiagramImport(),
+    'import "tscircuit"',
+    "",
+    "export default () => (",
+  );
   lines.push(
     request.boardName
       ? `  <board name=${quote(sanitizeInstanceName(request.boardName))} routingDisabled>`
       : "  <board routingDisabled>",
+  );
+
+  lines.push(
+    "    <schematicsheet",
+    `      name=${quote(systemDiagramSheetName)}`,
+    `      displayName=${quote(SYSTEM_DIAGRAM_DISPLAY_NAME)}`,
+    "      sheetIndex={0}",
+    "    >",
+    "      <schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    "    </schematicsheet>",
   );
 
   prepared.forEach((item, sheetIndex) => {
@@ -212,7 +259,7 @@ const renderGeneratedSource = ({
       "    <schematicsheet",
       `      name=${quote(item.sheetName)}`,
       `      displayName=${quote(item.definition.title)}`,
-      `      sheetIndex={${sheetIndex}}`,
+      `      sheetIndex={${sheetIndex + 1}}`,
       "    />",
     );
   });
@@ -250,7 +297,7 @@ const renderGeneratedSource = ({
   return lines.join("\n");
 };
 
-/** Generate canonical TSX plus a documentation-only system-diagram SVG. */
+/** Generate canonical TSX and its companion system-diagram module. */
 export const generateSystemDesignArtifacts = (
   request: GenerateTsxRequest,
 ): GeneratedSystemDesignArtifacts => {
@@ -262,18 +309,26 @@ export const generateSystemDesignArtifacts = (
     orderedConnections,
     catalog,
   );
+  const systemDiagramSheetName = getSystemDiagramSheetName(prepared);
   const systemDiagramSvg = renderSystemDiagramSvg({
     blocks: request.blocks,
     resolvedConnections,
     catalog,
     title: SYSTEM_DIAGRAM_DISPLAY_NAME,
   });
-  const sourceRequest = { request, prepared, resolvedConnections };
+  const sourceRequest = {
+    request,
+    prepared,
+    resolvedConnections,
+    systemDiagramSheetName,
+  };
 
   return {
     tsx: renderGeneratedSource(sourceRequest),
-    systemDiagramFileName: SYSTEM_DIAGRAM_FILE_NAME,
+    systemDiagramModuleFileName: SYSTEM_DIAGRAM_MODULE_FILENAME,
+    systemDiagramModuleSource: renderSystemDiagramModule(systemDiagramSvg),
     systemDiagramSvg,
+    systemDiagramSheetName,
   };
 };
 

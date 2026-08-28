@@ -30,11 +30,19 @@ const circuitJson = [
 ] as unknown as CircuitJson;
 
 const artifacts: GeneratedSystemSourceArtifacts = {
-  tsx: ["export default () => (", "  <board>", "  </board>", ")", ""].join(
-    "\n",
-  ),
-  systemDiagramFileName: "GeneratedSystem.system-diagram.svg",
-  systemDiagramSvg: "<svg>System diagram</svg>\n",
+  tsx: [
+    'import { SYSTEM_DIAGRAM_SVG } from "./GeneratedSystem.system-diagram"',
+    "",
+    "export default () => (",
+    "  <board>",
+    "    <schematicgraphic svgContent={SYSTEM_DIAGRAM_SVG} />",
+    "  </board>",
+    ")",
+    "",
+  ].join("\n"),
+  systemDiagramModuleFileName: "GeneratedSystem.system-diagram.ts",
+  systemDiagramModuleSource:
+    'export const SYSTEM_DIAGRAM_SVG = "<svg>System diagram</svg>"\n',
 };
 
 describe("browser source downloads", () => {
@@ -70,7 +78,7 @@ describe("browser source downloads", () => {
     );
   });
 
-  test("creates a deterministic ZIP with the TSX and overview SVG", async () => {
+  test("creates a deterministic ZIP with exactly the generated TSX files", async () => {
     const firstBlob = createTscircuitTsxZipBlob(artifacts);
     const secondBlob = createTscircuitTsxZipBlob(artifacts);
     const firstBytes = new Uint8Array(await firstBlob.arrayBuffer());
@@ -81,14 +89,19 @@ describe("browser source downloads", () => {
     expect([...firstBytes.slice(0, 4)]).toEqual([0x50, 0x4b, 0x03, 0x04]);
     expect(firstBytes).toEqual(secondBytes);
     expect(Object.keys(archive).sort()).toEqual(
-      [GENERATED_SYSTEM_MAIN_FILE_NAME, artifacts.systemDiagramFileName].sort(),
+      [
+        GENERATED_SYSTEM_MAIN_FILE_NAME,
+        artifacts.systemDiagramModuleFileName,
+      ].sort(),
     );
     expect(
       strFromU8(archive[GENERATED_SYSTEM_MAIN_FILE_NAME] ?? new Uint8Array()),
     ).toBe(artifacts.tsx);
     expect(
-      strFromU8(archive[artifacts.systemDiagramFileName] ?? new Uint8Array()),
-    ).toBe(artifacts.systemDiagramSvg);
+      strFromU8(
+        archive[artifacts.systemDiagramModuleFileName] ?? new Uint8Array(),
+      ),
+    ).toBe(artifacts.systemDiagramModuleSource);
     expect(getTscircuitTsxZipFileName({ projectName: "../../CON" })).toBe(
       "project-CON.tscircuit-tsx.zip",
     );
