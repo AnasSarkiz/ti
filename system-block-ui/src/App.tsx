@@ -29,10 +29,7 @@ import {
 } from "./model";
 import { downloadBlob } from "./rendering/download-blob";
 import type { EvaluatedSchematicSheet } from "./rendering/evaluate-schematic";
-import {
-  GENERATED_SYSTEM_MAIN_FILE_NAME,
-  getGeneratedSystemEvaluationFsMap,
-} from "./rendering/generated-source-files";
+import { GENERATED_SYSTEM_MAIN_FILE_NAME } from "./rendering/generated-source-files";
 import {
   SCHEMATIC_SVG_HEIGHT,
   SCHEMATIC_SVG_WIDTH,
@@ -277,10 +274,7 @@ export function App() {
       });
       const rendered = await evaluateGeneratedTsx(generatedArtifacts.tsx, {
         mainComponentPath: GENERATED_SYSTEM_MAIN_FILE_NAME,
-        fsMap: {
-          ...getGeneratedSystemEvaluationFsMap(generatedArtifacts),
-          ...createLocalTiPackageEvaluationFsMap(selectedDefinitions),
-        },
+        fsMap: createLocalTiPackageEvaluationFsMap(selectedDefinitions),
         timeoutMs: 45_000,
         schematicOptions: {
           width: SCHEMATIC_SVG_WIDTH,

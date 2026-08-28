@@ -1,34 +1,26 @@
 import { describe, expect, test } from "bun:test";
 import {
   GENERATED_SYSTEM_MAIN_FILE_NAME,
-  getGeneratedSystemEvaluationFsMap,
   getGeneratedSystemSourceFiles,
 } from "./generated-source-files";
 
 const artifacts = {
-  tsx: 'import { SYSTEM_DIAGRAM_SVG } from "./GeneratedSystem.system-diagram"',
-  systemDiagramModuleFileName: "GeneratedSystem.system-diagram.ts",
-  systemDiagramModuleSource: 'export const SYSTEM_DIAGRAM_SVG = "<svg />"',
+  tsx: "export default () => <board />",
+  systemDiagramFileName: "GeneratedSystem.system-diagram.svg",
+  systemDiagramSvg: "<svg />",
 };
 
 describe("generated source files", () => {
-  test("exports the main TSX and its required companion module", () => {
+  test("exports electrical TSX and the separate system-diagram SVG", () => {
     expect(getGeneratedSystemSourceFiles(artifacts)).toEqual([
       {
         fileName: GENERATED_SYSTEM_MAIN_FILE_NAME,
         source: artifacts.tsx,
       },
       {
-        fileName: artifacts.systemDiagramModuleFileName,
-        source: artifacts.systemDiagramModuleSource,
+        fileName: artifacts.systemDiagramFileName,
+        source: artifacts.systemDiagramSvg,
       },
     ]);
-  });
-
-  test("provides only companion modules to the evaluator fsMap", () => {
-    expect(getGeneratedSystemEvaluationFsMap(artifacts)).toEqual({
-      [artifacts.systemDiagramModuleFileName]:
-        artifacts.systemDiagramModuleSource,
-    });
   });
 });

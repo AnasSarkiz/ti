@@ -18,7 +18,7 @@ export const getTscircuitTsxZipFileName = (
   options: TscircuitTsxZipOptions = {},
 ): string => `${getSafeProjectExportName(options)}.tscircuit-tsx.zip`;
 
-/** Package every generated source file required to evaluate the design. */
+/** Package the generated design source and its documentation artifact. */
 export const createTscircuitTsxZipBlob = (
   artifacts: GeneratedSystemSourceArtifacts,
 ): Blob => {

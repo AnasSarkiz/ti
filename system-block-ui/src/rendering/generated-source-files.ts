@@ -2,8 +2,8 @@ export const GENERATED_SYSTEM_MAIN_FILE_NAME = "GeneratedSystem.circuit.tsx";
 
 export interface GeneratedSystemSourceArtifacts {
   tsx: string;
-  systemDiagramModuleFileName: string;
-  systemDiagramModuleSource: string;
+  systemDiagramFileName: string;
+  systemDiagramSvg: string;
 }
 
 export interface GeneratedSystemSourceFile {
@@ -11,7 +11,7 @@ export interface GeneratedSystemSourceFile {
   source: string;
 }
 
-/** Returns every source file required to evaluate the generated system. */
+/** Returns the electrical source and its separate overview artifact. */
 export const getGeneratedSystemSourceFiles = (
   artifacts: GeneratedSystemSourceArtifacts,
 ): readonly GeneratedSystemSourceFile[] => [
@@ -20,14 +20,7 @@ export const getGeneratedSystemSourceFiles = (
     source: artifacts.tsx,
   },
   {
-    fileName: artifacts.systemDiagramModuleFileName,
-    source: artifacts.systemDiagramModuleSource,
+    fileName: artifacts.systemDiagramFileName,
+    source: artifacts.systemDiagramSvg,
   },
 ];
-
-/** Returns companion modules for @tscircuit/eval's virtual filesystem. */
-export const getGeneratedSystemEvaluationFsMap = (
-  artifacts: GeneratedSystemSourceArtifacts,
-): Readonly<Record<string, string>> => ({
-  [artifacts.systemDiagramModuleFileName]: artifacts.systemDiagramModuleSource,
-});

@@ -9,7 +9,6 @@ import {
 } from "../model";
 import { evaluateGeneratedTsx } from "./evaluate-schematic";
 import { createKicadProjectZipBlob } from "./export-kicad-project";
-import { getGeneratedSystemEvaluationFsMap } from "./generated-source-files";
 import { createLocalTiPackageEvaluationFsMap } from "./local-ti-package-files";
 
 const seatPositionDefinitions = [
@@ -74,16 +73,12 @@ test("Seat Position Module renders every sheet and exports a complete KiCad proj
     sourceModules,
   );
   const evaluated = await evaluateGeneratedTsx(artifacts.tsx, {
-    fsMap: {
-      ...fsMap,
-      ...getGeneratedSystemEvaluationFsMap(artifacts),
-    },
+    fsMap,
     mainComponentPath: "GeneratedSystem.circuit.tsx",
     timeoutMs: 90_000,
   });
 
   expect(evaluated.sheets.map(({ title }) => title)).toEqual([
-    "System Diagram",
     "TCAN1042 CAN Interface",
     "TIDA-01330 Light Driver",
     "MSPM0L1306-Q1 Microcontroller",
