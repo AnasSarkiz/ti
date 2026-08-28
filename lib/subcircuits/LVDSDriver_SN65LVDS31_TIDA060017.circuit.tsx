@@ -42,6 +42,7 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
         key={name}
         name={name as string}
         resistance="49.9ohm"
+        footprint="0402"
         schX={schX as number}
         schY={schY as number}
         schRotation={90}
@@ -56,6 +57,7 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
     <capacitor
       name="C1"
       capacitance="10uF"
+      footprint="0603"
       schX={-1.4}
       schY={-3.2}
       schOrientation="vertical"
@@ -64,6 +66,7 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
     <capacitor
       name="C3"
       capacitance="0.01uF"
+      footprint="0402"
       schX={0}
       schY={-3.2}
       schOrientation="vertical"
@@ -72,6 +75,7 @@ export const LVDSDriver_SN65LVDS31_TIDA060017 = (props: SubcircuitProps) => (
     <capacitor
       name="C4"
       capacitance="0.01uF"
+      footprint="0402"
       schX={1.4}
       schY={-3.2}
       schOrientation="vertical"

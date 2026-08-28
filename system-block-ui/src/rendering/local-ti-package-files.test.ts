@@ -90,6 +90,14 @@ export default () => (
           element.type === "source_component" && element.name === "U1",
       ),
     ).toBe(true);
+    expect(
+      evaluated.circuitJson.some((element) => element.type === "pcb_component"),
+    ).toBe(true);
+    expect(
+      evaluated.circuitJson.some(
+        (element) => element.type === "pcb_missing_footprint_error",
+      ),
+    ).toBe(true);
   });
 
   test("fails clearly when a selected local source is unavailable", () => {

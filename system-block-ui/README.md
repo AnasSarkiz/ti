@@ -109,37 +109,33 @@ shows every Power and Data connection.
 
 The right panel always shows the syntax-highlighted main TSX; it does not switch
 to a schematic preview. **Render** evaluates that default export through
-`@tscircuit/eval` in a web worker with PCB generation, parts lookup, and PCB
-routing disabled. The resulting Circuit JSON is converted to schematic SVG for
-PDF export. The download menu exports a vector PDF, the exact evaluated Circuit
-JSON, the generated tscircuit TSX source archive, or editable KiCad and Altium
-project ZIPs. Exporters run in lazy-loaded browser chunks and sanitize the
-project name before using it in filenames or archive entries.
-
-Because this evaluation intentionally disables PCB generation and routing, the
-CAD ZIPs are schematic-first projects. Each converter includes
-the main file. **Export files** downloads both required files, while Copy copies
-only the main TSX. The system diagram preserves the block positions from the
-editor and shows every Power and Data connection.
-
-Preview rendering runs the generated default export through `@tscircuit/eval`
-in a web worker with PCB generation, parts lookup, and PCB routing disabled.
-The resulting Circuit JSON is converted to schematic SVG and can be downloaded
-as a vector PDF or as editable KiCad and Altium project ZIPs. The project
-exporters run in lazy-loaded browser chunks and sanitize the project name before
-using it in archive entries.
+`@tscircuit/eval` in a web worker with PCB generation enabled. Parts lookup,
+PCB routing, and all DRC phases (including placement checks) are disabled so
+evaluation avoids the expensive physical-design work while retaining footprint
+data. The resulting Circuit JSON is converted to schematic SVG for PDF export.
+The download menu exports a vector PDF, the exact evaluated Circuit JSON, the
+generated tscircuit TSX source archive, or editable KiCad and Altium project
+ZIPs. Exporters run in lazy-loaded browser chunks and sanitize the project name
+before using it in filenames or archive entries.
 
 The PDF exporter embeds Liberation Sans, an open, Arial-compatible font, so
 Unicode symbols and schematic text measurements remain intact.
 
-Because this preview intentionally evaluates with PCB generation and routing
-disabled, the CAD ZIPs are schematic-first projects. Each converter includes
-its required empty/default PCB document; it is not a routed system-board layout.
-The direct `GeneratedSystem.circuit.json` download likewise reflects this
-schematic-only evaluation and retains the System Diagram `schematic_graphic`.
-The SVG-only System Diagram overview is omitted from the KiCad and Altium
-archives because those native converters do not support `schematic_graphic`;
-all editable detail sheets are retained.
+The CAD ZIPs include PCB components and pad geometry for source components that
+specify a footprint. Components whose subcircuits have not selected a physical
+package are retained as footprint placeholders so schematic preview and export
+remain available. The board is neither placed nor routed. The direct
+`GeneratedSystem.circuit.json` download retains these PCB records and the System
+Diagram `schematic_graphic`. The SVG-only System Diagram overview is omitted
+from the KiCad and Altium archives because those native converters do not
+support `schematic_graphic`; all editable detail sheets are retained.
+
+The Consumer Wireless Module's seven packaged chips include exact copper pad
+geometry and LCSC supplier IDs imported from JLCPCB. Its resistors and RF
+passives use 0402 packages; bulk capacitors step up through 0603, 0805, and 1210
+as their capacitance and rail voltage require. The 4 mm power inductor and
+SOD-523 protection diode also use exact JLCPCB-imported copper. Its MOSFET and
+U.FL connector still require explicit package selections.
 
 `circuit-json-to-altium` is temporarily pinned to the official repository's
 exact commit `0dc762f2a8dc811ef4919d6f79a312c910bdcac0` because that converter has

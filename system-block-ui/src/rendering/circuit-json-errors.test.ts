@@ -27,5 +27,10 @@ describe("Circuit JSON error detection", () => {
     expect(() => assertCircuitJsonHasNoErrors(circuitJson)).toThrow(
       "Could not find selector",
     );
+    expect(() =>
+      assertCircuitJsonHasNoErrors(circuitJson, {
+        ignoredErrorTypes: ["schematic_port_not_found"],
+      }),
+    ).not.toThrow();
   });
 });

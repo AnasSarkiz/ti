@@ -1,6 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { TPS25910RSA } from "../chips/TPS25910RSA.circuit.tsx";
+import { ESD5Z6_0T1G_FOOTPRINT } from "../chips/jlcpcb-footprints.tsx";
 
 /**
  * TIDA-00890 sheet-3 VBUS input-protection stage.
@@ -31,6 +32,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <resistor
       name="R25"
       resistance="1Mohm"
+      footprint="0402"
       schX={-6.2}
       schY={0.87}
       schRotation={270}
@@ -38,6 +40,8 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <diode
       name="D6"
       manufacturerPartNumber="ESD5Z6.0T1G"
+      supplierPartNumbers={{ jlcpcb: ["C82323"] }}
+      footprint={ESD5Z6_0T1G_FOOTPRINT}
       variant="zener"
       schX={-4.6}
       schY={0.87}
@@ -47,6 +51,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <resistor
       name="R23"
       resistance="200kohm"
+      footprint="0402"
       schX={0.35}
       schY={2.5}
       schRotation={90}
@@ -54,15 +59,24 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <resistor
       name="R24"
       resistance="10kohm"
+      footprint="0402"
       schX={1.55}
       schY={2.5}
       schRotation={90}
     />
-    <resistor name="R34" resistance="0ohm" doNotPlace schX={1.15} schY={0.65} />
+    <resistor
+      name="R34"
+      resistance="0ohm"
+      footprint="0402"
+      doNotPlace
+      schX={1.15}
+      schY={0.65}
+    />
 
     <resistor
       name="R26"
       resistance="47kohm"
+      footprint="0402"
       schX={5.45}
       schY={-0.97}
       schRotation={270}
@@ -70,6 +84,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <capacitor
       name="C11"
       capacitance="47nF"
+      footprint="0402"
       schX={6.45}
       schY={-0.17}
       schOrientation="vertical"
@@ -77,6 +92,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     <capacitor
       name="C10"
       capacitance="47uF"
+      footprint="1210"
       schX={7.75}
       schY={0.4}
       schOrientation="vertical"
@@ -85,7 +101,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     {/* Type-C VBUS input rail, discharge resistor, and ESD clamp. */}
     <netlabel
       net="VBUS_IN"
-      connectsTo={["R25.pin1", "D6.cathode", "Q1.drain"]}
+      connectsTo={["R25.pin1", "D6.pin1", "Q1.drain"]}
       schX={-4.8}
       schY={2.3}
       anchorSide="bottom"
@@ -99,7 +115,7 @@ export const InputPowerProtection_TPS25910_TIDA00890 = (
     />
     <netlabel
       net="GND"
-      connectsTo="D6.anode"
+      connectsTo="D6.pin2"
       schX={-4.6}
       schY={-0.85}
       anchorSide="top"

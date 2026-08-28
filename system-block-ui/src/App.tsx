@@ -293,7 +293,7 @@ export function App() {
       setEvaluatedCircuitJson(rendered.circuitJson);
       setSchematicSheets(rendered.sheets);
       notify(
-        `${rendered.sheets.length} schematic sheet${rendered.sheets.length === 1 ? "" : "s"} evaluated with PCB and routing disabled.`,
+        `${rendered.sheets.length} schematic sheet${rendered.sheets.length === 1 ? "" : "s"} rendered with PCB components enabled; routing and DRC disabled.`,
         "success",
       );
     } catch (error) {

@@ -9,6 +9,7 @@ import {
   createKicadProjectZipBlob,
   getKicadProjectZipFileName,
 } from "./export-kicad-project";
+import { evaluateGeneratedTsx } from "./evaluate-schematic";
 import { prepareCircuitJsonForEcadExport } from "./prepare-circuit-json-for-ecad-export";
 
 const circuitJson = [
@@ -192,6 +193,52 @@ describe("ECAD project ZIP exports", () => {
     );
   });
 
+  test("preserves evaluated footprint pads in the KiCad PCB", async () => {
+    const evaluated = await evaluateGeneratedTsx(
+      `
+import "tscircuit"
+
+export default () => (
+  <board width="10mm" height="10mm" routingDisabled>
+    <schematicsheet name="fixture" displayName="Fixture" sheetIndex={0} />
+    <resistor
+      name="R1"
+      resistance="10k"
+      footprint="0402"
+      pcbX={0}
+      pcbY={0}
+    />
+  </board>
+)
+`,
+      {
+        mainComponentPath: "footprint-fixture.tsx",
+        timeoutMs: 15_000,
+      },
+    );
+
+    expect(
+      evaluated.circuitJson.filter(
+        (element) => element.type === "pcb_component",
+      ),
+    ).toHaveLength(1);
+    expect(
+      evaluated.circuitJson.filter((element) => element.type === "pcb_smtpad"),
+    ).toHaveLength(2);
+
+    const blob = await createKicadProjectZipBlob(evaluated.circuitJson, {
+      projectName: "footprint-fixture",
+    });
+    const archive = unzipSync(await expectZipSignature(blob));
+    const pcb = strFromU8(
+      archive["footprint-fixture.kicad_pcb"] ?? new Uint8Array(),
+    );
+
+    expect(pcb.match(/\(footprint\b/g)).toHaveLength(1);
+    expect(pcb.match(/\(pad\b/g)).toHaveLength(2);
+    expect(pcb).toContain('(property "Reference" "R1"');
+  });
+
   test("creates a real native Altium project archive", async () => {
     const blob = await createAltiumProjectZipBlob(circuitJson, {
       projectName: "demo board",
@@ -288,7 +335,7 @@ describe("ECAD project ZIP exports", () => {
     ]);
   });
 
-  test("exports schematic-only Circuit JSON from the preview evaluator", async () => {
+  test("still exports legacy schematic-only Circuit JSON", async () => {
     const schematicOnlyCircuitJson = circuitJson.filter(
       (element) => !element.type.startsWith("pcb_"),
     );

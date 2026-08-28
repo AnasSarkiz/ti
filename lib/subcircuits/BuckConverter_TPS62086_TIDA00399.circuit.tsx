@@ -1,6 +1,7 @@
 import type { SubcircuitProps } from "@tscircuit/props";
 import "tscircuit";
 import { TPS62086RLTR } from "../chips/TPS62086RLTR.circuit.tsx";
+import { XFL4015_471MEC_FOOTPRINT } from "../chips/jlcpcb-footprints.tsx";
 
 /**
  * TIDA-00399 sheet-5 3.3 V TPS62086 buck stage.
@@ -16,6 +17,7 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
     <capacitor
       name="C1_3P3"
       capacitance="10uF"
+      footprint="0805"
       schX={-2.05}
       schY={-0.2}
       schOrientation="vertical"
@@ -23,6 +25,8 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
     <inductor
       name="L3P3"
       manufacturerPartNumber="XFL4015-471MEC"
+      supplierPartNumbers={{ jlcpcb: ["C18221164"] }}
+      footprint={XFL4015_471MEC_FOOTPRINT}
       inductance="470nH"
       schX={2.35}
       schY={0.5}
@@ -30,6 +34,7 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
     <resistor
       name="R3_3P3"
       resistance="100kohm"
+      footprint="0402"
       schX={3.5}
       schY={-0.05}
       schRotation={270}
@@ -37,6 +42,7 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
     <capacitor
       name="C2_3P3"
       capacitance="22uF"
+      footprint="0805"
       schX={4.85}
       schY={-0.2}
       schOrientation="vertical"
@@ -44,6 +50,7 @@ export const BuckConverter_TPS62086_TIDA00399 = (props: SubcircuitProps) => (
     <resistor
       name="R3P3_BYP"
       resistance="0ohm"
+      footprint="0402"
       doNotPlace
       schX={0.3}
       schY={1.55}

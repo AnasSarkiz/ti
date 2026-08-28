@@ -1,5 +1,6 @@
 import type { ChipProps } from "@tscircuit/props";
 import "tscircuit";
+import { SN74LVC1G34DBVR_FOOTPRINT } from "./jlcpcb-footprints";
 
 const logicBufferSymbol = (
   <symbol>
@@ -73,6 +74,9 @@ const logicBufferSymbol = (
 export const SN74LVC1G34DBVR = (props: ChipProps) => (
   <chip
     manufacturerPartNumber="SN74LVC1G34DBVR"
+    supplierPartNumbers={{ jlcpcb: ["C840096"] }}
+    footprint={SN74LVC1G34DBVR_FOOTPRINT}
+    noConnect={["pin1"]}
     symbol={logicBufferSymbol}
     {...props}
   />

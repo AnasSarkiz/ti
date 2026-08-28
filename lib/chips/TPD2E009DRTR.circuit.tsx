@@ -1,5 +1,6 @@
 import type { ChipProps } from "@tscircuit/props";
 import "tscircuit";
+import { TPD2E009DRTR_FOOTPRINT } from "./jlcpcb-footprints";
 
 export const TPD2E009DRTR_PIN_LABELS = {
   pin1: "D1",
@@ -12,6 +13,8 @@ export const TPD2E009DRTR = (
 ) => (
   <chip
     manufacturerPartNumber="TPD2E009DRTR"
+    supplierPartNumbers={{ jlcpcb: ["C3040101"] }}
+    footprint={TPD2E009DRTR_FOOTPRINT}
     pinLabels={TPD2E009DRTR_PIN_LABELS}
     showPinAliases={false}
     schWidth={1.2}
