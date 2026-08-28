@@ -133,9 +133,8 @@ internal `U1` chip inside the placed `INA237` subcircuit.
 bypass capacitor**: the U5/C13 amplifier stage in
 [TI TIDA-010266, Figure 4-1](https://www.ti.com/lit/ug/tiduf53/tiduf53.pdf#page=17).
 It contains no pin headers, connectors, or gain-selection jumper. The
-[import example](examples/InstrumentationAmplifier_INA350.circuit.tsx) also uses
-only named parent nets, with no header. J10 in TI's schematic is an optional
-parent-board gain jumper, not part of this module.
+usage example below also uses only named parent nets, with no header. J10 in
+TI's schematic is an optional parent-board gain jumper, not part of this module.
 
 The CDS variant provides gains **30/50 V/V**. `gain="external"` (default) exposes
 GS for the parent: low selects 30, high or unconnected selects 50. `gain={30}`
