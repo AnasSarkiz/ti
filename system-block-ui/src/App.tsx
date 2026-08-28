@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { AnyCircuitElement } from "circuit-json";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BlockPalette,
   SYSTEM_BLOCK_DRAG_MIME,
@@ -7,9 +7,9 @@ import {
 import {
   CircuitIcon,
   FitIcon,
+  HammerIcon,
   PdfIcon,
   ResetIcon,
-  SparkIcon,
 } from "./components/Icons";
 import { OutputPanel } from "./components/OutputPanel";
 import {
@@ -459,8 +459,8 @@ export function App() {
             type="button"
           >
             <span className="button-content">
-              <SparkIcon />
-              {isRendering ? "Rendering…" : "Render"}
+              <HammerIcon />
+              {isRendering ? "Building…" : "Build"}
             </span>
           </button>
         </div>
