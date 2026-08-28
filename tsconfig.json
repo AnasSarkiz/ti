@@ -19,7 +19,7 @@
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
     "experimentalDecorators": true,
-    "types": ["tscircuit"]
+    "types": ["tscircuit", "bun"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "dist", ".claude", "system-block-ui"]

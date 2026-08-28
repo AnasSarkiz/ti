@@ -295,6 +295,7 @@ The package currently exports these subcircuit components:
 - `OutputUserInterface_LEDMatrix_LP5892_Q1`
 - `TemperatureSensor_TMP1075`
 - `TemperatureSensor_TMP1827`
+- `MotorThermalProtection_TMP390` (datasheet-derived; not an exact Window Module reference design)
 - `TemperatureSensor_LM50HV_Q1` ([LM50-Q1/LM50HV-Q1 datasheet, Figure 8-3](https://www.ti.com/lit/ds/symlink/lm50-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
 - `PowerSupply_LM74202_TPS7E81_Q1` ([LM74202-Q1 datasheet, page-1 Simplified Schematic and Figure 39 values](https://www.ti.com/lit/ds/symlink/lm74202-q1.pdf) and [TPS7E81-Q1 datasheet, Figure 7-5](https://www.ti.com/lit/ds/symlink/tps7e81-q1.pdf); used because the Rearview Mirror Module block has no attached reference design)
 - `LoadSwitch_TPS22919`
@@ -376,6 +377,7 @@ chip is listed individually below, including whether it supports a
 | `TMP103AYFF` | `-` | `TMP103AYFF` |
 | `TMP1827` | `-` | `TMP1827` |
 | `TMP1075` | `wson_8_ep_2x2` | `TMP1075DSGR` |
+| `TMP390Q1` | `-` | `TMP390AQDRLRQ1` |
 | `TPD2E009DRTR` | `-` | `TPD2E009DRTR` |
 | `TPS22919` | `-` | `TPS22919` |
 | `TPS25910RSA` | `-` | `TPS25910RSA` |
@@ -407,6 +409,18 @@ The package also exports:
 - `TiSubcircuitName`: a TypeScript union of keys in `TiSubcircuitComponents`.
 - `TiSubcircuitComponent`: a TypeScript type for any exported subcircuit
   component.
+
+### TMP390-Q1 Motor Thermal Protection Source Scope
+
+`MotorThermalProtection_TMP390` is derived from TMP390-Q1 datasheet Figure 7-1
+for topology and relative schematic placement, and Figure 8-3 plus Tables 7-1
+and 7-2 for component values and thresholds. It is **not** an exact TI Window
+Module reference design because TI does not attach schematic or CAD source to
+that subsystem.
+
+The fixed datasheet example exposes `VDD`, `VDDIO`, `GND`, `OUTA`, and `OUTB`.
+It selects a +90 C hot trip and -25 C cold trip with 10 C hysteresis. The
+active-low, open-drain outputs reset at +80 C and -15 C, respectively.
 
 ## Key Directories
 
