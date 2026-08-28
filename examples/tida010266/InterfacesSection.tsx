@@ -31,6 +31,7 @@ export type InterfacesSectionProps = GroupProps & {
   testPointSchYOffset?: number;
   inaFilterSchXOffset?: number;
   inaFilterSchYOffset?: number;
+  interfaceColumnLayout?: boolean;
 };
 
 /** TIDA-010266 power, UART/GPIO, selection jumpers, and seven test points. */
@@ -55,6 +56,7 @@ export const InterfacesSection = ({
   testPointSchYOffset = 0,
   inaFilterSchXOffset = 0,
   inaFilterSchYOffset = 0,
+  interfaceColumnLayout = false,
   ...props
 }: InterfacesSectionProps) => {
   const originX = typeof props.schX === "number" ? props.schX : 0;
@@ -69,6 +71,36 @@ export const InterfacesSection = ({
   const testPointY = (y: number) => y + testPointSchYOffset;
   const inaFilterX = (x: number) => x + inaFilterSchXOffset;
   const inaFilterY = (y: number) => y + inaFilterSchYOffset;
+  const jumperPositions = interfaceColumnLayout
+    ? {
+        J5: { x: jumperX(-20), y: jumperY(-4.6) },
+        J6: { x: jumperX(-20), y: jumperY(-7.2) },
+        J8: { x: jumperX(-20), y: jumperY(-9.8) },
+      }
+    : {
+        J5: { x: jumperX(-25), y: jumperY(-4.6) },
+        J6: { x: jumperX(-15), y: jumperY(-4.6) },
+        J8: { x: jumperX(-25), y: jumperY(-7.2) },
+      };
+  const testPointPositions = interfaceColumnLayout
+    ? {
+        TP1: { x: testPointX(0), y: testPointY(-3) },
+        TP2: { x: testPointX(0), y: testPointY(-4.5) },
+        TP3: { x: testPointX(0), y: testPointY(-6) },
+        TP4: { x: testPointX(0), y: testPointY(-7.5) },
+        TP5: { x: testPointX(0), y: testPointY(-9) },
+        TP6: { x: testPointX(0), y: testPointY(-10.5) },
+        TP7: { x: testPointX(0), y: testPointY(-12) },
+      }
+    : {
+        TP1: { x: testPointX(-6), y: testPointY(-3.7) },
+        TP2: { x: testPointX(6.5), y: testPointY(-4.9) },
+        TP3: { x: testPointX(-6), y: testPointY(-4.9) },
+        TP4: { x: testPointX(-6), y: testPointY(-6.1) },
+        TP5: { x: testPointX(6.5), y: testPointY(-7.3) },
+        TP6: { x: testPointX(-6), y: testPointY(-7.3) },
+        TP7: { x: testPointX(-6), y: testPointY(-8.5) },
+      };
 
   return (
     <group {...props}>
@@ -135,7 +167,7 @@ export const InterfacesSection = ({
           pin2: "net.UART_RX",
           pin3: "net.UART_TX",
           pin5: "net.UART_CTS",
-          pin6: "net.GND",
+          ...(interfaceColumnLayout ? {} : { pin6: "net.GND" }),
         }}
         pinAttributes={{ NC: { doNotConnect: true } }}
       />
@@ -198,8 +230,8 @@ export const InterfacesSection = ({
         schSheetName={jumperSheetName ?? props.schSheetName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={jumperX(-25)}
-        schY={jumperY(-4.6)}
+        schX={jumperPositions.J5.x}
+        schY={jumperPositions.J5.y}
         schWidth="1.8mm"
         schHeight="1.8mm"
         schPinArrangement={{
@@ -226,8 +258,8 @@ export const InterfacesSection = ({
         schSheetName={jumperSheetName ?? props.schSheetName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={jumperX(-15)}
-        schY={jumperY(-4.6)}
+        schX={jumperPositions.J6.x}
+        schY={jumperPositions.J6.y}
         schWidth="1.8mm"
         schHeight="1.8mm"
         schPinArrangement={{
@@ -244,7 +276,7 @@ export const InterfacesSection = ({
         }}
         connections={{
           pin1: "net.OPA1_OUT",
-          pin2: "net.PRESSURE",
+          ...(interfaceColumnLayout ? {} : { pin2: "net.PRESSURE" }),
           pin3: "net.INA_OUT",
         }}
       />
@@ -254,8 +286,8 @@ export const InterfacesSection = ({
         schSheetName={jumperSheetName ?? props.schSheetName}
         manufacturerPartNumber="61300311121"
         footprint="pinrow3"
-        schX={jumperX(-25)}
-        schY={jumperY(-7.2)}
+        schX={jumperPositions.J8.x}
+        schY={jumperPositions.J8.y}
         schWidth="1.8mm"
         schHeight="1.8mm"
         schPinArrangement={{
@@ -278,16 +310,24 @@ export const InterfacesSection = ({
       <group schSheetName={jumperSheetName ?? props.schSheetName}>
         <schematictext
           text="For MSPM0 INA + LMV324A Filter: Short pins 1-2"
-          schX={jumperX(-30.5)}
-          schY={jumperY(-8.5)}
+          schX={
+            interfaceColumnLayout ? jumperPositions.J8.x - 3 : jumperX(-30.5)
+          }
+          schY={
+            interfaceColumnLayout ? jumperPositions.J8.y - 2 : jumperY(-8.5)
+          }
           anchor="left"
           fontSize={0.22}
           color="#000000"
         />
         <schematictext
           text="For INA350 + LMV324A Filter: Short pins 2-3"
-          schX={jumperX(-30.5)}
-          schY={jumperY(-9.2)}
+          schX={
+            interfaceColumnLayout ? jumperPositions.J8.x - 3 : jumperX(-30.5)
+          }
+          schY={
+            interfaceColumnLayout ? jumperPositions.J8.y - 2.7 : jumperY(-9.2)
+          }
           anchor="left"
           fontSize={0.22}
           color="#000000"
@@ -317,8 +357,8 @@ export const InterfacesSection = ({
           schSheetName: jumperSheetName ?? props.schSheetName,
         } as Record<string, unknown>)}
         name="INA_IN_NEG_PORT"
-        schX={originX + jumperX(-23.8)}
-        schY={originY + jumperY(-8)}
+        schX={originX + jumperPositions.J8.x + 1.2}
+        schY={originY + jumperPositions.J8.y - 0.8}
         direction="right"
       />
       <trace
@@ -348,8 +388,8 @@ export const InterfacesSection = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         schSheetName={testPointSheetName ?? props.schSheetName}
         manufacturerPartNumber="5000"
-        schX={testPointX(-6)}
-        schY={testPointY(-3.7)}
+        schX={testPointPositions.TP1.x}
+        schY={testPointPositions.TP1.y}
         connections={{ pin1: "net.VIN" }}
       />
       <testpoint
@@ -358,9 +398,11 @@ export const InterfacesSection = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         schSheetName={testPointSheetName ?? props.schSheetName}
         manufacturerPartNumber="5117"
-        schX={testPointX(6.5)}
-        schY={testPointY(-4.9)}
-        connections={{ pin1: "net.PRESSURE" }}
+        schX={testPointPositions.TP2.x}
+        schY={testPointPositions.TP2.y}
+        connections={
+          interfaceColumnLayout ? undefined : { pin1: "net.PRESSURE" }
+        }
       />
       <testpoint
         {...throughHoleTestPoint}
@@ -368,8 +410,8 @@ export const InterfacesSection = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         schSheetName={testPointSheetName ?? props.schSheetName}
         manufacturerPartNumber="5000"
-        schX={testPointX(-6)}
-        schY={testPointY(-4.9)}
+        schX={testPointPositions.TP3.x}
+        schY={testPointPositions.TP3.y}
         connections={{ pin1: "net.V3_3" }}
       />
       <testpoint
@@ -378,8 +420,8 @@ export const InterfacesSection = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         schSheetName={testPointSheetName ?? props.schSheetName}
         manufacturerPartNumber="5000"
-        schX={testPointX(-6)}
-        schY={testPointY(-6.1)}
+        schX={testPointPositions.TP4.x}
+        schY={testPointPositions.TP4.y}
         connections={{ pin1: "net.VREF_2_5" }}
       />
       <testpoint
@@ -388,8 +430,8 @@ export const InterfacesSection = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         schSheetName={testPointSheetName ?? props.schSheetName}
         manufacturerPartNumber="5117"
-        schX={testPointX(6.5)}
-        schY={testPointY(-7.3)}
+        schX={testPointPositions.TP5.x}
+        schY={testPointPositions.TP5.y}
         connections={{ pin1: "net.OSCILLATIONS" }}
       />
       <testpoint
@@ -398,9 +440,9 @@ export const InterfacesSection = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         schSheetName={testPointSheetName ?? props.schSheetName}
         manufacturerPartNumber="5001"
-        schX={testPointX(-6)}
-        schY={testPointY(-7.3)}
-        connections={{ pin1: "net.GND" }}
+        schX={testPointPositions.TP6.x}
+        schY={testPointPositions.TP6.y}
+        connections={interfaceColumnLayout ? undefined : { pin1: "net.GND" }}
       />
       <testpoint
         {...throughHoleTestPoint}
@@ -408,10 +450,36 @@ export const InterfacesSection = ({
         schSectionName={testPointSectionName ?? props.schSectionName}
         schSheetName={testPointSheetName ?? props.schSheetName}
         manufacturerPartNumber="5001"
-        schX={testPointX(-6)}
-        schY={testPointY(-8.5)}
-        connections={{ pin1: "net.GND" }}
+        schX={testPointPositions.TP7.x}
+        schY={testPointPositions.TP7.y}
+        connections={interfaceColumnLayout ? undefined : { pin1: "net.GND" }}
       />
+      {interfaceColumnLayout && (
+        <>
+          <port
+            {...({
+              schSheetName: jumperSheetName ?? props.schSheetName,
+            } as Record<string, unknown>)}
+            name="PRESSURE"
+            schX={originX + jumperPositions.J6.x + 2.5}
+            schY={originY + jumperPositions.J6.y}
+            direction="right"
+            connectsTo=".J6 > .PRESSURE"
+          />
+          <netlabel net="PRESSURE" connectsTo=".J6 > .PRESSURE" inline />
+          <netlabel net="PRESSURE" connectsTo=".TP2 > .pin1" inline />
+          <port
+            {...({
+              schSheetName: connectorSheetName ?? props.schSheetName,
+            } as Record<string, unknown>)}
+            name="GND"
+            schX={originX + connectorX(9.6)}
+            schY={originY + connectorY(0)}
+            direction="left"
+            connectsTo=".J3 > .GND"
+          />
+        </>
+      )}
       <TIDA010266InlineNetPorts
         originX={originX}
         originY={originY}
@@ -437,88 +505,92 @@ export const InterfacesSection = ({
           {
             name: "V3_3",
             connectsTo: [".J10 > .V3_3", ".TP3 > .pin1"],
-            schX: testPointX(-7.2),
-            schY: testPointY(-4.9),
+            schX: testPointPositions.TP3.x - 1.2,
+            schY: testPointPositions.TP3.y,
             direction: "left",
             schSheetName: testPointSheetName ?? props.schSheetName,
           },
           {
             name: "VREF_2_5",
             connectsTo: ".TP4 > .pin1",
-            schX: testPointX(-7.2),
-            schY: testPointY(-6.1),
+            schX: testPointPositions.TP4.x - 1.2,
+            schY: testPointPositions.TP4.y,
             direction: "left",
             schSheetName: testPointSheetName ?? props.schSheetName,
           },
-          {
-            name: "PRESSURE",
-            connectsTo: [".J6 > .PRESSURE", ".TP2 > .pin1"],
-            schX: testPointX(5.3),
-            schY: testPointY(-4.9),
-            direction: "right",
-            schSheetName: testPointSheetName ?? props.schSheetName,
-          },
+          ...(interfaceColumnLayout
+            ? []
+            : [
+                {
+                  name: "PRESSURE",
+                  connectsTo: [".J6 > .PRESSURE", ".TP2 > .pin1"],
+                  schX: testPointPositions.TP2.x - 1.2,
+                  schY: testPointPositions.TP2.y,
+                  direction: "right" as const,
+                  schSheetName: testPointSheetName ?? props.schSheetName,
+                },
+              ]),
           {
             name: "OSCILLATIONS",
             connectsTo: ".TP5 > .pin1",
-            schX: testPointX(5.3),
-            schY: testPointY(-7.3),
+            schX: testPointPositions.TP5.x - 1.2,
+            schY: testPointPositions.TP5.y,
             direction: "right",
             schSheetName: testPointSheetName ?? props.schSheetName,
           },
           {
             name: "BRIDGE_POS",
             connectsTo: ".J5 > .BRIDGE_POS",
-            schX: jumperX(-26.2),
-            schY: jumperY(-4.6),
+            schX: jumperPositions.J5.x - 1.2,
+            schY: jumperPositions.J5.y,
             direction: "left",
             schSheetName: jumperSheetName ?? props.schSheetName,
           },
           {
             name: "BRIDGE_NEG",
             connectsTo: ".J8 > .BRIDGE_NEG",
-            schX: jumperX(-26.2),
-            schY: jumperY(-7.2),
+            schX: jumperPositions.J8.x - 1.2,
+            schY: jumperPositions.J8.y,
             direction: "left",
             schSheetName: jumperSheetName ?? props.schSheetName,
           },
           {
             name: "INA_IN_POS",
             connectsTo: ".J5 > .INA_IN_POS",
-            schX: jumperX(-26.2),
-            schY: jumperY(-5.4),
+            schX: jumperPositions.J5.x - 1.2,
+            schY: jumperPositions.J5.y - 0.8,
             direction: "left",
             schSheetName: jumperSheetName ?? props.schSheetName,
           },
           {
             name: "INA_OUT",
             connectsTo: ".J6 > .INA_OUT",
-            schX: jumperX(-16.2),
-            schY: jumperY(-5.4),
+            schX: jumperPositions.J6.x - 1.2,
+            schY: jumperPositions.J6.y - 0.8,
             direction: "left",
             schSheetName: jumperSheetName ?? props.schSheetName,
           },
           {
             name: "OPA0_IN0_POS",
             connectsTo: ".J8 > .OPA0_IN0_POS",
-            schX: jumperX(-26.2),
-            schY: jumperY(-6.4),
+            schX: jumperPositions.J8.x - 1.2,
+            schY: jumperPositions.J8.y + 0.8,
             direction: "left",
             schSheetName: jumperSheetName ?? props.schSheetName,
           },
           {
             name: "OPA1_IN0_POS",
             connectsTo: ".J5 > .OPA1_IN0_POS",
-            schX: jumperX(-26.2),
-            schY: jumperY(-3.8),
+            schX: jumperPositions.J5.x - 1.2,
+            schY: jumperPositions.J5.y + 0.8,
             direction: "left",
             schSheetName: jumperSheetName ?? props.schSheetName,
           },
           {
             name: "OPA1_OUT",
             connectsTo: ".J6 > .OPA1_OUT",
-            schX: jumperX(-16.2),
-            schY: jumperY(-3.8),
+            schX: jumperPositions.J6.x - 1.2,
+            schY: jumperPositions.J6.y + 0.8,
             direction: "left",
             schSheetName: jumperSheetName ?? props.schSheetName,
           },
@@ -634,20 +706,24 @@ export const InterfacesSection = ({
             direction: "left",
             schSheetName: connectorSheetName ?? props.schSheetName,
           },
-          {
-            name: "GND",
-            connectsTo: [
-              ".J3 > .GND",
-              ".J10 > .GND",
-              ".TP6 > .pin1",
-              ".TP7 > .pin1",
-            ],
-            inlineLabelConnectsTo: false,
-            schX: testPointX(-6),
-            schY: testPointY(-10),
-            direction: "down",
-            schSheetName: testPointSheetName ?? props.schSheetName,
-          },
+          ...(interfaceColumnLayout
+            ? []
+            : [
+                {
+                  name: "GND",
+                  connectsTo: [
+                    ".J3 > .GND",
+                    ".J10 > .GND",
+                    ".TP6 > .pin1",
+                    ".TP7 > .pin1",
+                  ],
+                  inlineLabelConnectsTo: false,
+                  schX: testPointPositions.TP7.x,
+                  schY: testPointPositions.TP7.y - 1.5,
+                  direction: "down" as const,
+                  schSheetName: testPointSheetName ?? props.schSheetName,
+                },
+              ]),
         ]}
       />
     </group>

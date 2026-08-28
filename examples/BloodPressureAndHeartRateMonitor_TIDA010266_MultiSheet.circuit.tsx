@@ -31,34 +31,73 @@ export default () => (
       displayName="Input + Reference"
       sheetIndex={0}
     />
-    <schematicsheet name="connectors" displayName="Connectors" sheetIndex={1} />
-    <schematicsheet name="jumpers" displayName="Jumpers" sheetIndex={2} />
     <schematicsheet
-      name="test_points"
-      displayName="Test Points"
-      sheetIndex={3}
+      name="interfaces"
+      displayName="Connectors + Jumpers + Test Points"
+      sheetIndex={1}
     />
+    <group schSheetName="interfaces">
+      <schematictext
+        text="Connectors"
+        schX={-10.5}
+        schY={8.4}
+        fontSize={0.42}
+        color="#000000"
+      />
+      <schematictext
+        text="Jumpers"
+        schX={0}
+        schY={8.4}
+        fontSize={0.42}
+        color="#000000"
+      />
+      <schematictext
+        text="Test Points"
+        schX={10.5}
+        schY={8.4}
+        fontSize={0.42}
+        color="#000000"
+      />
+      <schematicline
+        x1={-5.25}
+        y1={7.7}
+        x2={-5.25}
+        y2={-8.5}
+        strokeWidth={0.02}
+        color="#000000"
+        isDashed
+      />
+      <schematicline
+        x1={5.25}
+        y1={7.7}
+        x2={5.25}
+        y2={-8.5}
+        strokeWidth={0.02}
+        color="#000000"
+        isDashed
+      />
+    </group>
     <schematicsheet
       name="programming"
       displayName="Programming"
-      sheetIndex={4}
+      sheetIndex={2}
     />
     <schematicsheet
       name="ina_filter"
       displayName="INA + Filter"
-      sheetIndex={5}
+      sheetIndex={3}
     />
-    <schematicsheet name="mcu" displayName="MCU" sheetIndex={6} />
+    <schematicsheet name="mcu" displayName="MCU" sheetIndex={4} />
     <schematicsheet
       name="pressure_sensor"
       displayName="Pressure Sensor"
-      sheetIndex={7}
+      sheetIndex={5}
     />
-    <schematicsheet name="adc_filter" displayName="ADC Filter" sheetIndex={8} />
+    <schematicsheet name="adc_filter" displayName="ADC Filter" sheetIndex={6} />
     <schematicsheet
       name="motor_driver"
       displayName="Motor Driver"
-      sheetIndex={9}
+      sheetIndex={7}
     />
 
     <PowerManagement_TPS7A2433_TIDA010266
@@ -72,16 +111,21 @@ export default () => (
     />
     <InterfacesSection
       name="interfaces"
+      subcircuit
+      schTraceAutoLabelEnabled
+      schMaxTraceDistance="5mm"
       inputSheetName="input_reference"
-      connectorSheetName="connectors"
-      jumperSheetName="jumpers"
-      testPointSheetName="test_points"
+      connectorSheetName="interfaces"
+      jumperSheetName="interfaces"
+      testPointSheetName="interfaces"
       inaFilterSheetName="ina_filter"
+      interfaceColumnLayout
       inputSchXOffset={15.8}
-      connectorSchXOffset={-11.8}
+      connectorSchXOffset={-22.3}
       connectorSchYOffset={2.2}
       jumperSchXOffset={20}
       jumperSchYOffset={6}
+      testPointSchXOffset={10.5}
       testPointSchYOffset={6}
       inaFilterSchXOffset={10.5}
       inaFilterSchYOffset={14.5}
@@ -169,7 +213,7 @@ export default () => (
     <trace from=".microcontroller > .GND" to="net.GND" />
     <trace from=".motor_driver > .GND" to="net.GND" />
     <trace from=".programming > .GND" to="net.GND" />
-    <trace from=".interfaces > .GND" to="net.GND" />
+    <trace from=".interfaces > .GND" to="net.GND" schDisplayLabel="GND" />
 
     <trace
       from=".reference_2v5 > .VREF_2_5"
